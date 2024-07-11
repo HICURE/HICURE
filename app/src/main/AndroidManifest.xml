@@ -16,6 +16,9 @@
             android:name=".ServeInfo"
             android:exported="false" />
         <activity
+            android:name=".AppStart"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
