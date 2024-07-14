@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">HICURE</string>
+    <string name="sub_title">맞춤형 헬스케어 진단 서비스</string>
 </resources>

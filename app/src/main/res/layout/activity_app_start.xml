@@ -14,32 +14,35 @@
         android:background="@drawable/behind_sub_title"
         android:fontFamily="@font/jua_regular"
         android:gravity="center"
-        android:text="맞춤형 헬스케어 진단 서비스"
+        android:text="@string/sub_title"
         android:textColor="@color/black"
         app:layout_constraintBottom_toTopOf="@+id/main_title"
         app:layout_constraintEnd_toEndOf="@+id/main_title"
-        app:layout_constraintStart_toStartOf="@+id/main_title"/>
+        app:layout_constraintStart_toStartOf="@+id/main_title" />
 
     <FrameLayout
         android:id="@+id/main_title"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:background="@drawable/behind_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/jua_regular"
             android:layout_gravity="center"
-            android:text="HICURE"
+            android:background="@drawable/behind_title"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/jua_regular"
+            android:text="@string/app_name"
             android:textColor="@color/white"
-            android:textSize="50sp"
-            />
+            android:textSize="50sp" />
 
     </FrameLayout>
 
