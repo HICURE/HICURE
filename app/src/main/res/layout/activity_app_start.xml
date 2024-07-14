@@ -11,6 +11,7 @@
         android:id="@+id/sub_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/behind_sub_title"
         android:fontFamily="@font/jua_regular"
         android:gravity="center"
@@ -19,36 +20,26 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/main_title"
         app:layout_constraintEnd_toEndOf="@+id/main_title"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/main_title" />
 
-    <FrameLayout
+    <com.example.hicure.OutLineTextView
         android:id="@+id/main_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/behind_title"
+        android:fontFamily="@font/jua_regular"
+        android:gravity="center"
+        android:text="@string/app_name"
+        android:textColor="@color/white"
+        android:textSize="50sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/behind_title" />
-
-        <com.example.hicure.OutLineTextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:fontFamily="@font/jua_regular"
-            android:text="@string/app_name"
-            android:textColor="@color/white"
-            android:textSize="50sp"
-            android:paddingHorizontal="2dp"
-            app:textStrokeColor="@color/edge_blue"
-            app:textStrokeWidth="18" />
-
-    </FrameLayout>
-
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.475"
+        app:textStrokeColor="@color/edge_blue"
+        app:textStrokeWidth="18" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
