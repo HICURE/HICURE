@@ -16,6 +16,7 @@
         android:gravity="center"
         android:text="@string/sub_title"
         android:textColor="@color/black"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/main_title"
         app:layout_constraintEnd_toEndOf="@+id/main_title"
         app:layout_constraintStart_toStartOf="@+id/main_title" />
@@ -33,16 +34,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@drawable/behind_title"/>
+            android:background="@drawable/behind_title" />
 
-        <TextView
+        <com.example.hicure.OutLineTextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:fontFamily="@font/jua_regular"
             android:text="@string/app_name"
             android:textColor="@color/white"
-            android:textSize="50sp" />
+            android:textSize="50sp"
+            android:paddingHorizontal="2dp"
+            app:textStrokeColor="@color/edge_blue"
+            app:textStrokeWidth="18" />
 
     </FrameLayout>
 
