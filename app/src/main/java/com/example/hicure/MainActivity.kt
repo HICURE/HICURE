@@ -1,20 +1,17 @@
 package com.example.hicure
 
 import android.os.Bundle
-import android.widget.Button
-import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.example.hicure.databinding.ActivityMainBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
-    private val binding : ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(binding.root)
+        setContentView(R.layout.activity_main)
+
+        // 커스텀 아이콘 사용하기 위한 itemIconTintList setting
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.navigation_main)
+        bottomNavigationView.itemIconTintList = null
+
     }
 }
