@@ -8,4 +8,7 @@
     <color name="back_color_yellow">#FFDB5C</color>
     <color name="back_color_blue">#95B0F0</color>
     <color name="back_color_pink">#FFB6DA</color>
+    <color name="alarm_box_back_blue">#B5C6E3</color>
+    <color name="alarm_box_back_yellow">EDDE94</color>
+    <color name="alarm_box_back_pink">#E8B9D0</color>
 </resources>
