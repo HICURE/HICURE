@@ -27,5 +27,4 @@
         android:layout_marginTop="22dp"
         android:gravity="center"
         android:orientation="horizontal"/>
-
     </LinearLayout>
