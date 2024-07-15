@@ -5,11 +5,11 @@
         android:drawable="@drawable/background_circle_blue"
         android:gravity="center"
         android:left="-150dp"
-        android:top="-150dp" />
+        android:top="-80dp" />
 
     <item
         android:drawable="@drawable/background_circle_yellow"
         android:gravity="center"
-        android:right="-250dp"/>
+        android:right="-300dp"/>
 
 </layer-list>

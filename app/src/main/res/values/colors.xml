@@ -5,9 +5,9 @@
     <color name="deep_blue">#5F8EFF</color>
     <color name="edge_blue">#395597</color>
     <color name="light_yellow">#FFF7DB</color>
-    <color name="back_color_yellow">#12FFDB5C</color>
-    <color name="back_color_blue">#1095B0F0</color>
-    <color name="back_color_pink">#15FFB6DA</color>
+    <color name="back_color_yellow">#30FFDB5C</color>
+    <color name="back_color_blue">#3095B0F0</color>
+    <color name="back_color_pink">#30FFB6DA</color>
     <color name="lens_handle_1">#63D0F7</color>
     <color name="lens_handle_2">#E0904A</color>
 </resources>

@@ -9,12 +9,34 @@
     tools:context=".AppStart">
 
     <ImageView
+        android:id="@+id/back_blur_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:contentDescription="@string/description"
+        android:src="@drawable/background_circle_yellow_blue"
+        app:layout_constraintBottom_toTopOf="@+id/sub_title"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <ImageView
+        android:id="@+id/back_blur_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="-50dp"
+        android:contentDescription="@string/description"
+        android:src="@drawable/background_circle_pink"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_title" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="80dp"
         android:contentDescription="@string/description"
         android:rotation="-45"
         android:src="@drawable/lens"
-        android:layout_marginLeft="80dp"
         app:layout_constraintBottom_toBottomOf="@+id/main_title"
         app:layout_constraintEnd_toEndOf="@+id/main_title"
         app:layout_constraintStart_toStartOf="@+id/main_title"
@@ -55,6 +77,7 @@
         android:id="@+id/main_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintVertical_bias="0.45"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
