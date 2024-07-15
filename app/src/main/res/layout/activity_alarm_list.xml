@@ -7,4 +7,15 @@
     android:layout_height="match_parent"
     tools:context=".AlarmList">
 
+
+    <TextView
+        android:id="@+id/alarm"
+        android:layout_width="43dp"
+        android:layout_height="31dp"
+        android:layout_marginStart="168dp"
+        android:layout_marginTop="440dp"
+        android:fontFamily="@font/jua_regular"
+        android:text="알람"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
