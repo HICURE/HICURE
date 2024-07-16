@@ -8,29 +8,36 @@
     android:orientation="vertical"
     tools:context=".AlarmList">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@drawable/title_bubble_background">
-    </TextView>
-
-    <com.example.hicure.OutLineTextView
-        android:id="@+id/custom_alarm_text"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:fontFamily="@font/jua_regular"
-        android:gravity="center"
-        android:text="@string/title_alarm_list"
-        android:textColor="@color/white"
-        android:textSize="25sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:textStrokeColor="@color/edge_blue"
-        app:textStrokeWidth="18" />
+        android:layout_marginTop="20dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/title_bubble_background">
+        </TextView>
+
+        <com.example.hicure.OutLineTextView
+            android:id="@+id/custom_alarm_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/jua_regular"
+            android:gravity="center"
+            android:text="@string/title_alarm_list"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:textStrokeColor="@color/edge_blue"
+            app:textStrokeWidth="18" />
+    </FrameLayout>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,38 +45,35 @@
         android:layout_marginTop="22dp"
         android:gravity="center"
         android:orientation="vertical">
-
-        <TextView
+        <android.widget.Button
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_margin="8dp"
-            android:background="@drawable/alarm_box_blue"
+            android:layout_marginTop="22dp"
             android:fontFamily="@font/oxygen_bold"
             android:text="@string/alarm_box_blue_time"
             android:textColor="@color/edge_blue"
-            android:textSize="32sp" />
-
-        <TextView
+            android:textSize="32sp"
+            android:background="@drawable/alarm_box_blue" />
+        <android.widget.Button
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_margin="12dp"
-            android:background="@drawable/alarm_box_yellow"
+            android:layout_marginTop="12dp"
             android:fontFamily="@font/oxygen_bold"
             android:text="@string/alarm_box_yellow_time"
             android:textColor="@color/edge_blue"
-            android:textSize="32sp" />
-
-        <TextView
+            android:textSize="32sp"
+            android:background="@drawable/alarm_box_yellow" />
+        <android.widget.Button
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_margin="12dp"
-            android:background="@drawable/alarm_box_pink"
+            android:layout_marginTop="12dp"
             android:fontFamily="@font/oxygen_bold"
             android:text="@string/alarm_box_pink_time"
             android:textColor="@color/edge_blue"
-            android:textSize="32sp" />
+            android:textSize="32sp"
+            android:background="@drawable/alarm_box_pink" />
     </LinearLayout>
 </LinearLayout>
