@@ -50,4 +50,14 @@
         android:textColor="@color/edge_blue"
         android:fontFamily="@font/oxygen_bold"
         android:background="@drawable/alarm_box_yellow"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/alarm_box_pink_time"
+        android:textSize="32sp"
+        android:textColor="@color/edge_blue"
+        android:fontFamily="@font/oxygen_bold"
+        android:background="@drawable/alarm_box_pink"/>
 </LinearLayout>
