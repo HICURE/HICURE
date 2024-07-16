@@ -13,9 +13,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:fontFamily="@font/jua_regular"
-        android:text="알람"
+        android:text="@string/title_alarm_list"
         android:textSize="25sp"
+        android:textColor=""
+        android:fontFamily="@font/jua_regular"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -27,4 +28,13 @@
         android:layout_marginTop="22dp"
         android:gravity="center"
         android:orientation="horizontal"/>
-    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/alarm_box_blue_time"
+        android:textSize="32sp"
+        android:textColor="@color/edge_blue"
+        android:fontFamily="@font/oxygen_bold"
+        android:background="@drawable/alarm_box_blue"/>
+</LinearLayout>
