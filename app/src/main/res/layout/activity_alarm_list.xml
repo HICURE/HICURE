@@ -8,21 +8,23 @@
     android:orientation="vertical"
     tools:context=".AlarmList">
 
-    <TextView
+    <com.example.hicure.OutLineTextView
         android:id="@+id/custom_alarm_text"
-        android:layout_width="wrap_content"
+        android:layout_width="87dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@drawable/title_bubble_background"
         android:fontFamily="@font/jua_regular"
         android:gravity="center"
         android:text="@string/title_alarm_list"
-        android:textColor="@color/edge_blue"
+        android:textColor="@color/white"
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:textStrokeColor="@color/edge_blue"
+        app:textStrokeWidth="18" />
 
     <LinearLayout
         android:layout_width="wrap_content"
