@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/bottom_nav">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/ic_Home"
+        android:icon="@drawable/ic_home"/>
 
-</navigation>
+    <item android:id="@+id/ic_Alarm"
+        android:icon="@drawable/ic_alarm"/>
+
+    <item android:id="@+id/ic_Serve"
+        android:icon="@drawable/ic_serve"/>
+
+    <item android:id="@+id/ic_User"
+        android:icon="@drawable/ic_user"/>
+</menu>

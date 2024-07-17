@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
+    <color name="behind_title_blue">#AFC3F3</color>
     <color name="white">#FFFFFFFF</color>
     <color name="deep_blue">#5F8EFF</color>
     <color name="edge_blue">#395597</color>
