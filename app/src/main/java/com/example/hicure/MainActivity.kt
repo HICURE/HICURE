@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
 
     val binding : ActivityMainBinding by lazy { ActivityMainBinding.inflate((layoutInflater)) }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -25,20 +26,21 @@ class MainActivity : AppCompatActivity() {
         "원하는 타이틀 입력".also { binding.actionTitle.text = it }
 
         binding.actionTitle.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout(){
-                binding.actionTitle.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
-                val actionTextWidth = binding.actionTitle.width
+               override fun onGlobalLayout(){
+                    binding.actionTitle.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
-                binding.actionTitle.width = actionTextWidth + 10
+                   val actionTextWidth = binding.actionTitle.width
 
-                // binding.mainText.text = "$actionTextWidth"
+                   binding.actionTitle.width = actionTextWidth + 10
 
-                val layoutParams = binding.behindTitle.layoutParams
-                layoutParams.width = actionTextWidth + 30
-                binding.behindTitle.layoutParams = layoutParams
+                   // binding.mainText.text = "$actionTextWidth"
 
-            }
+                   val layoutParams = binding.behindTitle.layoutParams
+                   layoutParams.width = actionTextWidth + 30
+                   binding.behindTitle.layoutParams = layoutParams
+
+               }
         })
     }
 
