@@ -2,19 +2,59 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/main_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="266dp"
+        android:layout_height="182dp"
+        android:layout_marginBottom="56dp"
+        android:background="@drawable/border"
+        app:layout_constraintBottom_toTopOf="@+id/measurements"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/measurements"
+        android:layout_width="152dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="332dp"
+        android:background="@drawable/buttondesign_blue"
+        android:fontFamily="@font/oxygen_light_font"
+        android:text="새로 측정하기"
+        android:textColor="@color/edge_blue"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toStartOf="@+id/calender"
+        app:layout_constraintHorizontal_bias="0.061"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/calender"
+        android:layout_width="152dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="56dp"
+        android:background="@drawable/buttondesign_yellow"
+        android:fontFamily="@font/oxygen_light_font"
+        android:text="캘린더보기"
+        android:textColor="@color/edge_blue"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.938"
+        app:layout_constraintStart_toEndOf="@+id/measurements"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
+
+    <FrameLayout
+        android:layout_width="312dp"
+        android:layout_height="283dp"
+        android:layout_marginTop="52dp"
+        android:background="@drawable/border"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/calender" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
