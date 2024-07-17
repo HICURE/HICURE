@@ -52,4 +52,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+    <FrameLayout
+        android:id="@+id/holder_fl_main"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bn_main"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="10dp"
+            android:outlineSpotShadowColor="@color/black"
+            app:menu="@navigation/bottom_nav" />
+    </FrameLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

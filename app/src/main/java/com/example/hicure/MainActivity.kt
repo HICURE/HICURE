@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         "원하는 타이틀 입력".also { binding.actionTitle.text = it }
 
         binding.actionTitle.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+
                override fun onGlobalLayout(){
                     binding.actionTitle.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
@@ -42,4 +43,5 @@ class MainActivity : AppCompatActivity() {
                }
         })
     }
+
 }

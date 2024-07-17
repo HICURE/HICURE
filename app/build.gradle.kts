@@ -33,8 +33,8 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-    viewBinding{
-        enable = true
+    buildFeatures {
+        viewBinding = true
     }
 }
 
@@ -45,6 +45,9 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+    implementation("com.google.android.material:material:1.1.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
