@@ -38,4 +38,7 @@ class AppStart : AppCompatActivity() {
         }
         return super.onTouchEvent(event)
     }
+
+    
+
 }
