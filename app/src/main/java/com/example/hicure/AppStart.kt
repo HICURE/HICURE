@@ -39,6 +39,10 @@ class AppStart : AppCompatActivity() {
         return super.onTouchEvent(event)
     }
 
-    
+    // If id is not checked, go to the check-id-activity
+
+
+
+    // If id is checked, go to the main-activity
 
 }
