@@ -66,13 +66,14 @@
         <android.widget.Button
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
+            android:layout_gravity=""
             android:layout_marginTop="12dp"
             android:fontFamily="@font/oxygen_bold"
             android:text="@string/alarm_box_yellow_time"
             android:textColor="@color/edge_blue"
             android:textSize="32sp"
             android:background="@drawable/alarm_box_yellow" />
+
         <android.widget.Button
             android:layout_width="match_parent"
             android:layout_height="match_parent"
