@@ -1,0 +1,29 @@
+name: Feature Report
+description: Request new Feature
+title: "[FEATURE] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        짧지만 확실하게...! 여러분들 화이팅!🫠
+  - type: textarea
+    id: new-feature
+    attributes:
+      label: 작업 사항💡
+      description: 어떤 기능을 추가할 것인지 적어주세요!
+      placeholder: ex ) 적절한 달력 라이브러리를 추가하여, 달력 화면 구현 
+    validations:
+      required: true
+  - type: textarea
+    id: todo
+    attributes:
+      label: Todo
+      description: 작업사항을 진행하기 위해 필요한 과정을 세부적으로 작성해주세요!
+      value: |
+        - [ ] todo1
+  - type: textarea
+    id: etc
+    attributes:
+      label: 기타사항
+      description: 추가로 기록이 필요한 경우 작성해주세요! ( 참고 사항 등 )
+      placeholder: 달력 라이브러리는 Android Ver 12 이상부터 가능하다.

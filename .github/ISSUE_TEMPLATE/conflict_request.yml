@@ -1,0 +1,29 @@
+name: Conflict Report
+description: Request your issue
+title: "[CONFLICT] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Merge, Pull 과정에서 발생한 충돌이나 수정 사항 등을 기록해주세요.
+  - type: textarea
+    id: conflict
+    attributes:
+      label: 충돌 및 수정
+      description: 개발 중 발생한 각종 오류들을 작성해주세요.
+      placeholder: A 파일 변경으로 인한 충돌
+    validations:
+      required: true
+  - type: textarea
+    id: todo
+    attributes:
+      label: Todo
+      description: 오류를 해결하기 위한 과정을 기록해주세요.
+      value: |
+        - [ ] todo1
+  - type: textarea
+    id: etc
+    attributes:
+      label: 기타사항
+      description: 추가로 기록이 필요한 경우 작성해주세요!
+      placeholder: ex ) 참고 사항을 기록해도 괜찮습니다.

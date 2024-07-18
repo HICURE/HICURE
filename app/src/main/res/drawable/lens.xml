@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/main_lens"
+        android:drawable="@drawable/title_lens"
+        android:gravity="center"
+        android:top="-118dp"/>
+
+    <item
+        android:drawable="@drawable/title_lens_handle_1"
+        android:gravity="center"
+        android:top="72dp" />
+
+    <item
+        android:drawable="@drawable/title_lens_handle_2"
+        android:gravity="center"
+        android:top="132dp" />
+
+    <item
+        android:drawable="@drawable/title_lens_handle_3"
+        android:gravity="center"
+        android:top="234dp" />
+
+    <item
+        android:drawable="@drawable/title_lens_handle_1"
+        android:gravity="center"
+        android:top="296dp" />
+
+</layer-list>
