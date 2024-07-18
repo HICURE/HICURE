@@ -9,11 +9,14 @@ import com.example.hicure.databinding.ActivityCheckIdBinding
 
 class CheckId : AppCompatActivity() {
 
-    val binding: ActivityCheckIdBinding by lazy { ActivityCheckIdBinding.inflate(layoutInflater) }
+    val binding : ActivityCheckIdBinding by lazy { ActivityCheckIdBinding.inflate(layoutInflater) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(binding.root)
+
+
+
+
     }
 }
