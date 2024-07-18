@@ -2,6 +2,8 @@ package com.example.hicure
 
 import android.app.ActionBar
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
@@ -51,6 +53,7 @@ class AppStart : AppCompatActivity() {
 
         val alertDialog = dialogBuilder.create()
         alertDialog.show()
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         val dialogTitle = dialogView.findViewById<TextView>(R.id.Title)
         val dialogContent = dialogView.findViewById<TextView>(R.id.content)
