@@ -1,68 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_width="match_parent"
     tools:context=".Survey">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:background="@color/white"
         android:elevation="8dp"
+        android:id="@+id/toolbar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
         android:outlineSpotShadowColor="@color/black"
         app:layout_constraintTop_toTopOf="parent">
 
         <FrameLayout
-            android:layout_width="wrap_content"
+            android:layout_gravity="center"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            android:layout_width="wrap_content">
 
             <ImageView
+                android:contentDescription="@string/description"
                 android:id="@+id/behind_title"
-                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="13dp"
-                android:contentDescription="@string/description"
+                android:layout_width="match_parent"
                 android:src="@drawable/behind_action_title" />
 
             <com.example.hicure.OutLineTextView
-                android:id="@+id/action_title"
                 style="@style/mainTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:id="@+id/action_title"
                 android:layout_gravity="center"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
                 android:text="@string/main_title" />
 
         </FrameLayout>
 
     </androidx.appcompat.widget.Toolbar>
 
-    <ImageView
-        android:id="@+id/back_blur_1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:alpha="0.15"
-        android:contentDescription="@string/description"
-        android:layout_marginBottom="-100dp"
-        android:scaleX="-1"
-        android:scaleY="-1"
-        android:src="@drawable/background_circle_yellow_blue"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
-    <ImageView
-        android:id="@+id/back_blur_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:alpha="0.15"
-        android:contentDescription="@string/description"
-        android:src="@drawable/background_circle_pink"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+    <include layout="@layout/background_circle" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
