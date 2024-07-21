@@ -34,7 +34,7 @@
                 android:id="@+id/action_title"
                 style="@style/mainTitle"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/main_title" />
 
@@ -42,22 +42,67 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <TextView
-        android:id="@+id/main_text"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/holder_fl_main"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintVertical_bias="0.085"
+        tools:layout_editor_absoluteX="16dp">
+
+        <TextView
+            android:id="@+id/Square1"
+            android:layout_width="320dp"
+            android:layout_height="160dp"
+            android:layout_gravity="center"
+            android:background="@drawable/rectangle_style" />
+
+        <View
+            android:layout_height="16dp"
+            android:layout_width="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            app:layout_constraintBottom_toTopOf="@id/holder_fl_main"
+            app:layout_constraintTop_toBottomOf="@id/Square1">
+
+            <android.widget.Button
+                android:id="@+id/new_measure"
+                android:layout_width="152dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_blue"
+                android:text="새로 측정하기"
+                android:textSize="20dp"
+                android:fontFamily="@font/oxygen_light"/>
+
+            <View
+                android:layout_width="25dp"
+                android:layout_height="wrap_content" />
+
+            <android.widget.Button
+                android:id="@+id/calender"
+                android:layout_width="152dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_yellow"
+                android:textSize="20dp"
+                android:fontFamily="@font/oxygen_light"
+                android:text="캘린더" />
+
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/holder_fl_main"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -69,6 +114,5 @@
             android:outlineSpotShadowColor="@color/black"
             app:menu="@navigation/bottom_nav" />
     </FrameLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

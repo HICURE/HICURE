@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
-    <color name="behind_title_blue">#AFC3F3</color>
     <color name="white">#FFFFFFFF</color>
     <color name="deep_blue">#5F8EFF</color>
     <color name="edge_blue">#395597</color>
@@ -12,4 +11,6 @@
     <color name="lens_handle_1">#63D0F7</color>
     <color name="lens_handle_2">#E0904A</color>
     <color name="behind_title_blue">#AFC3F3</color>
+    <color name="button_blue">#EAF2FF</color>
+    <color name="button_yellow">#FFFBE6</color>
 </resources>
