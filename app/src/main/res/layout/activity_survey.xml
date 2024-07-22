@@ -1,42 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:layout_height="match_parent"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".Survey">
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         android:elevation="8dp"
-        android:id="@+id/toolbar"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
         android:outlineSpotShadowColor="@color/black"
         app:layout_constraintTop_toTopOf="parent">
 
         <FrameLayout
-            android:layout_gravity="center"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content">
+            android:layout_gravity="center">
 
             <ImageView
-                android:contentDescription="@string/description"
                 android:id="@+id/behind_title"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="13dp"
-                android:layout_width="match_parent"
+                android:layout_marginBottom="13dp"
+                android:contentDescription="@string/description"
                 android:src="@drawable/behind_action_title" />
 
             <com.example.hicure.OutLineTextView
-                style="@style/mainTitle"
                 android:id="@+id/action_title"
-                android:layout_gravity="center"
-                android:layout_height="match_parent"
+                style="@style/mainTitle"
                 android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:text="@string/main_title" />
 
         </FrameLayout>
@@ -45,5 +46,57 @@
 
     <include layout="@layout/background_circle" />
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="40dp"
+            android:fontFamily="@font/roboto_regular"
+            android:orientation="vertical"
+            android:textSize="15sp">
+
+            <TextView
+                android:id="@+id/surveyTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="@font/roboto_bold_font"
+                android:text="@string/surveyTitle"
+                android:textSize="25sp" />
+
+            <include
+                android:id="@+id/q1"
+                layout="@layout/survey_yesno"/>
+
+            <include
+                android:id="@+id/q2"
+                layout="@layout/survey_yesno"/>
+
+            <include
+                android:id="@+id/q3"
+                layout="@layout/survey_yesno"/>
+
+            <include
+                android:id="@+id/q4"
+                layout="@layout/survey_yesno"/>
+
+            <android.widget.Button
+                android:id="@+id/checkButton"
+                android:layout_width="152dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/button_blue"
+                android:fontFamily="@font/oxygen_light"
+                android:text="@string/check"
+                android:textSize="20sp"/>
+        </LinearLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

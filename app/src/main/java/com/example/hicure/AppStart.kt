@@ -73,7 +73,7 @@ class AppStart : AppCompatActivity() {
         dialogButton.setOnClickListener{
             // need to add function for check id
             alertDialog.dismiss()
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, Survey::class.java)
             startActivity(intent)
             finish()
         }

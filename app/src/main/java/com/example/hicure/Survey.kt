@@ -1,5 +1,6 @@
 package com.example.hicure
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.ViewTreeObserver
 import androidx.activity.enableEdgeToEdge
@@ -18,8 +19,9 @@ class Survey : AppCompatActivity() {
 
         "오늘의 폐건강".also { binding.actionTitle.text = it }
 
-        binding.actionTitle.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-            override fun onGlobalLayout(){
+        binding.actionTitle.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
                 binding.actionTitle.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
                 val actionTextWidth = binding.actionTitle.width
@@ -34,5 +36,11 @@ class Survey : AppCompatActivity() {
 
             }
         })
+
+        binding.checkButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 }
