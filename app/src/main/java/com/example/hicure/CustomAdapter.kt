@@ -20,10 +20,6 @@ class CustomAdapter: RecyclerView.Adapter<Holder>() {
         return listData.size
     }
 
-    fun getQCount():Int{
-        return listData.size
-    }
-
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val memo = listData.get(position)
         holder.setMemo(memo)

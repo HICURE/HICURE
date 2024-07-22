@@ -42,18 +42,6 @@ class Survey : AppCompatActivity() {
             }
         })
 
-        fun loadData(): MutableList<QuestionMemo> {
-            val data: MutableList<QuestionMemo> = mutableListOf()
-
-            for (no in 1..100) {
-                val title = "이것이 안드로이드다 ${no}"
-
-                var qMemo = QuestionMemo(no, title)
-                data.add(qMemo)
-            }
-            return data
-        }
-
         binding.checkButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
