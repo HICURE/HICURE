@@ -103,7 +103,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="47dp"
+            android:layout_height="49dp"
             android:orientation="horizontal"
             android:gravity="center_horizontal"
             app:layout_constraintBottom_toTopOf="@id/holder_fl_main"
@@ -149,13 +149,94 @@
                 android:background="@drawable/rectangle_style"
                 android:layout_gravity="center" />
 
-            <EditText
-                android:id="@+id/editTextDate2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="date"
-                android:layout_gravity="center" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="10dp" />
+
+                <TextView
+                    android:id="@+id/textViewDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="날짜를 표시"
+                    android:textSize="18sp" />
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="10dp" />
+
+                <LinearLayout
+                    android:id="@+id/countL"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <android.widget.Button
+                        android:id="@+id/leftB"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:textSize="25dp"
+                        android:fontFamily="@font/oxygen_bold"
+                        android:textColor="@color/edge_blue"
+                        android:background="@android:color/transparent"
+                        android:text="«" />
+
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/count_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="23dp"
+                        android:textColor="@color/edge_blue"
+                        android:fontFamily="@font/oxygen_bold"
+                        android:text="1" />
+
+                    <TextView
+                        android:id="@+id/count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="23dp"
+                        android:textColor="@color/edge_blue"
+                        android:fontFamily="@font/oxygen_bold"
+                        android:text="회차" />
+
+                    <View
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content" />
+
+                    <android.widget.Button
+                        android:id="@+id/rightB"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:textColor="@color/edge_blue"
+                        android:fontFamily="@font/oxygen_bold"
+                        android:textSize="25dp"
+                        android:background="@android:color/transparent"
+                        android:text="»" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="10dp" />
+
+                <TextView
+                    android:id="@+id/textViewTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="시간을 표시" />
+            </LinearLayout>
+
+
         </FrameLayout>
 
 

@@ -8,7 +8,7 @@
         android:width="100dp"/>
     <stroke
         android:width="3dp"
-        android:color="@color/cardview_dark_background"
+        android:color="@color/edge_blue"
         android:dashWidth="10dp"/>
 
 </shape>
