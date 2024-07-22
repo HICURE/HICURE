@@ -4,7 +4,7 @@
     <string name="sub_title">맞춤형 헬스케어 진단 서비스</string>
     <string name="description">add drawable</string>
     <string name="touchScreen">화면을 터지해주세요</string>
-    <string name="tempSurveyQuestion">0. 임시 질문 문항</string>
+    <string name="tempSurveyQuestion">임시 질문 문항</string>
     <string name="yes">예</string>
     <string name="no">아니요</string>
     <string name="surveyTitle">설문 제목</string>
@@ -14,4 +14,5 @@
     <string name="temporary_text">글을 입력해주세요.</string>
     <string name="button">버튼 text</string>
     <string name="surveySubTitle">n일차 월/일</string>
+    <string name="qNo">no.</string>
 </resources>

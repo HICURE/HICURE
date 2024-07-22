@@ -2,11 +2,9 @@ package com.example.hicure
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.marginBottom
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.hicure.databinding.ActivitySurveyBinding
 
 class Survey : AppCompatActivity() {
@@ -16,6 +14,13 @@ class Survey : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        val data: MutableList<QuestionMemo> = loadData()
+        var adapter = CustomAdapter()
+        adapter.listData = data
+        binding.questionView.adapter = adapter
+
+        binding.questionView.layoutManager = LinearLayoutManager(this)
 
         "오늘의 폐건강".also { binding.actionTitle.text = it }
 
@@ -37,6 +42,18 @@ class Survey : AppCompatActivity() {
             }
         })
 
+        fun loadData(): MutableList<QuestionMemo> {
+            val data: MutableList<QuestionMemo> = mutableListOf()
+
+            for (no in 1..100) {
+                val title = "이것이 안드로이드다 ${no}"
+
+                var qMemo = QuestionMemo(no, title)
+                data.add(qMemo)
+            }
+            return data
+        }
+
         binding.checkButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
@@ -44,15 +61,21 @@ class Survey : AppCompatActivity() {
         }
 
         binding.surveyTitle.text = "만족도조사"
-        binding.q1.questionText.text = "1. 기기가 제대로 작동하였나요?"
-        binding.q2.questionText.text = "2. 기기 사용에 어려움은 없었나요?"
-        binding.q5.text = "3. 하루 중 이상활동은 없었나요?"
+    }
 
-        if (binding.surveyTitle.text == "진단평가") {
+    private fun loadData(): MutableList<QuestionMemo> {
+        val data: MutableList<QuestionMemo> = mutableListOf()
 
-            binding.subTitle.visibility = View.GONE
-            binding.line.visibility = View.GONE
-            binding.underAppTItle.visibility = View.GONE
+        val surveyQuestion = listOf(
+            "기기가 제대로 작동하였나요?",
+            "기기 사용에 어려움은 없었나요?"
+        )
+
+        surveyQuestion.forEachIndexed { index, title ->
+            val no = index + 1
+            val memo = QuestionMemo(no, title)
+            data.add(memo)
         }
+        return data;
     }
 }
