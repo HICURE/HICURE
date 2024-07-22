@@ -50,11 +50,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="40dp"
             android:fontFamily="@font/roboto_regular"
             android:orientation="vertical"
@@ -68,33 +69,58 @@
                 android:layout_marginBottom="20dp"
                 android:fontFamily="@font/roboto_bold_font"
                 android:text="@string/surveyTitle"
+                android:textColor="@color/black"
                 android:textSize="25sp" />
 
             <include
                 android:id="@+id/q1"
-                layout="@layout/survey_yesno"/>
+                layout="@layout/survey_yesno" />
 
             <include
                 android:id="@+id/q2"
-                layout="@layout/survey_yesno"/>
+                layout="@layout/survey_yesno" />
 
             <include
                 android:id="@+id/q3"
-                layout="@layout/survey_yesno"/>
+                layout="@layout/survey_yesno" />
 
             <include
                 android:id="@+id/q4"
-                layout="@layout/survey_yesno"/>
+                layout="@layout/survey_yesno" />
+
+            <TextView
+                android:id="@+id/q5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tempSurveyQuestion"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginVertical="15dp"
+                android:background="@drawable/edit_text_frame"
+                android:gravity="center"
+                android:hint="@string/temporary_text"
+                android:inputType="text"
+                android:textColor="@color/black"
+                android:textColorHint="@color/temporary_text"
+                android:textSize="14sp" />
 
             <android.widget.Button
                 android:id="@+id/checkButton"
                 android:layout_width="152dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="20dp"
                 android:background="@drawable/button_blue"
                 android:fontFamily="@font/oxygen_light"
                 android:text="@string/check"
-                android:textSize="20sp"/>
+                android:textColor="@color/black"
+                android:textSize="20sp" />
         </LinearLayout>
 
     </ScrollView>

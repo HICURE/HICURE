@@ -43,9 +43,11 @@ class Survey : AppCompatActivity() {
             finish()
         }
 
+        binding.surveyTitle.text="진단평가"
         binding.q1.questionText.text="1. 반복적으로 쌕쌕거리는 숨소리(천명음)"
         binding.q2.questionText.text="2. 호흡 곤란, 기침"
         binding.q3.questionText.text="3. 밤이나 새벽에 악화되는 증상"
         binding.q4.questionText.text="4. 운동 후 심해지는 천명이나 기침"
+        binding.q5.text="하루 중 이상활동은 없었나요?"
     }
 }
