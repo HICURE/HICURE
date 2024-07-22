@@ -9,5 +9,6 @@
         <enum name="blue" value="0"/>
         <enum name="yellow" value="1"/>
         <enum name="pink" value="2"/>
+        <enum name="grey" value="3"/>
     </attr>
 </resources>

@@ -7,4 +7,6 @@
         app:alarmBoxStyle="yellow"/>
     <item android:color="@color/switch_track_color_on_pink"
         app:alarmBoxStyle="pink"/>
+    <item android:color="@color/switch_track_color_off"
+        app:alarmBoxStyle="grey"/>
 </selector>

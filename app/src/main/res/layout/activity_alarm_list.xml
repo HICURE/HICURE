@@ -7,39 +7,39 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".AlarmList">
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:elevation="8dp"
-        android:outlineSpotShadowColor="@color/black"
-        app:layout_constraintTop_toTopOf="parent">
+<!--    <androidx.appcompat.widget.Toolbar-->
+<!--        android:id="@+id/toolbar"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@color/white"-->
+<!--        android:elevation="8dp"-->
+<!--        android:outlineSpotShadowColor="@color/black"-->
+<!--        app:layout_constraintTop_toTopOf="parent">-->
 
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center">
+<!--        <FrameLayout-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center">-->
 
-            <ImageView
-                android:id="@+id/behind_title"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="13dp"
-                android:contentDescription="@string/description"
-                android:src="@drawable/behind_action_title" />
+<!--            <ImageView-->
+<!--                android:id="@+id/behind_title"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginTop="13dp"-->
+<!--                android:contentDescription="@string/description"-->
+<!--                android:src="@drawable/behind_action_title" />-->
 
-            <com.example.hicure.OutLineTextView
-                android:id="@+id/action_title"
-                style="@style/mainTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:text="@string/main_title" />
+<!--            <com.example.hicure.OutLineTextView-->
+<!--                android:id="@+id/action_title"-->
+<!--                style="@style/mainTitle"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:text="@string/main_title" />-->
 
-        </FrameLayout>
+<!--        </FrameLayout>-->
 
-    </androidx.appcompat.widget.Toolbar>
+<!--    </androidx.appcompat.widget.Toolbar>-->
 
 <!--        <com.example.hicure.OutLineTextView-->
 <!--            android:id="@+id/custom_alarm_text"-->
@@ -123,7 +123,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
-                    android:checked="true"
+                    android:checked="false"
                     android:thumb="@drawable/alarm_switch_thumb"
                     android:track="@drawable/alarm_switch_track"
                     app:layout_constraintBottom_toBottomOf="parent"
