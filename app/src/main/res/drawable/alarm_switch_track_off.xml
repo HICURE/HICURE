@@ -4,6 +4,6 @@
     <corners android:radius="200dp"/>
     <size
         android:width="45dp"
-        android:height="28dp"/>
+        android:height="29.25dp"/>
     <solid android:color="@color/switch_track_color_off"/>
 </shape>
