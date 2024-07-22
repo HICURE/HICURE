@@ -13,4 +13,5 @@
     <string name="id_help">식별코드는 안내지에 기입되어 있습니다.</string>
     <string name="temporary_text">글을 입력해주세요.</string>
     <string name="button">버튼 text</string>
+    <string name="surveySubTitle">n일차 월/일</string>
 </resources>

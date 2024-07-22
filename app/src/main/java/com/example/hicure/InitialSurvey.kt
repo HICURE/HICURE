@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.marginBottom
 import com.example.hicure.databinding.ActivitySurveyBinding
 
-class Survey : AppCompatActivity() {
+class InitialSurvey : AppCompatActivity() {
 
     val binding: ActivitySurveyBinding by lazy { ActivitySurveyBinding.inflate(layoutInflater) }
 
@@ -43,16 +43,18 @@ class Survey : AppCompatActivity() {
             finish()
         }
 
-        binding.surveyTitle.text = "만족도조사"
-        binding.q1.questionText.text = "1. 기기가 제대로 작동하였나요?"
-        binding.q2.questionText.text = "2. 기기 사용에 어려움은 없었나요?"
-        binding.q5.text = "3. 하루 중 이상활동은 없었나요?"
+        binding.surveyTitle.text = "진단평가"
+        binding.q1.questionText.text = "1. 반복적으로 쌕쌕거리는 숨소리(천명음)"
+        binding.q2.questionText.text = "2. 호흡 곤란, 기침"
+        binding.q3.questionText.text = "3. 밤이나 새벽에 악화되는 증상"
+        binding.q4.questionText.text = "4. 운동 후 심해지는 천명이나 기침"
+        binding.q5.text = "하루 중 이상활동은 없었나요?"
 
         if (binding.surveyTitle.text == "진단평가") {
-
             binding.subTitle.visibility = View.GONE
             binding.line.visibility = View.GONE
             binding.underAppTItle.visibility = View.GONE
         }
+
     }
 }

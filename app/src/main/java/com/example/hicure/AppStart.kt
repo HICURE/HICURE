@@ -1,20 +1,15 @@
 package com.example.hicure
 
-import android.app.ActionBar
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.widget.Button
 import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.hicure.databinding.ActivityAppStartBinding
 
 class AppStart : AppCompatActivity() {
@@ -73,7 +68,7 @@ class AppStart : AppCompatActivity() {
         dialogButton.setOnClickListener{
             // need to add function for check id
             alertDialog.dismiss()
-            val intent = Intent(this, Survey::class.java)
+            val intent = Intent(this, InitialSurvey::class.java)
             startActivity(intent)
             finish()
         }
