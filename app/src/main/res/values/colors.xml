@@ -15,8 +15,8 @@
     <color name="alarm_box_stroke_blue">#B5C6E3</color>
     <color name="alarm_box_stroke_yellow">#EDDE94</color>
     <color name="alarm_box_stroke_pink">#E8B9D0</color>
-    <color name="switch_off_grey">#D4D6DD</color>
-    <color name="switch_track_color">#B5C6E3</color>
+    <color name="switch_track_color_off">#D4D6DD</color>
+    <color name="switch_track_color_on">#B5C6E3</color>
     <color name="switch_thumb_color">#FFFFFF</color>
 
 </resources>
