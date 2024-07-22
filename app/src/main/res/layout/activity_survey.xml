@@ -44,7 +44,8 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <include layout="@layout/background_circle" />
+    <include layout="@layout/background_circle"
+        android:id="@+id/backCircle"/>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

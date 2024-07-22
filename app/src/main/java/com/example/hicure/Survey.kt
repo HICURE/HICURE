@@ -2,10 +2,16 @@ package com.example.hicure
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.view.ViewTreeObserver
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.hicure.databinding.ActivitySurveyBinding
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.chrono.Chronology
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 class Survey : AppCompatActivity() {
 
@@ -22,7 +28,7 @@ class Survey : AppCompatActivity() {
 
         binding.questionView.layoutManager = LinearLayoutManager(this)
 
-        "오늘의 폐건강".also { binding.actionTitle.text = it }
+        "만족도조사".also { binding.actionTitle.text = it }
 
         binding.actionTitle.viewTreeObserver.addOnGlobalLayoutListener(object :
             ViewTreeObserver.OnGlobalLayoutListener {
@@ -48,7 +54,15 @@ class Survey : AppCompatActivity() {
             finish()
         }
 
-        binding.surveyTitle.text = "만족도조사"
+        val referenceDate = LocalDate.of(2024,7,5)
+        if (binding.actionTitle.text=="만족도조사"){
+            val currentDate = LocalDate.now()
+            val n = ChronoUnit.DAYS.between(referenceDate, currentDate).toInt()
+            val formattedDate = currentDate.format(DateTimeFormatter.ofPattern("MM/dd"))
+            binding.subTitle.text = "${n}일차  $formattedDate"
+            binding.surveyTitle.text="만족도조사"
+            binding.backCircle.root.visibility = View.GONE
+        }
     }
 
     private fun loadData(): MutableList<QuestionMemo> {

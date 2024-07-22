@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.marginBottom
+import java.time.LocalDate
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.hicure.databinding.ActivitySurveyBinding
+import java.time.format.DateTimeFormatter
 
 class InitialSurvey : AppCompatActivity() {
 
@@ -51,10 +53,11 @@ class InitialSurvey : AppCompatActivity() {
             finish()
         }
 
-        binding.surveyTitle.text = "진단평가"
 
-        if (binding.surveyTitle.text == "진단평가") {
-            binding.subTitle.visibility = View.GONE
+        if (binding.actionTitle.text == "오늘의 폐건강") {
+            binding.surveyTitle.text = "진단평가"
+            val referenceDate = LocalDate.now()
+            binding.subTitle.text = referenceDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
             binding.line.visibility = View.GONE
             binding.underAppTItle.visibility = View.GONE
         }
