@@ -59,7 +59,7 @@ class AppStart : AppCompatActivity() {
         val dialogContent = dialogView.findViewById<TextView>(R.id.content)
         val dialogEditText = dialogView.findViewById<TextView>(R.id.edit_text)
         val dialogExit = dialogView.findViewById<Button>(R.id.exit_button)
-        val dialogButton = dialogView.findViewById<Button>(R.id.check_button)
+        val dialogButton = dialogView.findViewById<Button>(R.id.checkButton)
 
         dialogTitle.text = "어플 사용 전 확인"
         dialogEditText.hint = "식별코드를 입력해주세요."
