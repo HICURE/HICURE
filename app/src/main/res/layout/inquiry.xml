@@ -35,7 +35,7 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="60dp"
             android:background="@drawable/inquiry_button"
             android:fontFamily="@font/roboto_regular"
             android:text="문의하기"
