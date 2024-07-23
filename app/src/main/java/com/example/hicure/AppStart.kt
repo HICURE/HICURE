@@ -1,20 +1,15 @@
 package com.example.hicure
 
-import android.app.ActionBar
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.widget.Button
 import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.hicure.databinding.ActivityAppStartBinding
 
 class AppStart : AppCompatActivity() {
@@ -59,7 +54,7 @@ class AppStart : AppCompatActivity() {
         val dialogContent = dialogView.findViewById<TextView>(R.id.content)
         val dialogEditText = dialogView.findViewById<TextView>(R.id.edit_text)
         val dialogExit = dialogView.findViewById<Button>(R.id.exit_button)
-        val dialogButton = dialogView.findViewById<Button>(R.id.check_button)
+        val dialogButton = dialogView.findViewById<Button>(R.id.checkButton)
 
         dialogTitle.text = "어플 사용 전 확인"
         dialogEditText.hint = "식별코드를 입력해주세요."
@@ -73,7 +68,7 @@ class AppStart : AppCompatActivity() {
         dialogButton.setOnClickListener{
             // need to add function for check id
             alertDialog.dismiss()
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, InitialSurvey::class.java)
             startActivity(intent)
             finish()
         }
