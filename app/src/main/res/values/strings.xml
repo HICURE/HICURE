@@ -15,4 +15,6 @@
     <string name="button">버튼 text</string>
     <string name="surveySubTitle">n일차 월/일</string>
     <string name="qNo">no.</string>
+    <string name="userGender">유저 성별</string>
+    <string name="userAge">유저 나이</string>
 </resources>
