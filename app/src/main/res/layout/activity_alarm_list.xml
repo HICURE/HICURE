@@ -52,13 +52,14 @@
             android:layout_marginTop="22dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="10dp">
+            app:cardCornerRadius="12dp">
+<!--            app:cardElevation="10dp"-->
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/alarmBoxLayoutBlue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:padding="10dp"
                 android:background="@drawable/alarm_box_blue"
                 app:alarmBoxStyle="blue">
 
@@ -120,13 +121,12 @@
             android:layout_marginTop="12dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="10dp">
+            app:cardCornerRadius="12dp">
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/alarmBoxLayoutYellow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:padding="10dp"
                 android:background="@drawable/alarm_box_yellow"
                 app:alarmBoxStyle="yellow">
 
@@ -186,15 +186,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="10dp">
+            app:cardCornerRadius="12dp">
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/alarmBoxLayoutPink"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:padding="10dp"
                 android:background="@drawable/alarm_box_pink"
                 app:alarmBoxStyle="pink">
 
