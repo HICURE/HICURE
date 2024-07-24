@@ -12,16 +12,25 @@ import androidx.core.view.WindowInsetsCompat
 
 
 class AlarmList : AppCompatActivity() {
-    private lateinit var alarmBoxLayout: ConstraintLayout
-    private lateinit var alarmSwitch: Switch
+    private lateinit var alarmBoxLayoutBlue: ConstraintLayout
+    private lateinit var alarmBoxLayoutYellow: ConstraintLayout
+    private lateinit var alarmBoxLayoutPink: ConstraintLayout
+    private lateinit var alarmSwitchBlue: Switch
+    private lateinit var alarmSwitchYellow: Switch
+    private lateinit var alarmSwitchPink: Switch
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_alarm_list)
 
-        alarmBoxLayout = findViewById(R.id.alarmBoxLayout)
-        alarmSwitch = findViewById(R.id.alarmSwitch)
+        alarmBoxLayoutBlue = findViewById(R.id.alarmBoxLayoutBlue)
+        alarmBoxLayoutYellow = findViewById(R.id.alarmBoxLayoutYellow)
+        alarmBoxLayoutPink = findViewById(R.id.alarmBoxLayoutPink)
+        alarmSwitchBlue = findViewById(R.id.alarmSwitchBlue)
+        alarmSwitchYellow = findViewById(R.id.alarmSwitchYellow)
+        alarmSwitchPink = findViewById(R.id.alarmSwitchPink)
+
 
         // 초기 스타일 설정
         setAlarmBoxStyle("grey")
@@ -36,19 +45,19 @@ class AlarmList : AppCompatActivity() {
     private fun setAlarmBoxStyle(style: String) {
         when (style) {
             "blue" -> {
-                alarmBoxLayout.setBackgroundResource(R.drawable.alarm_box_blue)
-                alarmBoxLayout.setTag(R.attr.alarmBoxStyle, 0)
-                alarmSwitch.trackTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.switch_track_color_on_blue))
+                alarmBoxLayoutBlue.setBackgroundResource(R.drawable.alarm_box_blue)
+                alarmBoxLayoutBlue.setTag(R.attr.alarmBoxStyle, 0)
+                alarmSwitchBlue.trackDrawable =ContextCompat.getDrawable(this, R.drawable.alarm_switch_track_on_blue)
             }
             "yellow" -> {
-                alarmBoxLayout.setBackgroundResource(R.drawable.alarm_box_yellow)
-                alarmBoxLayout.setTag(R.attr.alarmBoxStyle, 1)
-                alarmSwitch.trackTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.switch_track_color_on_yellow))
+                alarmBoxLayoutYellow.setBackgroundResource(R.drawable.alarm_box_yellow)
+                alarmBoxLayoutYellow.setTag(R.attr.alarmBoxStyle, 1)
+                alarmSwitchYellow.trackDrawable =ContextCompat.getDrawable(this, R.drawable.alarm_switch_track_on_yellow)
             }
             "pink" -> {
-                alarmBoxLayout.setBackgroundResource(R.drawable.alarm_box_pink)
-                alarmBoxLayout.setTag(R.attr.alarmBoxStyle, 2)
-                alarmSwitch.trackTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.switch_track_color_on_pink))
+                alarmBoxLayoutPink.setBackgroundResource(R.drawable.alarm_box_pink)
+                alarmBoxLayoutPink.setTag(R.attr.alarmBoxStyle, 2)
+                alarmSwitchPink.trackDrawable =ContextCompat.getDrawable(this, R.drawable.alarm_switch_track_on_pink)
             }
         }
     }
