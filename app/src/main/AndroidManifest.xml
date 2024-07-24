@@ -16,10 +16,19 @@
             android:name=".AlarmList"
             android:exported="false" />
         <activity
+            android:name=".Survey"
+            android:exported="false" />
+        <activity
+            android:name=".CheckId"
+            android:exported="false" />
+        <activity
             android:name=".ServeInfo"
             android:exported="false" />
         <activity
             android:name=".AppStart"
+            android:exported="false" />
+        <activity
+            android:name=".Survey"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

@@ -17,6 +17,10 @@
     <color name="alarm_box_pink">#E8B9D0</color>
     <color name="switch_track_color_off">#D4D6DD</color>
     <color name="switch_thumb_color">#FFFFFF</color>
-    <color name="behind_title_blue">#AFC3F3</color>>
-
+    <color name="lens_handle_1">#63D0F7</color>
+    <color name="lens_handle_2">#E0904A</color>
+    <color name="behind_title_blue">#AFC3F3</color>
+    <color name="button_blue">#EAF2FF</color>
+    <color name="temporary_text">#676767</color>
+    <color name="light_blue">#ADBEE6</color>
 </resources>
