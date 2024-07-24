@@ -9,5 +9,5 @@
         android:height="70dp" />
     <stroke
         android:width="1dp"
-        android:color="@color/alarm_box_stroke_blue"/>
+        android:color="@color/alarm_box_blue"/>
 </shape>

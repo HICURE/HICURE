@@ -5,5 +5,5 @@
     <size
         android:width="45dp"
         android:height="29.25dp"/>
-    <solid android:color="@color/switch_track_color_on_yellow"/>
+    <solid android:color="@color/alarm_box_yellow"/>
 </shape>
