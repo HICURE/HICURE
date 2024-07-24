@@ -1,36 +1,33 @@
 package com.example.hicure
 
-import android.content.res.ColorStateList
 import android.os.Bundle
-import android.widget.Switch
+import android.view.ViewTreeObserver
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.hicure.databinding.ActivityAlarmListBinding
 
 
 class AlarmList : AppCompatActivity() {
-    private lateinit var alarmBoxLayoutBlue: ConstraintLayout
-    private lateinit var alarmBoxLayoutYellow: ConstraintLayout
-    private lateinit var alarmBoxLayoutPink: ConstraintLayout
-    private lateinit var alarmSwitchBlue: Switch
-    private lateinit var alarmSwitchYellow: Switch
-    private lateinit var alarmSwitchPink: Switch
+//    private lateinit var alarmBoxLayoutBlue: ConstraintLayout
+//    private lateinit var alarmBoxLayoutYellow: ConstraintLayout
+//    private lateinit var alarmBoxLayoutPink: ConstraintLayout
+//    private lateinit var alarmSwitchBlue: Switch
+//    private lateinit var alarmSwitchYellow: Switch
+//    private lateinit var alarmSwitchPink: Switch
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_alarm_list)
 
-        alarmBoxLayoutBlue = findViewById(R.id.alarmBoxLayoutBlue)
-        alarmBoxLayoutYellow = findViewById(R.id.alarmBoxLayoutYellow)
-        alarmBoxLayoutPink = findViewById(R.id.alarmBoxLayoutPink)
-        alarmSwitchBlue = findViewById(R.id.alarmSwitchBlue)
-        alarmSwitchYellow = findViewById(R.id.alarmSwitchYellow)
-        alarmSwitchPink = findViewById(R.id.alarmSwitchPink)
-
+//        alarmBoxLayoutBlue = findViewById(R.id.alarmBoxLayoutBlue)
+//        alarmBoxLayoutYellow = findViewById(R.id.alarmBoxLayoutYellow)
+//        alarmBoxLayoutPink = findViewById(R.id.alarmBoxLayoutPink)
+//        alarmSwitchBlue = findViewById(R.id.alarmSwitchBlue)
+//        alarmSwitchYellow = findViewById(R.id.alarmSwitchYellow)
+//        alarmSwitchPink = findViewById(R.id.alarmSwitchPink)
 
 //        // 초기 스타일 설정
 //        setAlarmBoxStyle("grey")
@@ -41,6 +38,7 @@ class AlarmList : AppCompatActivity() {
             insets
         }
     }
+
 
 //    private fun setAlarmBoxStyle(style: String) {
 //        when (style) {
