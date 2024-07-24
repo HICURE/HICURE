@@ -16,8 +16,7 @@
         android:alpha="0.15"
         android:contentDescription="@string/description"
         android:src="@drawable/background_circle_yellow_blue"
-        app:layout_constraintBottom_toTopOf="@+id/sub_title"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintBottom_toTopOf="@+id/sub_title" />
 
     <ImageView
         android:id="@+id/back_blur_2"

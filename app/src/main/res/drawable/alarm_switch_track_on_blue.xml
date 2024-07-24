@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/alarm_switch_track_off"
+        android:state_checked="false"/>
+    <item android:state_checked="true">
+        android:drawable="@drawable/alarm_switch_track_off"
+        android:state_checked="false"/>
+        <shape android:shape="rectangle">
+            <corners android:radius="200dp"/>
+            <size
+                android:width="45dp"
+                android:height="29.25dp"/>
+            <solid android:color="@color/alarm_box_blue"/>
+        </shape>
+    </item>
+</selector>

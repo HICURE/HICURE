@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="20dp"
+    android:background="@drawable/pop_up_frame"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/exit_button"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_gravity="end|center"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/x"
+        android:contentDescription="@string/description" />
+
+    <TextView
+        android:id="@+id/Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="30dp"
+        android:fontFamily="@font/roboto_black"
+        android:text="@string/pop_up_title"
+        android:textColor="@color/black"
+        android:textSize="25sp" />
+
+    <EditText
+        android:id="@+id/edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:background="@drawable/edit_text_frame"
+        android:gravity="center"
+        android:hint="@string/temporary_text"
+        android:inputType="text"
+        android:textColor="@color/black"
+        android:textColorHint="@color/temporary_text"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:fontFamily="@font/roboto_black"
+        android:text="@string/id_help"
+        android:textColor="@color/edge_blue"
+        android:textSize="12sp" />
+
+    <android.widget.Button
+        android:textColor="@color/black"
+        android:id="@+id/checkButton"
+        android:layout_width="152dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/button_blue"
+        android:fontFamily="@font/oxygen_light"
+        android:text="@string/check"
+        android:textSize="20sp" />
+
+</LinearLayout>

@@ -2,8 +2,29 @@
     <string name="app_name">HICURE</string>
     <string name="main_title">Title</string>
     <string name="sub_title">맞춤형 헬스케어 진단 서비스</string>
+    <string name="title_alarm_list">알람</string>
+
+    <string name="alarm_box_blue_time">05:30</string>
+    <string name="alarm_box_yellow_time">12:30</string>
+    <string name="alarm_box_pink_time">06:30</string>
+    <string name="alarm_box_AM">AM</string>
+    <string name="alarm_box_PM">PM</string>
+    <string name="alarm_box_name_blue">측정 1회차</string>
+    <string name="alarm_box_name_yellow">측정 2회차</string>
+    <string name="alarm_box_name_pink">측정 3회차</string>
+  
     <string name="description">add drawable</string>
     <string name="touchScreen">화면을 터지해주세요</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tempSurveyQuestion">임시 질문 문항</string>
+    <string name="yes">예</string>
+    <string name="no">아니요</string>
+    <string name="surveyTitle">설문 제목</string>
+    <string name="check">확인</string>
+    <string name="pop_up_title">팝업 제목</string>
+    <string name="id_help">식별코드는 안내지에 기입되어 있습니다.</string>
+    <string name="temporary_text">글을 입력해주세요.</string>
+    <string name="button">버튼 text</string>
+    <string name="surveySubTitle">n일차 월/일</string>
+    <string name="qNo">no.</string>
 </resources>

@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-
+    <solid android:color="@color/title_background"/>
     <corners android:radius="30dp"/>
-    <solid android:color="@color/behind_title_blue"/>
     <size
-        android:height="22dp"/>
+        android:height="21.86dp"
+        android:width="53dp"/>
 </shape>
