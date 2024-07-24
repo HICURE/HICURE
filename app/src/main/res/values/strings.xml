@@ -2,6 +2,17 @@
     <string name="app_name">HICURE</string>
     <string name="main_title">Title</string>
     <string name="sub_title">맞춤형 헬스케어 진단 서비스</string>
+    <string name="title_alarm_list">알람</string>
+
+    <string name="alarm_box_blue_time">05:30</string>
+    <string name="alarm_box_yellow_time">12:30</string>
+    <string name="alarm_box_pink_time">06:30</string>
+    <string name="alarm_box_AM">AM</string>
+    <string name="alarm_box_PM">PM</string>
+    <string name="alarm_box_name_blue">측정 1회차</string>
+    <string name="alarm_box_name_yellow">측정 2회차</string>
+    <string name="alarm_box_name_pink">측정 3회차</string>
+  
     <string name="description">add drawable</string>
     <string name="touchScreen">화면을 터지해주세요</string>
     <string name="tempSurveyQuestion">임시 질문 문항</string>

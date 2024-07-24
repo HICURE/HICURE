@@ -4,4 +4,11 @@
         <attr name ="textStrokeWidth" format ="float"/>
         <attr name ="textStrokeColor" format ="color"/>
     </declare-styleable>
+
+    <attr name="alarmBoxStyle" format="enum">
+        <enum name="blue" value="0"/>
+        <enum name="yellow" value="1"/>
+        <enum name="pink" value="2"/>
+        <enum name="grey" value="3"/>
+    </attr>
 </resources>
