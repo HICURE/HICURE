@@ -28,7 +28,7 @@
             android:name=".AppStart"
             android:exported="false" />
         <activity
-            android:name=".Survey"
+            android:name=".InitialSurvey"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
