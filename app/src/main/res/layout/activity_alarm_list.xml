@@ -61,7 +61,6 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:background="@drawable/alarm_box_blue">
-                //app:alarmBoxStyle="blue">
 
                 <TextView
                     android:id="@+id/alarmLabelBlue"
@@ -128,7 +127,6 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:background="@drawable/alarm_box_yellow">
-                //app:alarmBoxStyle="yellow">
 
                 <TextView
                     android:id="@+id/alarmLabelYellow"
@@ -196,7 +194,6 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:background="@drawable/alarm_box_pink">
-                //app:alarmBoxStyle="pink">
 
                 <TextView
                     android:id="@+id/alarmLabelPink"
