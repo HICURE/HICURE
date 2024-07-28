@@ -1,12 +1,10 @@
 package com.example.hicure
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import java.io.FileInputStream
 import java.io.FileOutputStream
 
@@ -15,6 +13,12 @@ import android.widget.Button
 import android.widget.CalendarView
 import android.widget.EditText
 import android.widget.TextView
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import java.util.ArrayList
 
 class Calendar : AppCompatActivity() {
     var userID: String = "userID"
@@ -28,6 +32,9 @@ class Calendar : AppCompatActivity() {
     lateinit var diaryContent:TextView
     lateinit var title:TextView
     lateinit var contextEditText: EditText
+
+    lateinit var lineChart: LineChart
+    private val chartData = ArrayList<ChartData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -146,5 +153,39 @@ class Calendar : AppCompatActivity() {
             e.printStackTrace()
         }
     }
+    private fun setupLineChart() {
+        lineChart = findViewById(R.id.linechart)
 
+        // LineChart 데이터 초기화
+        chartData.clear()
+        addChartItem("1월", 7.9)
+        addChartItem("2월", 8.2)
+        addChartItem("3월", 8.3)
+        addChartItem("4월", 8.5)
+        addChartItem("5월", 7.3)
+
+        val entries = mutableListOf<Entry>()
+
+        for (item in chartData) {
+            entries.add(Entry(item.lableData.replace("[^\\d.]".toRegex(), "").toFloat(), item.lineData.toFloat()))
+        }
+
+        val lineDataSet = LineDataSet(entries, "")
+        lineDataSet.color = Color.BLUE // LineChart에서 Line Color 설정
+        lineDataSet.setCircleColor(Color.DKGRAY) // LineChart에서 Line Circle Color 설정
+        lineDataSet.setCircleHoleColor(Color.DKGRAY) // LineChart에서 Line Hole Circle Color 설정
+
+        val dataSets = ArrayList<ILineDataSet>()
+        dataSets.add(lineDataSet)
+
+        val data = LineData(dataSets)
+
+        lineChart.data = data
+        lineChart.description.isEnabled = false
+        lineChart.invalidate()
+    }
+    private fun addChartItem(labelItem: String, dataItem: Double) {
+        val item = ChartData(labelItem, dataItem)
+        chartData.add(item)
+    }
 }
