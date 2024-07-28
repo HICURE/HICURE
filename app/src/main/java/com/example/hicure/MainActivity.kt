@@ -1,5 +1,6 @@
 package com.example.hicure
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.TextView
@@ -9,6 +10,7 @@ import android.view.ViewTreeObserver
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import android.widget.Button
 
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
@@ -34,6 +36,9 @@ class MainActivity : AppCompatActivity() {
 
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -45,6 +50,18 @@ class MainActivity : AppCompatActivity() {
         textViewDate.text = currentDate
         val textViewTime: TextView = findViewById(R.id.textViewTime)
         textViewTime.text = currentTime
+
+        val button1 : Button = findViewById(R.id.new_measure)
+        button1.setOnClickListener {
+            val intent = Intent(this, NewMeasume::class.java)
+            startActivity(intent)
+        }
+        val button2: Button = findViewById(R.id.calender)
+        button2.setOnClickListener {
+            val intent = Intent(this, Calendar::class.java)
+            startActivity(intent)
+        }
+
 
         "원하는 타이틀 입력".also { binding.actionTitle.text = it }
 
@@ -128,7 +145,7 @@ class MainActivity : AppCompatActivity() {
 
         lineChart.data = data
         lineChart.description.isEnabled = false
-        lineChart.invalidate() // 차트를 새로고침합니다.
+        lineChart.invalidate()
     }
 
     private fun addChartItem(labelItem: String, dataItem: Double) {
