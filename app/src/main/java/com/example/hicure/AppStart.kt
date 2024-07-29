@@ -8,13 +8,15 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doAfterTextChanged
 import com.example.hicure.databinding.ActivityAppStartBinding
 
 class AppStart : AppCompatActivity() {
 
-    val binding: ActivityAppStartBinding by lazy {ActivityAppStartBinding.inflate(layoutInflater)}
+    val binding: ActivityAppStartBinding by lazy { ActivityAppStartBinding.inflate(layoutInflater) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +32,8 @@ class AppStart : AppCompatActivity() {
 
     // Touch Screen
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        when (event?.action){
-            MotionEvent.ACTION_DOWN ->{
+        when (event?.action) {
+            MotionEvent.ACTION_DOWN -> {
                 showCustomDialog()
             }
         }
@@ -40,7 +42,7 @@ class AppStart : AppCompatActivity() {
 
     // If id is not checked, go to the check-id-activity
 
-    private fun showCustomDialog(){
+    private fun showCustomDialog() {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.activity_check_id, null)
 
         val dialogBuilder = AlertDialog.Builder(this)
@@ -61,19 +63,24 @@ class AppStart : AppCompatActivity() {
         dialogContent.text = "식별코드는 안내지에 기입되어 있습니다!"
         dialogButton.text = "확인"
 
-        dialogExit.setOnClickListener{
+        dialogExit.setOnClickListener {
             alertDialog.dismiss()
         }
 
-        dialogButton.setOnClickListener{
+        dialogButton.setOnClickListener {
             // need to add function for check id
-            alertDialog.dismiss()
-            val intent = Intent(this, InitialSurvey::class.java)
-            startActivity(intent)
-            finish()
+            val idString = dialogEditText.text.toString().trim()
+            if (idString.isEmpty()) {
+                dialogContent.text = "식별코드가 입력되지 않았습니다."
+                dialogContent.setTextColor(Color.parseColor("#D1180B"))
+            } else {
+                val intent = Intent(this, InitialSurvey::class.java)
+                alertDialog.dismiss()
+                startActivity(intent)
+                finish()
+            }
         }
     }
-
-    // If id is checked, go to the main-activity
-
 }
+
+// If id is checked, go to the main-activity
