@@ -3,6 +3,7 @@
     <string name="main_title">Title</string>
     <string name="sub_title">맞춤형 헬스케어 진단 서비스</string>
     <string name="title_alarm_list">알람</string>
+    <string name="title_set_alarm">알람 설정</string>>
 
     <string name="alarm_box_blue_time">05:30</string>
     <string name="alarm_box_yellow_time">12:30</string>
