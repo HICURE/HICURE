@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -7,6 +8,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".AlarmList">
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -41,26 +43,30 @@
     </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:orientation="vertical"
-        tools:context=".AlarmList">
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toTopOf="@id/holder_fl_alarm"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/alarmBoxBlue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="22dp"
             android:layout_marginEnd="20dp"
             app:cardCornerRadius="12dp">
-<!--            app:cardElevation="10dp"-->
+            <!--            app:cardElevation="10dp"-->
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/alarmBoxLayoutBlue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:background="@drawable/alarm_box_blue">
+                android:background="@drawable/alarm_box_blue"
+                android:padding="10dp">
 
                 <TextView
                     android:id="@+id/alarmLabelBlue"
@@ -114,19 +120,22 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
+
         <androidx.cardview.widget.CardView
+            android:id="@+id/alarmBoxYellow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
             android:layout_marginEnd="20dp"
             app:cardCornerRadius="12dp">
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/alarmBoxLayoutYellow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:background="@drawable/alarm_box_yellow">
+                android:background="@drawable/alarm_box_yellow"
+                android:padding="10dp">
 
                 <TextView
                     android:id="@+id/alarmLabelYellow"
@@ -180,20 +189,23 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
+
         <androidx.cardview.widget.CardView
+            android:id="@+id/alarmBoxPink"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
             android:layout_marginEnd="20dp"
+            android:layout_marginBottom="12dp"
             app:cardCornerRadius="12dp">
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/alarmBoxLayoutPink"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:background="@drawable/alarm_box_pink">
+                android:background="@drawable/alarm_box_pink"
+                android:padding="10dp">
 
                 <TextView
                     android:id="@+id/alarmLabelPink"
@@ -248,4 +260,22 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
     </LinearLayout>
-</LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/holder_fl_alarm"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bn_alarm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:elevation="10dp"
+            android:outlineSpotShadowColor="@color/black"
+            app:menu="@navigation/bottom_nav"/>
+    </FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
