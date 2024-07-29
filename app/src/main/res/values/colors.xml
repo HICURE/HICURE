@@ -24,4 +24,5 @@
     <color name="button_yellow">#FFFBE6</color>
     <color name="temporary_text">#676767</color>
     <color name="light_blue">#ADBEE6</color>
+    <color name="grey">#CCCCD7</color>
 </resources>
