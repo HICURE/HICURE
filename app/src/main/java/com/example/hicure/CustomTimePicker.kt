@@ -3,12 +3,12 @@ package com.example.hicure
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.content.withStyledAttributes
 
 class CustomTimePicker @JvmOverloads constructor(
     context: Context,
@@ -18,7 +18,6 @@ class CustomTimePicker @JvmOverloads constructor(
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         textAlign = Paint.Align.CENTER
-        textSize = 45f
     }
 
     private val amPm = listOf("AM", "PM")
@@ -33,30 +32,24 @@ class CustomTimePicker @JvmOverloads constructor(
     private var scrollY = 0f
     private val scrollSpeedFactor = 0.5f
 
-    private val selectedTextSize = 150f
-    private val normalTextSize = 140f
-    private val amPmTextSize = 80f
+    private val selectedTextSize: Float
+    private val normalTextSize: Float
+    private val amPmTextSize: Float
 
-    // 간격 조정 변수
-    private val itemSpacing = 40f
-
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-
-        itemHeight = (height / 5f) + itemSpacing
-
-        val amPmWidth = width * 0.25f
-        val hourWidth = width * 0.25f
-        val minuteWidth = width * 0.25f
-
-        // Draw AM/PM (centered)
-        drawAmPmColumn(canvas, amPm, amPmWidth / 2, selectedAmPm)
-
-        // Draw hours (5 rows)
-        drawColumn(canvas, hours, amPmWidth + hourWidth / 2, selectedHour)
-
-        // Draw minutes (5 rows)
-        drawColumn(canvas, minutes, amPmWidth + hourWidth + minuteWidth / 2, selectedMinute)
+    init {
+        context.theme.obtainStyledAttributes(
+            attrs,
+            R.styleable.CustomTimePicker,
+            0, 0
+        ).apply {
+            try {
+                selectedTextSize = getDimension(R.styleable.CustomTimePicker_selectedTextSize, 50f)
+                normalTextSize = getDimension(R.styleable.CustomTimePicker_normalTextSize, 45f)
+                amPmTextSize = getDimension(R.styleable.CustomTimePicker_amPmTextSize, 25f)
+            } finally {
+                recycle()
+            }
+        }
     }
 
     private fun drawAmPmColumn(canvas: Canvas, items: List<String>, centerX: Float, selected: Int) {
@@ -71,6 +64,20 @@ class CustomTimePicker @JvmOverloads constructor(
             val offset = if (i == 0) -itemHeight else itemHeight
             canvas.drawText(items[i], centerX, y + offset, paint)
         }
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+
+        itemHeight = (height / 5f)
+
+        val amPmWidth = width * 0.25f
+        val hourWidth = width * 0.25f
+        val minuteWidth = width * 0.25f
+
+        drawAmPmColumn(canvas, amPm, amPmWidth / 2, selectedAmPm)
+        drawColumn(canvas, hours, amPmWidth + hourWidth / 2, selectedHour)
+        drawColumn(canvas, minutes, amPmWidth + hourWidth + minuteWidth / 2, selectedMinute)
     }
 
     private fun drawColumn(canvas: Canvas, items: List<String>, centerX: Float, selected: Int) {
@@ -99,16 +106,13 @@ class CustomTimePicker @JvmOverloads constructor(
                 }
                 when (column) {
                     0 -> {
-                        // AM/PM selection
                         selectedAmPm = if (event.y < height / 2) 0 else 1
                     }
                     1 -> {
-                        // Hours selection
                         scrollY += event.y * scrollSpeedFactor
                         selectedHour = ((selectedHour - (scrollY / itemHeight).toInt()) + hours.size) % hours.size
                     }
                     2 -> {
-                        // Minutes selection
                         scrollY += event.y * scrollSpeedFactor
                         selectedMinute = ((selectedMinute - (scrollY / itemHeight).toInt()) + minutes.size) % minutes.size
                     }
