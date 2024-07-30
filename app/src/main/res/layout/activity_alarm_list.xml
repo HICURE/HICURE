@@ -45,6 +45,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@color/white"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintBottom_toTopOf="@id/holder_fl_alarm"
