@@ -8,9 +8,8 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.content.withStyledAttributes
 
-class CustomTimePicker @JvmOverloads constructor(
+class CustomTimePickerdd @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -52,20 +51,6 @@ class CustomTimePicker @JvmOverloads constructor(
         }
     }
 
-    private fun drawAmPmColumn(canvas: Canvas, items: List<String>, centerX: Float, selected: Int) {
-        val y = height / 2f
-
-        for (i in 0..1) {
-            paint.color = if (i == selected) ContextCompat.getColor(context, R.color.edge_blue)
-            else ContextCompat.getColor(context, R.color.gray)
-            paint.typeface = ResourcesCompat.getFont(context, R.font.oxygen_bold)
-            paint.textSize = amPmTextSize
-
-            val offset = if (i == 0) -itemHeight else itemHeight
-            canvas.drawText(items[i], centerX, y + offset, paint)
-        }
-    }
-
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
@@ -73,11 +58,29 @@ class CustomTimePicker @JvmOverloads constructor(
 
         val amPmWidth = width * 0.25f
         val hourWidth = width * 0.25f
+        val colonWidth = width * 0.005f
         val minuteWidth = width * 0.25f
 
         drawAmPmColumn(canvas, amPm, amPmWidth / 2, selectedAmPm)
         drawColumn(canvas, hours, amPmWidth + hourWidth / 2, selectedHour)
+        drawColon(canvas, amPmWidth + hourWidth + colonWidth / 2)
         drawColumn(canvas, minutes, amPmWidth + hourWidth + minuteWidth / 2, selectedMinute)
+    }
+
+    private fun drawAmPmColumn(canvas: Canvas, items: List<String>, centerX: Float, selected: Int) {
+        val y = height / 2f
+
+        val offsetFactor = 0.02f
+
+        for (i in 0..1) {
+            paint.color = if (i == selected) ContextCompat.getColor(context, R.color.edge_blue)
+            else ContextCompat.getColor(context, R.color.gray)
+            paint.typeface = ResourcesCompat.getFont(context, R.font.oxygen_bold)
+            paint.textSize = amPmTextSize
+
+            val offset = if (i == 0) -itemHeight * offsetFactor else itemHeight
+            canvas.drawText(items[i], centerX, y + offset, paint)
+        }
     }
 
     private fun drawColumn(canvas: Canvas, items: List<String>, centerX: Float, selected: Int) {
@@ -92,6 +95,16 @@ class CustomTimePicker @JvmOverloads constructor(
 
             canvas.drawText(items[index], centerX, y + itemHeight / 2, paint)
         }
+    }
+
+    private fun drawColon(canvas: Canvas, centerX: Float) {
+        val y = height / 2f
+
+        paint.color = ContextCompat.getColor(context, R.color.edge_blue)
+        paint.typeface = ResourcesCompat.getFont(context, R.font.oxygen_light)
+        paint.textSize = selectedTextSize
+
+        canvas.drawText(":", centerX, y + itemHeight / 2, paint)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
