@@ -7,8 +7,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
-import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.hicure.databinding.ActivityAppStartBinding
@@ -24,11 +24,15 @@ class AppStart : AppCompatActivity() {
     val binding: ActivityAppStartBinding by lazy { ActivityAppStartBinding.inflate(layoutInflater) }
 
     val database = Firebase.database("https://hicure-d5c99-default-rtdb.firebaseio.com/")
-    val myRef = database.getReference("users")
+    val userRef = database.getReference("users")
+    private var isUserLoggedIn = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        loadUserFromPreferences()
 
         // Splash Screen
         /*Handler().postDelayed(Runnable {
@@ -40,10 +44,12 @@ class AppStart : AppCompatActivity() {
 
     // Touch Screen
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        when (event?.action) {
-            MotionEvent.ACTION_DOWN -> {
-                showCustomDialog()
-            }
+        if (!isUserLoggedIn) {
+            showCustomDialog()
+        } else {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
         }
         return super.onTouchEvent(event)
     }
@@ -53,7 +59,6 @@ class AppStart : AppCompatActivity() {
     private fun showCustomDialog() {
 
         val dialogBinding = CheckIdBinding.inflate(LayoutInflater.from(this))
-
         val dialogBuilder = AlertDialog.Builder(this)
             .setView(dialogBinding.root)
 
@@ -89,8 +94,8 @@ class AppStart : AppCompatActivity() {
     }
 
     private fun addItem(user: User) {
-        val keyId = myRef.push().key!!
-        myRef.child(user.id).setValue(user)
+        val keyId = userRef.push().key!!
+        userRef.child(user.id).setValue(user)
             .addOnSuccessListener {
                 Log.d("AppStart", "Add Success")
             }
@@ -100,21 +105,72 @@ class AppStart : AppCompatActivity() {
     }
 
     private fun checkUserId(id: String, contentTextView: TextView, alertDialog: AlertDialog) {
-        myRef.child(id).addListenerForSingleValueEvent(object : ValueEventListener {
+        userRef.child(id).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    val intent = Intent(this@AppStart, InitialSurvey::class.java)
-                    alertDialog.dismiss()
-                    startActivity(intent)
-                    finish()
+                    val user = snapshot.getValue(User::class.java)
+                    user?.let {
+                        saveUserToPreferences(it)
+                        val intent = Intent(this@AppStart, InitialSurvey::class.java)
+                        alertDialog.dismiss()
+                        startActivity(intent)
+                        finish()
+                    }
                 } else {
                     contentTextView.text = "올바르지 않은 식별코드입니다."
                     contentTextView.setTextColor(Color.parseColor("#D1180B"))
                 }
             }
+
             override fun onCancelled(error: DatabaseError) {
                 Log.e("AppStart", "Database Error", error.toException())
             }
         })
+    }
+
+    private fun saveUserToPreferences(user: User) {
+        val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString("user_id", user.id)
+        editor.putString("user_name", user.name)
+        editor.putInt("user_age", user.age)
+        editor.putString("user_gender", user.gender)
+        editor.apply()
+    }
+
+    private fun loadUserFromPreferences() {
+        val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        val userId = sharedPreferences.getString("user_id", null)
+
+        if (userId != null) {
+            // Check if the user ID exists in Firebase
+            userRef.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        val user = snapshot.getValue(User::class.java)
+                        user?.let {
+                            // Update shared preferences with user data from Firebase
+                            val editor = sharedPreferences.edit()
+                            editor.putString("user_id", it.id)
+                            editor.putString("user_name", it.name)
+                            editor.putInt("user_age", it.age)
+                            editor.putString("user_gender", it.gender)
+                            editor.apply()
+
+                            isUserLoggedIn = true
+                        }
+                    } else {
+                        // User ID does not exist in Firebase
+                        isUserLoggedIn = false
+                    }
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("AppStart", "Database Error", error.toException())
+                    isUserLoggedIn = false
+                }
+            })
+        } else {
+            isUserLoggedIn = false
+        }
     }
 }

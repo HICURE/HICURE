@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import android.widget.Button
+import android.widget.Toast
 
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
@@ -37,8 +38,6 @@ class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -62,8 +61,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-
-        "원하는 타이틀 입력".also { binding.actionTitle.text = it }
+        "오늘의 폐건강".also { binding.actionTitle.text = it }
 
         binding.actionTitle.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
@@ -80,6 +78,11 @@ class MainActivity : AppCompatActivity() {
 
         setupPieChart()
         setupLineChart()
+
+        val userName = getUserNameFromPreferences()
+        userName?.let {
+            "$it".also{binding.username.text= it }
+        }
     }
 
     private fun getCurrentDate(): String {
@@ -151,5 +154,10 @@ class MainActivity : AppCompatActivity() {
     private fun addChartItem(labelItem: String, dataItem: Double) {
         val item = ChartData(labelItem, dataItem)
         chartData.add(item)
+    }
+
+    private fun getUserNameFromPreferences(): String? {
+        val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        return sharedPreferences.getString("user_name", null)
     }
 }

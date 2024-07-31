@@ -31,13 +31,13 @@
             android:name=".ServeInfo"
             android:exported="false" />
         <activity
-            android:name=".AppStart"
+            android:name=".MainActivity"
             android:exported="false" />
         <activity
             android:name=".InitialSurvey"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".AppStart"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
