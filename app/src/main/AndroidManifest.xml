@@ -28,9 +28,6 @@
             android:name=".Survey"
             android:exported="false" />
         <activity
-            android:name=".CheckId"
-            android:exported="false" />
-        <activity
             android:name=".ServeInfo"
             android:exported="false" />
         <activity
