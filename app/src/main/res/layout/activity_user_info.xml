@@ -60,7 +60,7 @@
 
             <include layout="@layout/inquiry" />
 
-            <include layout="@layout/"/>
+            <include layout="@layout/user_survey"/>
 
             <View
                 android:id="@+id/line"
