@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.hicure.databinding.ActivityAppStartBinding
@@ -23,41 +22,34 @@ class AppStart : AppCompatActivity() {
 
     val binding: ActivityAppStartBinding by lazy { ActivityAppStartBinding.inflate(layoutInflater) }
 
+    // load firebase realtime database
     val database = Firebase.database("https://hicure-d5c99-default-rtdb.firebaseio.com/")
     val userRef = database.getReference("users")
     private var isUserLoggedIn = false
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        // User data load
         loadUserFromPreferences()
-
-        // Splash Screen
-        /*Handler().postDelayed(Runnable {
-            val i = Intent(this@AppStart,MainActivity::class.java)
-            startActivity(i)
-            finish()
-        }, 5000)*/
     }
 
     // Touch Screen
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if (!isUserLoggedIn) {
-            showCustomDialog()
-        } else {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+        if (isUserLoggedIn) {
+            startActivity(Intent(this, MainActivity::class.java))
             finish()
+        } else {
+            showCustomDialog()
         }
         return super.onTouchEvent(event)
     }
 
     // If id is not checked, go to the check-id-activity
-
     private fun showCustomDialog() {
 
+        // load check id xml ( binding )
         val dialogBinding = CheckIdBinding.inflate(LayoutInflater.from(this))
         val dialogBuilder = AlertDialog.Builder(this)
             .setView(dialogBinding.root)
@@ -75,6 +67,7 @@ class AppStart : AppCompatActivity() {
             alertDialog.dismiss()
         }
 
+        // check id
         dialogBinding.checkButton.setOnClickListener {
             // need to add function for check id
             val idString = dialogBinding.editText.text.toString().trim()
@@ -84,24 +77,25 @@ class AppStart : AppCompatActivity() {
             } else {
                 if (idString.startsWith("add")) {
                     val newId = idString.removePrefix("add").trim()
-                    val user = User(newId, "", 0, "")
-                    addItem(user)
+                    val user = User().apply {
+                        name = "New User"
+                        age = 0
+                        gender = "Unknown"
+                        survey = false
+                    }
+                    userRef.child(newId).setValue(user)
+                        .addOnSuccessListener {
+                            Log.d("AppStart", "Add Success")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.d("AppStart", "Add Failure", e)
+                        }
                 } else {
+                    // check User
                     checkUserId(idString, dialogBinding.content, alertDialog)
                 }
             }
         }
-    }
-
-    private fun addItem(user: User) {
-        val keyId = userRef.push().key!!
-        userRef.child(user.id).setValue(user)
-            .addOnSuccessListener {
-                Log.d("AppStart", "Add Success")
-            }
-            .addOnFailureListener { e ->
-                Log.d("AppStart", "Add Failure")
-            }
     }
 
     private fun checkUserId(id: String, contentTextView: TextView, alertDialog: AlertDialog) {
@@ -110,7 +104,7 @@ class AppStart : AppCompatActivity() {
                 if (snapshot.exists()) {
                     val user = snapshot.getValue(User::class.java)
                     user?.let {
-                        saveUserToPreferences(it)
+                        saveUserToPreferences(it, id)
                         val intent = Intent(this@AppStart, InitialSurvey::class.java)
                         alertDialog.dismiss()
                         startActivity(intent)
@@ -122,20 +116,23 @@ class AppStart : AppCompatActivity() {
                 }
             }
 
+            // database error log
             override fun onCancelled(error: DatabaseError) {
                 Log.e("AppStart", "Database Error", error.toException())
             }
         })
     }
 
-    private fun saveUserToPreferences(user: User) {
+    private fun saveUserToPreferences(user: User, id: String) {
         val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putString("user_id", user.id)
-        editor.putString("user_name", user.name)
-        editor.putInt("user_age", user.age)
-        editor.putString("user_gender", user.gender)
-        editor.apply()
+        with(sharedPreferences.edit()) {
+            putString("user_id", id)
+            putString("user_name", user.name)
+            putInt("user_age", user.age)
+            putString("user_gender", user.gender)
+            putBoolean("user_survey", user.survey)
+            apply()
+        }
     }
 
     private fun loadUserFromPreferences() {
@@ -151,19 +148,23 @@ class AppStart : AppCompatActivity() {
                         user?.let {
                             // Update shared preferences with user data from Firebase
                             val editor = sharedPreferences.edit()
-                            editor.putString("user_id", it.id)
                             editor.putString("user_name", it.name)
                             editor.putInt("user_age", it.age)
                             editor.putString("user_gender", it.gender)
+                            editor.putBoolean("user_survey", it.survey)
                             editor.apply()
 
-                            isUserLoggedIn = true
+                            if (it.survey) {
+                                isUserLoggedIn = true
+                            }
                         }
                     } else {
                         // User ID does not exist in Firebase
                         isUserLoggedIn = false
                     }
                 }
+
+                // Error database
                 override fun onCancelled(error: DatabaseError) {
                     Log.e("AppStart", "Database Error", error.toException())
                     isUserLoggedIn = false

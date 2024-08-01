@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         val textViewTime: TextView = findViewById(R.id.textViewTime)
         textViewTime.text = currentTime
 
-        val button1 : Button = findViewById(R.id.new_measure)
+        val button1: Button = findViewById(R.id.new_measure)
         button1.setOnClickListener {
             val intent = Intent(this, NewMeasume::class.java)
             startActivity(intent)
@@ -63,7 +63,8 @@ class MainActivity : AppCompatActivity() {
 
         "오늘의 폐건강".also { binding.actionTitle.text = it }
 
-        binding.actionTitle.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        binding.actionTitle.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 binding.actionTitle.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
@@ -81,7 +82,7 @@ class MainActivity : AppCompatActivity() {
 
         val userName = getUserNameFromPreferences()
         userName?.let {
-            "$it".also{binding.username.text= it }
+            "$it".also { binding.username.text = it }
         }
     }
 
@@ -133,7 +134,12 @@ class MainActivity : AppCompatActivity() {
         val entries = mutableListOf<Entry>()
 
         for (item in chartData) {
-            entries.add(Entry(item.lableData.replace("[^\\d.]".toRegex(), "").toFloat(), item.lineData.toFloat()))
+            entries.add(
+                Entry(
+                    item.lableData.replace("[^\\d.]".toRegex(), "").toFloat(),
+                    item.lineData.toFloat()
+                )
+            )
         }
 
         val lineDataSet = LineDataSet(entries, "")
