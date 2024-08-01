@@ -178,13 +178,15 @@ class AppStart : AppCompatActivity() {
             // Check if the user ID exists in Firebase
             userRef.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
+
+                    val editor = sharedPreferences.edit()
+
                     if (snapshot.exists()) {
 
                         isUserLoggedIn = true
                         val user = snapshot.getValue(User::class.java)
                         user?.let {
                             // Update shared preferences with user data from Firebase
-                            val editor = sharedPreferences.edit()
                             editor.putString("user_name", it.name)
                             editor.putInt("user_age", it.age)
                             editor.putString("user_gender", it.gender)
@@ -197,7 +199,7 @@ class AppStart : AppCompatActivity() {
                         }
                     } else {
                         // User ID does not exist in Firebase
-                        isSurvey = false
+                        editor.putString("user_id", "")
                     }
                     onComplete()
                 }
