@@ -10,8 +10,11 @@ import android.view.ViewTreeObserver
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import androidx.fragment.app.Fragment
 import android.widget.Button
 import android.widget.Toast
+import android.widget.RelativeLayout
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
@@ -34,9 +37,14 @@ class MainActivity : AppCompatActivity() {
     private val TAG = this.javaClass.simpleName
     lateinit var lineChart: LineChart
     private val chartData = ArrayList<ChartData>()
-
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
+    private val frame: RelativeLayout by lazy { // activity_main의 화면 부분
+        findViewById(R.id.main)
+    }
+    private val bottomNagivationView: BottomNavigationView by lazy { // 하단 네비게이션 바
+        findViewById(R.id.bn_main)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         val textViewTime: TextView = findViewById(R.id.textViewTime)
         textViewTime.text = currentTime
 
-        val button1 : Button = findViewById(R.id.new_measure)
+        val button1: Button = findViewById(R.id.new_measure)
         button1.setOnClickListener {
             val intent = Intent(this, NewMeasume::class.java)
             startActivity(intent)
@@ -61,9 +69,28 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        binding.bnMain.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.ic_Home -> {
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+
+                R.id.ic_Alarm -> {
+                    val intent = Intent(this, AlarmList::class.java)
+                    startActivity(intent)
+                    true
+                }
+                else -> false
+            }
+        }
+
+
         "오늘의 폐건강".also { binding.actionTitle.text = it }
 
-        binding.actionTitle.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        binding.actionTitle.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 binding.actionTitle.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
@@ -83,6 +110,11 @@ class MainActivity : AppCompatActivity() {
         userName?.let {
             "$it".also{binding.username.text= it }
         }
+    }
+
+    // 화면 전환 구현 메소드
+    private fun replaceFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction().replace(frame.id, fragment).commit()
     }
 
     private fun getCurrentDate(): String {
@@ -133,7 +165,12 @@ class MainActivity : AppCompatActivity() {
         val entries = mutableListOf<Entry>()
 
         for (item in chartData) {
-            entries.add(Entry(item.lableData.replace("[^\\d.]".toRegex(), "").toFloat(), item.lineData.toFloat()))
+            entries.add(
+                Entry(
+                    item.lableData.replace("[^\\d.]".toRegex(), "").toFloat(),
+                    item.lineData.toFloat()
+                )
+            )
         }
 
         val lineDataSet = LineDataSet(entries, "")
