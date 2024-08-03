@@ -9,5 +9,9 @@ class User {
 }
 
 class SurveyResult {
+    var answers: Map<String, SurveyData> = mutableMapOf()
+}
+
+class SurveyData {
     var answers: Map<String, String> = mutableMapOf()
 }
