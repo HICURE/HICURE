@@ -5,4 +5,9 @@ class User {
     var age: Int = 0
     var gender: String = ""
     var survey: Boolean = false
+    var surveyResult: SurveyResult? = null
+}
+
+class SurveyResult {
+    var answers: Map<String, String> = mutableMapOf()
 }

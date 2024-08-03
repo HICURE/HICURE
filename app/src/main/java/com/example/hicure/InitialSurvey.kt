@@ -50,8 +50,12 @@ class InitialSurvey : AppCompatActivity() {
 
         binding.checkButton.setOnClickListener {
             if (adapter.allQuestionsAnswered()) {
-                updateSurveyStatus()
-            } else{
+                val surveyResult = SurveyResult()
+                surveyResult.answers = adapter.selectedAnswers.mapIndexed { index, checkedId ->
+                    (index + 1).toString() to getAnswerText(checkedId)
+                }.toMap()
+                updateSurveyStatus(surveyResult)
+            } else {
                 Toast.makeText(this, "모든 항목이 체크되지 않았습니다!", Toast.LENGTH_SHORT).show()
             }
         }
@@ -85,7 +89,15 @@ class InitialSurvey : AppCompatActivity() {
         return data
     }
 
-    private fun updateSurveyStatus() {
+    private fun getAnswerText(checkedId: Int?): String {
+        return when (checkedId) {
+            R.id.yesButton -> "예"
+            R.id.noButton -> "아니요"
+            else -> "Unanswered"
+        }
+    }
+
+    private fun updateSurveyStatus(surveyResult: SurveyResult) {
         val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
         val userId = sharedPreferences.getString("user_id", null)
 
@@ -95,12 +107,20 @@ class InitialSurvey : AppCompatActivity() {
         userRef.child("survey").setValue(true)
             .addOnSuccessListener {
                 Log.d("InitialSurvey", "Survey status updated successfully.")
+            }
+            .addOnFailureListener { e ->
+                Log.e("InitialSurvey", "Failed to update survey status", e)
+            }
+
+        userRef.child("surveyResult").setValue(surveyResult)
+            .addOnSuccessListener {
+                Log.d("InitialSurvey", "Survey results saved successfully.")
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()
             }
             .addOnFailureListener { e ->
-                Log.e("InitialSurvey", "Failed to update survey status", e)
+                Log.e("InitialSurvey", "Failed to save survey results", e)
             }
     }
 }
