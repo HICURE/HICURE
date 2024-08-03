@@ -14,4 +14,6 @@ class SurveyResult {
 
 class SurveyData {
     var answers: Map<String, String> = mutableMapOf()
+    var date: String? = null
+    var time: String? = null
 }

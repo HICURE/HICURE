@@ -12,6 +12,7 @@ import com.example.hicure.databinding.ActivitySurveyBinding
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class InitialSurvey : AppCompatActivity() {
@@ -94,9 +95,18 @@ class InitialSurvey : AppCompatActivity() {
         if (adapter.allQuestionsAnswered()) {
             val surveyData = SurveyData().apply {
                 answers = adapter.selectedAnswers.mapIndexed { index, checkedId ->
-                    // Convert the index + 1 to a string to use as the key
                     (index + 1).toString() to getAnswerText(checkedId)
                 }.toMap()
+
+                answers = answers + ("기타" to binding.editText.text.toString())
+
+                val now = LocalDateTime.now()
+                val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+                date = now.format(dateFormatter)
+                time = now.format(timeFormatter)
+
+                Log.d("InitialSurvey", "Survey Answers: $answers")
             }
 
             val surveyResult = SurveyResult().apply {
@@ -136,5 +146,10 @@ class InitialSurvey : AppCompatActivity() {
             .addOnFailureListener { e ->
                 Log.e("InitialSurvey", "Failed to save survey results", e)
             }
+
+        val now = LocalDateTime.now()
+        val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+        userRef.child("startDate").setValue(now.format(dateFormatter))
     }
 }
