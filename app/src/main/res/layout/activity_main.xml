@@ -70,7 +70,7 @@
                     android:id="@+id/username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="김수현"
+                    android:text="user_name"
                     android:textSize="20dp" />
 
                 <View

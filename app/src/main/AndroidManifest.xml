@@ -22,19 +22,22 @@
             android:name=".AlarmList"
             android:exported="false" />
         <activity
-            android:name=".CheckId"
-            android:exported="false" />
-        <activity
-            android:name=".ServeInfo"
-            android:exported="false" />
-        <activity
-            android:name=".AppStart"
+            android:name=".UserInfo"
             android:exported="false" />
         <activity
             android:name=".Survey"
             android:exported="false" />
         <activity
+            android:name=".ServeInfo"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".InitialSurvey"
+            android:exported="false" />
+        <activity
+            android:name=".AppStart"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

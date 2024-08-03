@@ -12,6 +12,7 @@ import java.util.Date
 import java.util.Locale
 import androidx.fragment.app.Fragment
 import android.widget.Button
+import android.widget.Toast
 import android.widget.RelativeLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -86,7 +87,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        "원하는 타이틀 입력".also { binding.actionTitle.text = it }
+        "오늘의 폐건강".also { binding.actionTitle.text = it }
 
         binding.actionTitle.viewTreeObserver.addOnGlobalLayoutListener(object :
             ViewTreeObserver.OnGlobalLayoutListener {
@@ -104,6 +105,11 @@ class MainActivity : AppCompatActivity() {
 
         setupPieChart()
         setupLineChart()
+
+        val userName = getUserNameFromPreferences()
+        userName?.let {
+            "$it".also { binding.username.text = it }
+        }
     }
 
     // 화면 전환 구현 메소드
@@ -185,5 +191,10 @@ class MainActivity : AppCompatActivity() {
     private fun addChartItem(labelItem: String, dataItem: Double) {
         val item = ChartData(labelItem, dataItem)
         chartData.add(item)
+    }
+
+    private fun getUserNameFromPreferences(): String? {
+        val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        return sharedPreferences.getString("user_name", null)
     }
 }
