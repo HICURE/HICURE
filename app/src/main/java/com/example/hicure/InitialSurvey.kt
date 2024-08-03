@@ -5,11 +5,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.hicure.databinding.ActivitySurveyBinding
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import java.time.LocalDate
@@ -18,16 +17,18 @@ import java.time.format.DateTimeFormatter
 class InitialSurvey : AppCompatActivity() {
 
     val binding: ActivitySurveyBinding by lazy { ActivitySurveyBinding.inflate(layoutInflater) }
+    lateinit var adapter: CustomAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
         val data: MutableList<QuestionMemo> = loadData()
-        val adapter = CustomAdapter()
+        adapter = CustomAdapter()
         adapter.listData = data
-        binding.questionView.adapter = adapter
+        adapter.selectedAnswers = MutableList(data.size) { null }
 
+        binding.questionView.adapter = adapter
         binding.questionView.layoutManager = LinearLayoutManager(this)
 
         "오늘의 폐건강".also { binding.actionTitle.text = it }
@@ -48,10 +49,11 @@ class InitialSurvey : AppCompatActivity() {
         })
 
         binding.checkButton.setOnClickListener {
-            updateSurveyStatus()
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
+            if (adapter.allQuestionsAnswered()) {
+                updateSurveyStatus()
+            } else{
+                Toast.makeText(this, "모든 항목이 체크되지 않았습니다!", Toast.LENGTH_SHORT).show()
+            }
         }
 
         if (binding.actionTitle.text == "오늘의 폐건강") {
@@ -84,12 +86,11 @@ class InitialSurvey : AppCompatActivity() {
     }
 
     private fun updateSurveyStatus() {
-
         val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
         val userId = sharedPreferences.getString("user_id", null)
 
-
-        val userRef = Firebase.database("https://hicure-d5c99-default-rtdb.firebaseio.com/").getReference("users").child("${userId}")
+        val userRef = Firebase.database("https://hicure-d5c99-default-rtdb.firebaseio.com/")
+            .getReference("users").child(userId!!)
 
         userRef.child("survey").setValue(true)
             .addOnSuccessListener {
