@@ -67,6 +67,11 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, Calendar::class.java)
             startActivity(intent)
         }
+        val button4: Button = findViewById(R.id.UserInfo)
+        button2.setOnClickListener {
+            val intent = Intent(this, Calendar::class.java)
+            startActivity(intent)
+        }
 
         binding.bnMain.setOnItemSelectedListener { item ->
             when (item.itemId) {
