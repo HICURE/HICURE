@@ -20,15 +20,15 @@ class AlarmList : AppCompatActivity() {
         val alarmBoxPink = findViewById<CardView>(R.id.alarmBoxPink)
 
         alarmBoxBlue.setOnClickListener {
-            navigateToSetAlarm()
+            navigateToSetAlarm(R.drawable.set_alarm_box_blue, R.drawable.alarm_switch_track_on_blue, R.drawable.set_alarm_save_button_box_blue)
         }
 
         alarmBoxYellow.setOnClickListener {
-            navigateToSetAlarm()
+            navigateToSetAlarm(R.drawable.set_alarm_box_yellow, R.drawable.alarm_switch_track_on_yellow, R.drawable.set_alarm_save_button_box_yellow)
         }
 
         alarmBoxPink.setOnClickListener {
-            navigateToSetAlarm()
+            navigateToSetAlarm(R.drawable.set_alarm_box_pink, R.drawable.alarm_switch_track_on_pink, R.drawable.set_alarm_save_button_box_pink)
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -37,8 +37,12 @@ class AlarmList : AppCompatActivity() {
             insets
         }
     }
-    private fun navigateToSetAlarm() {
+
+    private fun navigateToSetAlarm(boxDrawableResId: Int, switchDrawableResId: Int, buttonDrawableResId: Int) {
         val intent = Intent(this, SetAlarm::class.java)
+        intent.putExtra("EXTRA_BOX_COLOR", boxDrawableResId)
+        intent.putExtra("EXTRA_SWITCH_COLOR", switchDrawableResId)
+        intent.putExtra("EXTRA_BUTTON_COLOR", buttonDrawableResId)
         startActivity(intent)
     }
 }
