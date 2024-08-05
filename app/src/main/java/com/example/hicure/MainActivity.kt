@@ -69,23 +69,19 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        bottomNagivationView.selectedItemId = R.id.ic_Home
+
         binding.bnMain.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.ic_Home -> {
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                    true
-                }
-
-                R.id.ic_Alarm -> {
-                    val intent = Intent(this, AlarmList::class.java)
-                    startActivity(intent)
-                    true
-                }
-                else -> false
+                R.id.ic_Home -> startNewActivity(MainActivity::class.java)
+                R.id.ic_Alarm -> startNewActivity(AlarmList::class.java)
+                R.id.ic_Serve -> startNewActivity(ServeInfo::class.java)
+                R.id.ic_User -> startNewActivity(UserInfo::class.java)
             }
+            true
         }
 
+        bottomNagivationView.selectedItemId = R.id.ic_Home
 
         "오늘의 폐건강".also { binding.actionTitle.text = it }
 
@@ -196,5 +192,10 @@ class MainActivity : AppCompatActivity() {
     private fun getUserNameFromPreferences(): String? {
         val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
         return sharedPreferences.getString("user_name", null)
+    }
+    private fun startNewActivity(activityClass: Class<*>) {
+        val intent = Intent(this, activityClass)
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
     }
 }
