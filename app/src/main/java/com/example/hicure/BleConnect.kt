@@ -204,18 +204,42 @@ class BleConnect : AppCompatActivity(), OnDeviceClickListener {
         bluetoothGatt = device.device.connectGatt(this, false, gattCallback)
     }
 
-    private val gattCallback = object  : BluetoothGattCallback(){
+    private val gattCallback = object : BluetoothGattCallback() {
         @SuppressLint("MissingPermission")
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
+            val deviceName = gatt.device.name ?: "Unknown Device"
+            val deviceAddress = gatt.device.address
+
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 Log.d(TAG, "Connected to GATT server.")
                 gatt.discoverServices()
 
+                val intent = Intent("com.example.hicure.CONNECTION_STATUS").apply {
+                    putExtra("status", "Connected")
+                    putExtra("device_name", deviceName)
+                    putExtra("device_address", deviceAddress)
+                }
+                sendBroadcast(intent)
 
+                val newIntent = Intent(this@BleConnect, NewMeasume::class.java).apply {
+                    putExtra("device_name", deviceName)
+                    putExtra("device_address", deviceAddress)
+                }
+                startActivity(newIntent)
+                finish()
 
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+
+                Toast.makeText(this@BleConnect,"연결할 수 없습니다.",Toast.LENGTH_SHORT).show()
+
                 Log.d(TAG, "Disconnected from GATT server.")
-                bluetoothGatt = null
+
+                val intent = Intent("com.example.hicure.CONNECTION_STATUS").apply {
+                    putExtra("status", "Disconnected")
+                    putExtra("device_name", deviceName)
+                    putExtra("device_address", deviceAddress)
+                }
+                sendBroadcast(intent)
             }
         }
 
