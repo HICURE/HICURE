@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:text="Device Name"
+            android:textColor="@color/black"
             android:textSize="18sp" />
 
         <TextView
@@ -27,6 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/ble_name"
             android:layout_margin="16dp"
+            android:textColor="@color/black"
             android:text="Device Address"
             android:textSize="18sp" />
 
@@ -36,6 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/ble_address"
             android:layout_margin="16dp"
+            android:textColor="@color/black"
             android:text="Connection Status"
             android:textSize="18sp" />
 
