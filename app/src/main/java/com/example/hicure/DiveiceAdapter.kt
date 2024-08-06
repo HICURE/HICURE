@@ -37,6 +37,11 @@ class DeviceAdapter : RecyclerView.Adapter<DeviceAdapter.DeviceViewHolder>() {
         }
     }
 
+    fun clearDevices() {
+        devices.clear()
+        notifyDataSetChanged()
+    }
+
     fun addDevices(newDevices: List<ScanResult>) {
         val uniqueNewDevices = newDevices.filter { !deviceAddresses.contains(it.device.address) }
         devices.addAll(uniqueNewDevices)
