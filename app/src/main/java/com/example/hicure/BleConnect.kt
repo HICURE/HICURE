@@ -3,6 +3,7 @@ package com.example.hicure
 import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
@@ -33,6 +34,8 @@ class BleConnect : AppCompatActivity() {
     private lateinit var bluetoothLeScanner: BluetoothLeScanner
     private val handler = Handler(Looper.getMainLooper())
     private var isScanning = false
+
+    var bluetoothGatt: BluetoothGatt? = null
 
     companion object {
         private const val PERMISSION_REQUEST_CODE = 1
