@@ -11,7 +11,10 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.PersistableBundle
 import android.util.Log
+import android.view.ViewTreeObserver
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -22,7 +25,11 @@ import com.example.hicure.databinding.ActivityBleConnectBinding
 
 class BleConnect : AppCompatActivity() {
 
-    private val binding: ActivityBleConnectBinding by lazy { ActivityBleConnectBinding.inflate(layoutInflater) }
+    private val binding: ActivityBleConnectBinding by lazy {
+        ActivityBleConnectBinding.inflate(
+            layoutInflater
+        )
+    }
     private lateinit var deviceAdapter: DeviceAdapter
     private lateinit var bluetoothLeScanner: BluetoothLeScanner
     private val handler = Handler(Looper.getMainLooper())
@@ -41,6 +48,22 @@ class BleConnect : AppCompatActivity() {
 
         Log.d(TAG, "onCreate: Activity started")
 
+        "기기 연결하기".also { binding.actionTitle.text = it }
+
+        binding.actionTitle.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                binding.actionTitle.viewTreeObserver.removeOnGlobalLayoutListener(this)
+
+                val actionTextWidth = binding.actionTitle.width
+                binding.actionTitle.width = actionTextWidth + 10
+
+                val layoutParams = binding.behindTitle.layoutParams
+                layoutParams.width = actionTextWidth + 30
+                binding.behindTitle.layoutParams = layoutParams
+            }
+        })
+
         setupRecyclerView()
         updatePermissionState()
 
@@ -55,7 +78,8 @@ class BleConnect : AppCompatActivity() {
             bluetoothLeScanner = bluetoothManager.adapter.bluetoothLeScanner
         } else {
             Log.e(TAG, "onCreate: BluetoothManager is null")
-            Toast.makeText(this, "Bluetooth not supported on this device", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Bluetooth not supported on this device", Toast.LENGTH_SHORT)
+                .show()
             finish()
         }
     }
@@ -68,10 +92,19 @@ class BleConnect : AppCompatActivity() {
 
     private fun updatePermissionState() {
         val permissionsGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.BLUETOOTH_SCAN
+            ) == PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.BLUETOOTH_CONNECT
+                    ) == PackageManager.PERMISSION_GRANTED
         } else {
-            ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
         }
 
         binding.permissionState.text = if (permissionsGranted) "권한 허용됨" else "권한 필요"
@@ -81,20 +114,36 @@ class BleConnect : AppCompatActivity() {
         val permissionsNeeded = mutableListOf<String>()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.BLUETOOTH_SCAN
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
                 permissionsNeeded.add(Manifest.permission.BLUETOOTH_SCAN)
             }
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.BLUETOOTH_CONNECT
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
                 permissionsNeeded.add(Manifest.permission.BLUETOOTH_CONNECT)
             }
         } else {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
                 permissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION)
             }
         }
 
         return if (permissionsNeeded.isNotEmpty()) {
-            ActivityCompat.requestPermissions(this, permissionsNeeded.toTypedArray(), PERMISSION_REQUEST_CODE)
+            ActivityCompat.requestPermissions(
+                this,
+                permissionsNeeded.toTypedArray(),
+                PERMISSION_REQUEST_CODE
+            )
             false
         } else {
             true
@@ -106,20 +155,21 @@ class BleConnect : AppCompatActivity() {
     }
 
     @SuppressLint("MissingPermission")
-    private fun scanLeDevice(enable: Boolean){
-        when(enable){
+    private fun scanLeDevice(enable: Boolean) {
+        when (enable) {
             true -> {
                 handler.postDelayed({
                     isScanning = false
                     bluetoothLeScanner.stopScan(mScanCallback)
-                    handler.post{
-                        Toast.makeText(this,"스캔 종료", Toast.LENGTH_SHORT).show()
+                    handler.post {
+                        Toast.makeText(this, "스캔 종료", Toast.LENGTH_SHORT).show()
                     }
                 }, SCAN_PERIOD)
                 isScanning = true
                 bluetoothLeScanner.startScan(mScanCallback)
                 Toast.makeText(this, "스캔 시작", Toast.LENGTH_SHORT).show()
             }
+
             else -> {
                 isScanning = false
                 bluetoothLeScanner.stopScan(mScanCallback)
@@ -127,7 +177,7 @@ class BleConnect : AppCompatActivity() {
         }
     }
 
-    private val mScanCallback = object : ScanCallback(){
+    private val mScanCallback = object : ScanCallback() {
         @SuppressLint("MissingPermission")
         override fun onScanResult(callbackType: Int, result: ScanResult) {
             super.onScanResult(callbackType, result)
@@ -147,7 +197,11 @@ class BleConnect : AppCompatActivity() {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_REQUEST_CODE) {
             updatePermissionState()

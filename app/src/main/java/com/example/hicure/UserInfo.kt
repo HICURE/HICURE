@@ -21,9 +21,22 @@ class UserInfo : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-
-
         "설정".also { binding.actionTitle.text = it }
+
+        binding.actionTitle.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                binding.actionTitle.viewTreeObserver.removeOnGlobalLayoutListener(this)
+
+                val actionTextWidth = binding.actionTitle.width
+                binding.actionTitle.width = actionTextWidth + 10
+
+                val layoutParams = binding.behindTitle.layoutParams
+                layoutParams.width = actionTextWidth + 30
+                binding.behindTitle.layoutParams = layoutParams
+            }
+        })
+
         bottomNagivationView.selectedItemId = R.id.ic_User
 
         binding.bnMain.setOnItemSelectedListener { item ->

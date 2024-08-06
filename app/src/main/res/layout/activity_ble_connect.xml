@@ -8,34 +8,85 @@
     android:background="@color/white"
     tools:context=".BleConnect">
 
-    <TextView
-        android:id="@+id/permissionState"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textColor="@color/black"
-        android:text="권한 상태"
-        app:layout_constraintBottom_toTopOf="@+id/btnScan"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:background="@color/white"
+        android:elevation="8dp"
+        android:outlineSpotShadowColor="@color/black"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <Button
-        android:id="@+id/btnScan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Scan"
-        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/behind_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="13dp"
+                android:contentDescription="@string/description"
+                android:src="@drawable/behind_action_title" />
+
+            <com.example.hicure.OutLineTextView
+                android:id="@+id/action_title"
+                style="@style/mainTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:text="@string/main_title" />
+
+        </FrameLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <LinearLayout
+        android:id="@+id/ScanState"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="15dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <TextView
+            android:id="@+id/permissionState"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:text="권한 상태"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/btnScan"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+        <android.widget.Button
+            android:id="@+id/btnScan"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/yellow_frame"
+            android:text="Scan"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_editor_absoluteY="120dp" />
+
+    </LinearLayout>
 
     <ScrollView
-        android:layout_margin="20dp"
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:padding="20dp"
-        android:background="@drawable/gray_frame"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:layout_height="0dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/blue_frame"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ScanState"
+        app:layout_constraintVertical_bias="0.609"
+        tools:layout_editor_absoluteX="20dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/deviceList"
