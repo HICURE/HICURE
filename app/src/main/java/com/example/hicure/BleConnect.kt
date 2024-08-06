@@ -3,8 +3,12 @@ package com.example.hicure
 import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt
+import android.bluetooth.BluetoothGattCallback
+import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothManager
+import android.bluetooth.BluetoothProfile
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
@@ -23,7 +27,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.hicure.databinding.ActivityBleConnectBinding
 
-class BleConnect : AppCompatActivity() {
+class BleConnect : AppCompatActivity(), OnDeviceClickListener {
 
     private val binding: ActivityBleConnectBinding by lazy {
         ActivityBleConnectBinding.inflate(
@@ -35,11 +39,11 @@ class BleConnect : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private var isScanning = false
 
-    var bluetoothGatt: BluetoothGatt? = null
+    private var bluetoothGatt: BluetoothGatt? = null
 
     companion object {
         private const val PERMISSION_REQUEST_CODE = 1
-        private const val SCAN_PERIOD: Long = 2000 // 3 seconds
+        private const val SCAN_PERIOD: Long = 2000 // 2 seconds
         private const val TAG = "BleConnect"
     }
 
@@ -73,13 +77,13 @@ class BleConnect : AppCompatActivity() {
         binding.btnScan.setOnClickListener {
             if (checkAndRequestPermissions()) {
                 if (isBluetoothEnabled()) {
+                    deviceAdapter.clearDevices()
                     startScan()
                 } else {
                     promptEnableBluetooth()
                 }
             }
         }
-
         val bluetoothManager = getSystemService(BLUETOOTH_SERVICE) as? BluetoothManager
 
         if (bluetoothManager != null) {
@@ -103,7 +107,7 @@ class BleConnect : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        deviceAdapter = DeviceAdapter()
+        deviceAdapter = DeviceAdapter(this)
         binding.deviceList.layoutManager = LinearLayoutManager(this)
         binding.deviceList.adapter = deviceAdapter
     }
@@ -195,6 +199,42 @@ class BleConnect : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("MissingPermission")
+    override fun onDeviceClick(device: ScanResult){
+        bluetoothGatt = device.device.connectGatt(this, false, gattCallback)
+    }
+
+    private val gattCallback = object  : BluetoothGattCallback(){
+        @SuppressLint("MissingPermission")
+        override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
+            if (newState == BluetoothProfile.STATE_CONNECTED) {
+                Log.d(TAG, "Connected to GATT server.")
+                gatt.discoverServices()
+
+
+
+            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                Log.d(TAG, "Disconnected from GATT server.")
+                bluetoothGatt = null
+            }
+        }
+
+        override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                Log.d(TAG, "Services discovered: ${gatt.services}")
+                // Handle discovered services
+            } else {
+                Log.w(TAG, "onServicesDiscovered received: $status")
+            }
+        }
+
+        override fun onCharacteristicRead(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                Log.d(TAG, "Characteristic read: ${characteristic.value}")
+            }
+        }
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -209,4 +249,5 @@ class BleConnect : AppCompatActivity() {
             }
         }
     }
+
 }

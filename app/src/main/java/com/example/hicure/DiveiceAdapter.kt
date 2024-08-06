@@ -2,6 +2,7 @@ package com.example.hicure
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.bluetooth.BluetoothDevice
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.bluetooth.le.ScanResult
@@ -10,7 +11,11 @@ import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.hicure.databinding.DeviceInfoBinding
 
-class DeviceAdapter : RecyclerView.Adapter<DeviceAdapter.DeviceViewHolder>() {
+interface OnDeviceClickListener{
+    fun onDeviceClick(device: ScanResult)
+}
+
+class DeviceAdapter(private val listener: OnDeviceClickListener) : RecyclerView.Adapter<DeviceAdapter.DeviceViewHolder>() {
 
     private val devices = mutableListOf<ScanResult>()
     private val deviceAddresses = mutableSetOf<String>()
@@ -25,7 +30,7 @@ class DeviceAdapter : RecyclerView.Adapter<DeviceAdapter.DeviceViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: DeviceViewHolder, position: Int) {
-        holder.bind(devices[position])
+        holder.bind(devices[position], listener)
     }
 
     fun addDevice(device: ScanResult) {
@@ -39,6 +44,7 @@ class DeviceAdapter : RecyclerView.Adapter<DeviceAdapter.DeviceViewHolder>() {
 
     fun clearDevices() {
         devices.clear()
+        deviceAddresses.clear()
         notifyDataSetChanged()
     }
 
@@ -51,9 +57,12 @@ class DeviceAdapter : RecyclerView.Adapter<DeviceAdapter.DeviceViewHolder>() {
 
     class DeviceViewHolder(private val binding: DeviceInfoBinding) : RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("MissingPermission")
-        fun bind(device: ScanResult) {
+        fun bind(device: ScanResult, listener: OnDeviceClickListener) {
             binding.bleName.text = device.device.name ?: "Unknown Device"
             binding.bleAddress.text = device.device.address
+            binding.btnConnect.setOnClickListener{
+                listener.onDeviceClick(device)
+            }
         }
     }
 }
