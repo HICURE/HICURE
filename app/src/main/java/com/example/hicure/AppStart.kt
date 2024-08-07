@@ -1,5 +1,6 @@
 package com.example.hicure
 
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
@@ -8,6 +9,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.View
+import android.view.animation.LinearInterpolator
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -42,6 +48,10 @@ class AppStart : AppCompatActivity() {
                 handleTouchEvent(event)
                 true
             }
+        }
+
+        binding.root.setOnClickListener{
+            Toast.makeText(this, "LOADING", Toast.LENGTH_SHORT).show()
         }
     }
 
