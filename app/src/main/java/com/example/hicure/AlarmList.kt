@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
@@ -70,25 +71,42 @@ class AlarmList : AppCompatActivity() {
 
     private fun updateAlarmBox(time: String?, name: String?, isSoundVibrationOn: Boolean) {
         val alarmBox = findViewById<CardView>(lastClickedAlarmBox)
-        val timeTextViewId = when (lastClickedAlarmBox) {
-            R.id.alarmBoxBlue -> R.id.alarmTimeBlue
-            R.id.alarmBoxYellow -> R.id.alarmTimeYellow
-            R.id.alarmBoxPink -> R.id.alarmTimePink
-            else -> R.id.alarmTimeBlue // Default to blue if something unexpected happens
-        }
-        val labelTextViewId = when (lastClickedAlarmBox) {
-            R.id.alarmBoxBlue -> R.id.alarmLabelBlue
-            R.id.alarmBoxYellow -> R.id.alarmLabelYellow
-            R.id.alarmBoxPink -> R.id.alarmLabelPink
-            else -> R.id.alarmLabelBlue // Default to blue if something unexpected happens
+        val (timeTextViewId, labelTextViewId, amPmTextViewId) = when (lastClickedAlarmBox) {
+            R.id.alarmBoxBlue -> Triple(R.id.alarmTimeBlue, R.id.alarmLabelBlue, R.id.alarmAmPmBlue)
+            R.id.alarmBoxYellow -> Triple(R.id.alarmTimeYellow, R.id.alarmLabelYellow, R.id.alarmAmPmYellow)
+            R.id.alarmBoxPink -> Triple(R.id.alarmTimePink, R.id.alarmLabelPink, R.id.alarmAmPmPink)
+            else -> Triple(R.id.alarmTimeBlue, R.id.alarmLabelBlue, R.id.alarmAmPmBlue) // 기본값
         }
 
-        alarmBox.findViewById<TextView>(timeTextViewId).text = time
-        alarmBox.findViewById<TextView>(labelTextViewId).text = name
+        val timeTextView = alarmBox.findViewById<TextView>(timeTextViewId)
+        val labelTextView = alarmBox.findViewById<TextView>(labelTextViewId)
+        val amPmTextView = alarmBox.findViewById<TextView>(amPmTextViewId)
 
-        // You can update the sound/vibration status here if needed
-        // For example:
-        // val soundVibrationIcon = alarmBox.findViewById<ImageView>(R.id.soundVibrationIcon)
-        // soundVibrationIcon.visibility = if (isSoundVibrationOn) View.VISIBLE else View.GONE
+        // 폰트 적용
+        val customFont = ResourcesCompat.getFont(this, R.font.oxygen_bold)
+        timeTextView.typeface = customFont
+
+        // 시간 설정 (AM/PM 분리)
+        val (newTime, amPm) = splitTimeAndAmPm(time)
+        timeTextView.text = newTime
+        amPmTextView.text = amPm
+
+        // 알람 이름 설정
+        labelTextView.text = name
+
+        // 소리/진동 상태 업데이트 (필요한 경우)
+        // val soundVibrationSwitch = alarmBox.findViewById<Switch>(R.id.alarmSwitchBlue) // 또는 Yellow, Pink
+        // soundVibrationSwitch.isChecked = isSoundVibrationOn
+    }
+
+    private fun splitTimeAndAmPm(time: String?): Pair<String, String> {
+        return time?.let {
+            val parts = it.split(" ")
+            if (parts.size == 2) {
+                Pair(parts[0], parts[1])
+            } else {
+                Pair(it, "") // AM/PM이 없는 경우
+            }
+        } ?: Pair("", "") // time이 null인 경우
     }
 }
