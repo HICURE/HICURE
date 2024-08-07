@@ -7,7 +7,11 @@ import com.example.hicure.databinding.SurveyQuestionBinding
 
 class CustomAdapter : RecyclerView.Adapter<Holder>() {
     var listData = mutableListOf<QuestionMemo>()
-    var selectedAnswers = MutableList(listData.size) { null as Int? }
+        set(value) {
+            field = value
+            selectedAnswers = MutableList(value.size) { null }
+        }
+    var selectedAnswers = mutableListOf<Int?>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val binding =

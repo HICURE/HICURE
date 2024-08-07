@@ -62,7 +62,7 @@ class InitialSurvey : AppCompatActivity() {
             binding.underAppTItle.visibility = View.GONE
         }
 
-        binding.q5.text = "하루 중 이상활동은 없었나요?"
+        binding.etc.text = "하루 중 이상활동은 없었나요?"
     }
 
     private fun loadData(): MutableList<QuestionMemo> {

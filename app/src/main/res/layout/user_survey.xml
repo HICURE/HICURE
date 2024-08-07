@@ -24,65 +24,7 @@
         android:paddingVertical="20dp">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/yellow_frame"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="일차"
-                android:textSize="15sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="날짜"
-                android:textSize="11sp" />
-
-            <View
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:background="@drawable/check" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/pop_up_frame"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="10dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="일차"
-                android:textSize="15sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="날짜"
-                android:textSize="11sp" />
-
-            <View
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:alpha="0"
-                android:background="@drawable/check"/>
-        </LinearLayout>
-
-        <LinearLayout
+            android:id="@+id/first_survey"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="5dp"
@@ -95,23 +37,28 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="일차"
+                android:text="1회차"
+                android:textColor="@color/edge_blue"
                 android:textSize="15sp" />
 
             <TextView
+                android:id="@+id/date1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:text="날짜"
+                android:textColor="@color/edge_blue"
                 android:textSize="11sp" />
 
             <View
+                android:id="@+id/Icon1"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:background="@drawable/lock" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/second_survey"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="5dp"
@@ -124,20 +71,92 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="일차"
+                android:text="2회차"
+                android:textColor="@color/edge_blue"
                 android:textSize="15sp" />
 
             <TextView
+                android:id="@+id/date2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:text="날짜"
+                android:textColor="@color/edge_blue"
                 android:textSize="11sp" />
 
             <View
+                android:id="@+id/Icon2"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:background="@drawable/lock"/>
+                android:background="@drawable/lock" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/third_survey"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/gray_frame"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3회차"
+                android:textColor="@color/edge_blue"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/date3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="날짜"
+                android:textColor="@color/edge_blue"
+                android:textSize="11sp" />
+
+            <View
+                android:id="@+id/Icon3"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/lock" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/last_survey"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/gray_frame"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4회차"
+                android:textColor="@color/edge_blue"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/date4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="날짜"
+                android:textColor="@color/edge_blue"
+                android:textSize="11sp" />
+
+            <View
+                android:id="@+id/Icon4"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/lock" />
         </LinearLayout>
     </LinearLayout>
 
