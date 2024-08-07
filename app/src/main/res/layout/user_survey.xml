@@ -52,8 +52,8 @@
 
             <View
                 android:id="@+id/Icon1"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:background="@drawable/lock" />
         </LinearLayout>
 
@@ -86,8 +86,8 @@
 
             <View
                 android:id="@+id/Icon2"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:background="@drawable/lock" />
         </LinearLayout>
 
@@ -120,8 +120,8 @@
 
             <View
                 android:id="@+id/Icon3"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:background="@drawable/lock" />
         </LinearLayout>
 
@@ -154,8 +154,8 @@
 
             <View
                 android:id="@+id/Icon4"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:background="@drawable/lock" />
         </LinearLayout>
     </LinearLayout>
