@@ -1,11 +1,12 @@
 package com.example.hicure
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Switch
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
@@ -16,10 +17,11 @@ class SetAlarm : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_alarm)
 
-        val timePicker = findViewById<CustomTimePickerdd>(R.id.customTimePicker) // 시간 설정
-        val cancelButton = findViewById<Button>(R.id.cancelButton) // 취소 버튼
-        val saveButton = findViewById<Button>(R.id.saveButton) // 저장 버튼
-        val soundVibrationSwitch = findViewById<Switch>(R.id.soundVibrationSwitch) // 소리 및 진동 토글 버튼
+        val timePicker = findViewById<CustomTimePickerdd>(R.id.customTimePicker)
+        val cancelButton = findViewById<Button>(R.id.cancelButton)
+        val saveButton = findViewById<Button>(R.id.saveButton)
+        val soundVibrationSwitch = findViewById<Switch>(R.id.soundVibrationSwitch)
+        val alarmNameEditText = findViewById<EditText>(R.id.alarmNameEditText)
 
         val boxDrawableResId = intent.getIntExtra("EXTRA_BOX_COLOR", R.drawable.set_alarm_box_blue)
         val switchDrawableResId = intent.getIntExtra("EXTRA_SWITCH_COLOR", R.drawable.alarm_switch_track_on_blue)
@@ -38,18 +40,24 @@ class SetAlarm : AppCompatActivity() {
         soundVibrationSwitch.trackDrawable = switchDrawable
         saveButton.background = buttonDrawable
 
-        // 취소 버튼
         cancelButton.setOnClickListener {
-            val selectedTime = timePicker.getSelectedTime()
-            Toast.makeText(this, "Selected Time: $selectedTime", Toast.LENGTH_SHORT).show()
+            setResult(Activity.RESULT_CANCELED)
+            finish()
         }
 
-        // 저장 버튼
         saveButton.setOnClickListener {
             val selectedTime = timePicker.getSelectedTime()
-            val resultIntent = Intent()
-            resultIntent.putExtra("EXTRA_SELECTED_TIME", selectedTime)
-            setResult(RESULT_OK, resultIntent)
+            val alarmName = alarmNameEditText.text.toString()
+            val isSoundVibrationOn = soundVibrationSwitch.isChecked
+
+            val resultIntent = Intent().apply {
+                putExtra("EXTRA_SELECTED_TIME", selectedTime)
+                putExtra("EXTRA_ALARM_NAME", alarmName)
+                putExtra("EXTRA_SOUND_VIBRATION", isSoundVibrationOn)
+                putExtra("EXTRA_BOX_COLOR", boxDrawableResId)
+            }
+
+            setResult(Activity.RESULT_OK, resultIntent)
             finish()
         }
     }
