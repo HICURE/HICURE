@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.hicure.databinding.ActivityUserInfoBinding
 import android.view.View
 import android.widget.Toast
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import java.util.Date
 import java.util.Calendar
 import java.text.SimpleDateFormat
@@ -21,6 +23,7 @@ class UserInfo : AppCompatActivity() {
 
     val binding: ActivityUserInfoBinding by lazy { ActivityUserInfoBinding.inflate(layoutInflater) }
     private val TAG = "UserInfo"
+    private lateinit var userRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,9 +41,12 @@ class UserInfo : AppCompatActivity() {
             }
             true
         }
-        binding.bnMain.selectedItemId = R.id.ic_User
 
         val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        val userId = sharedPreferences.getString("user_id", null) ?: return
+
+        userRef = FirebaseDatabase.getInstance().getReference("users").child(userId)
+
         val userAge = sharedPreferences.getInt("user_age", 0)
         val userGender = sharedPreferences.getString("user_gender", null)
 
@@ -59,31 +65,35 @@ class UserInfo : AppCompatActivity() {
         val baseDate: Date = sdf.parse("2024-07-10") ?: Date()
         val currentDate = Calendar.getInstance().time
 
-        val firstSurveyState = getSurveyState(baseDate, currentDate, 0)
-        val secondSurveyState = getSurveyState(baseDate, currentDate, 3)
-        val thirdSurveyState = getSurveyState(baseDate, currentDate, 7)
-        val fourthSurveyState = getSurveyState(baseDate, currentDate, 14)
+        userRef.child("surveyResult").get().addOnSuccessListener { snapshot ->
+            val surveyResults = snapshot.value as? Map<String, Any>
+            val firstSurveyState = getSurveyState(baseDate, currentDate, 0, surveyResults, "Survey 1")
+            val secondSurveyState = getSurveyState(baseDate, currentDate, 3, surveyResults, "Survey 2")
+            val thirdSurveyState = getSurveyState(baseDate, currentDate, 7, surveyResults, "Survey 3")
+            val fourthSurveyState = getSurveyState(baseDate, currentDate, 14, surveyResults, "Survey 4")
 
-        val firstSurveyDate = getDateForDaysAfter(baseDate, 0)
-        val secondSurveyDate = getDateForDaysAfter(baseDate, 3)
-        val thirdSurveyDate = getDateForDaysAfter(baseDate, 7)
-        val fourthSurveyDate = getDateForDaysAfter(baseDate, 14)
+            val firstSurveyDate = getDateForDaysAfter(baseDate, 0)
+            val secondSurveyDate = getDateForDaysAfter(baseDate, 3)
+            val thirdSurveyDate = getDateForDaysAfter(baseDate, 7)
+            val fourthSurveyDate = getDateForDaysAfter(baseDate, 14)
 
-        binding.surveys.date1.text = sdfShort.format(firstSurveyDate)
-        binding.surveys.date2.text = sdfShort.format(secondSurveyDate)
-        binding.surveys.date3.text = sdfShort.format(thirdSurveyDate)
-        binding.surveys.date4.text = sdfShort.format(fourthSurveyDate)
+            binding.surveys.date1.text = sdfShort.format(firstSurveyDate)
+            binding.surveys.date2.text = sdfShort.format(secondSurveyDate)
+            binding.surveys.date3.text = sdfShort.format(thirdSurveyDate)
+            binding.surveys.date4.text = sdfShort.format(fourthSurveyDate)
 
+            setSurveyState(binding.surveys.firstSurvey, firstSurveyState, binding.surveys.Icon1)
+            setSurveyState(binding.surveys.secondSurvey, secondSurveyState, binding.surveys.Icon2)
+            setSurveyState(binding.surveys.thirdSurvey, thirdSurveyState, binding.surveys.Icon3)
+            setSurveyState(binding.surveys.lastSurvey, fourthSurveyState, binding.surveys.Icon4)
 
-        setSurveyState(binding.surveys.firstSurvey, firstSurveyState, binding.surveys.Icon1)
-        setSurveyState(binding.surveys.secondSurvey, secondSurveyState, binding.surveys.Icon2)
-        setSurveyState(binding.surveys.thirdSurvey, thirdSurveyState, binding.surveys.Icon3)
-        setSurveyState(binding.surveys.lastSurvey, fourthSurveyState, binding.surveys.Icon4)
-
-        binding.surveys.firstSurvey.setOnClickListener { onSurveyClick(firstSurveyState, "1") }
-        binding.surveys.secondSurvey.setOnClickListener { onSurveyClick(secondSurveyState, "2") }
-        binding.surveys.thirdSurvey.setOnClickListener { onSurveyClick(thirdSurveyState, "3") }
-        binding.surveys.lastSurvey.setOnClickListener { onSurveyClick(fourthSurveyState, "4") }
+            binding.surveys.firstSurvey.setOnClickListener { onSurveyClick(firstSurveyState, "1") }
+            binding.surveys.secondSurvey.setOnClickListener { onSurveyClick(secondSurveyState, "2") }
+            binding.surveys.thirdSurvey.setOnClickListener { onSurveyClick(thirdSurveyState, "3") }
+            binding.surveys.lastSurvey.setOnClickListener { onSurveyClick(fourthSurveyState, "4") }
+        }.addOnFailureListener { e ->
+            Log.e(TAG, "Failed to get survey results", e)
+        }
     }
 
     private fun startNewActivity(activityClass: Class<*>) {
@@ -92,13 +102,17 @@ class UserInfo : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun getSurveyState(baseDate: Date, currentDate: Date, daysAfter: Int): SurveyState {
+    private fun getSurveyState(baseDate: Date, currentDate: Date, daysAfter: Int, surveyResults: Map<String, Any>?, surveyKey: String): SurveyState {
         val calendar = Calendar.getInstance().apply {
             time = baseDate
             add(Calendar.DAY_OF_YEAR, daysAfter)
         }
         return if (currentDate.after(calendar.time)) {
-            SurveyState.CAN_DO
+            if (surveyResults?.containsKey(surveyKey) == true) {
+                SurveyState.DONE
+            } else {
+                SurveyState.CAN_DO
+            }
         } else {
             SurveyState.TO_DO
         }
