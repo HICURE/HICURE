@@ -138,10 +138,24 @@ class CustomTimePickerdd @JvmOverloads constructor(
         return super.onTouchEvent(event)
     }
 
+//    fun setInitialTime(time: String?) {
+//        time?.let {
+//            val parts = it.split(" ")
+//            if (parts.size == 2) {
+//                val hm = parts[0].split(":")
+//                selectedHour = hours.indexOf(hm[0])
+//                selectedMinute = minutes.indexOf(hm[1])
+//                selectedAmPm = if (parts[1] == "AM") 0 else 1
+//                invalidate()
+//            }
+//        }
+//    }
+
+
     fun getSelectedTime(): String {
         val hour = hours[selectedHour]
         val minute = minutes[selectedMinute]
         val period = amPm[selectedAmPm]
-        return "$period $hour:$minute"
+        return "$hour:$minute $period"
     }
 }
