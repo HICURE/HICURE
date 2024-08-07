@@ -27,6 +27,7 @@ class Survey : AppCompatActivity() {
         setContentView(binding.root)
 
         val data: MutableList<QuestionMemo> = loadData()
+        val surveyNumber = intent.getStringExtra("survey_number") ?: "N"
 
         adapter = CustomAdapter().apply {
             listData = data
@@ -52,19 +53,17 @@ class Survey : AppCompatActivity() {
 
             }
         })
-        binding.etc.text = "하루 중 이상활동은 없었나요?"
+        binding.etc.text = "현재까지 진행함에 있어 느낀 점을 적어주세요."
 
         binding.checkButton.setOnClickListener {
-            // submitSurvey()
-            Toast.makeText(this,"성공적!",Toast.LENGTH_SHORT).show()
-
+            submitSurvey(surveyNumber)
         }
 
         if (binding.actionTitle.text=="만족도조사"){
             val currentDate = LocalDate.now()
             val formattedDate = currentDate.format(DateTimeFormatter.ofPattern("MM-dd"))
             binding.subTitle.text = "$formattedDate"
-            binding.surveyTitle.text="만족도조사"
+            binding.surveyTitle.text="$surveyNumber 일차 만족도조사"
             binding.backCircle.root.visibility = View.GONE
         }
     }
@@ -92,7 +91,7 @@ class Survey : AppCompatActivity() {
         }
     }
 
-    private fun submitSurvey() {
+    private fun submitSurvey(surveyNumber: String) {
         if (adapter.allQuestionsAnswered()) {
             val surveyData = SurveyData().apply {
                 answers = adapter.selectedAnswers.mapIndexed { index, checkedId ->
@@ -112,7 +111,7 @@ class Survey : AppCompatActivity() {
 
             val surveyResult = SurveyResult().apply {
                 answers = mapOf(
-                    "Survey" to surveyData
+                    "Survey $surveyNumber" to surveyData
                 )
             }
 
@@ -137,7 +136,7 @@ class Survey : AppCompatActivity() {
                 Log.e("Survey", "Failed to update survey status", e)
             }
 
-        userRef.child("surveyResult").setValue(surveyResult.answers)
+        userRef.child("surveyResult").updateChildren(surveyResult.answers)
             .addOnSuccessListener {
                 Log.d("Survey", "Survey results saved successfully.")
                 val intent = Intent(this, MainActivity::class.java)

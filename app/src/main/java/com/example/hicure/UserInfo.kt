@@ -80,10 +80,10 @@ class UserInfo : AppCompatActivity() {
         setSurveyState(binding.surveys.thirdSurvey, thirdSurveyState, binding.surveys.Icon3)
         setSurveyState(binding.surveys.lastSurvey, fourthSurveyState, binding.surveys.Icon4)
 
-        binding.surveys.firstSurvey.setOnClickListener { onSurveyClick(firstSurveyState) }
-        binding.surveys.secondSurvey.setOnClickListener { onSurveyClick(secondSurveyState) }
-        binding.surveys.thirdSurvey.setOnClickListener { onSurveyClick(thirdSurveyState) }
-        binding.surveys.lastSurvey.setOnClickListener { onSurveyClick(fourthSurveyState) }
+        binding.surveys.firstSurvey.setOnClickListener { onSurveyClick(firstSurveyState, "1") }
+        binding.surveys.secondSurvey.setOnClickListener { onSurveyClick(secondSurveyState, "2") }
+        binding.surveys.thirdSurvey.setOnClickListener { onSurveyClick(thirdSurveyState, "3") }
+        binding.surveys.lastSurvey.setOnClickListener { onSurveyClick(fourthSurveyState, "4") }
     }
 
     private fun startNewActivity(activityClass: Class<*>) {
@@ -130,10 +130,13 @@ class UserInfo : AppCompatActivity() {
         return calendar.time
     }
 
-    private fun onSurveyClick(state: SurveyState) {
+    private fun onSurveyClick(state: SurveyState, surveyNumber: String) {
         when (state) {
             SurveyState.CAN_DO -> {
-                val intent = Intent(this, Survey::class.java)
+
+                val intent = Intent(this, Survey::class.java).apply {
+                    putExtra("survey_number", surveyNumber)
+                }
                 startActivity(intent)
             }
             SurveyState.DONE -> {
