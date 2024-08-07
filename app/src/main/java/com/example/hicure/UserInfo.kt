@@ -62,37 +62,50 @@ class UserInfo : AppCompatActivity() {
         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val sdfShort = SimpleDateFormat("MM-dd", Locale.getDefault())
 
-        val baseDate: Date = sdf.parse("2024-07-10") ?: Date()
-        val currentDate = Calendar.getInstance().time
+        userRef.child("startDate").get().addOnSuccessListener { snapshot ->
+            val startDateString = snapshot.getValue(String::class.java)
+            val baseDate: Date = startDateString?.let {
+                try {
+                    sdf.parse(it) ?: Date()
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to parse startDate", e)
+                    Date()
+                }
+            } ?: Date()
 
-        userRef.child("surveyResult").get().addOnSuccessListener { snapshot ->
-            val surveyResults = snapshot.value as? Map<String, Any>
-            val firstSurveyState = getSurveyState(baseDate, currentDate, 0, surveyResults, "Survey 1")
-            val secondSurveyState = getSurveyState(baseDate, currentDate, 3, surveyResults, "Survey 2")
-            val thirdSurveyState = getSurveyState(baseDate, currentDate, 7, surveyResults, "Survey 3")
-            val fourthSurveyState = getSurveyState(baseDate, currentDate, 14, surveyResults, "Survey 4")
+            val currentDate = Calendar.getInstance().time
 
-            val firstSurveyDate = getDateForDaysAfter(baseDate, 0)
-            val secondSurveyDate = getDateForDaysAfter(baseDate, 3)
-            val thirdSurveyDate = getDateForDaysAfter(baseDate, 7)
-            val fourthSurveyDate = getDateForDaysAfter(baseDate, 14)
+            userRef.child("surveyResult").get().addOnSuccessListener { snapshot ->
+                val surveyResults = snapshot.value as? Map<String, Any>
+                val firstSurveyState = getSurveyState(baseDate, currentDate, 0, surveyResults, "Survey 1")
+                val secondSurveyState = getSurveyState(baseDate, currentDate, 3, surveyResults, "Survey 2")
+                val thirdSurveyState = getSurveyState(baseDate, currentDate, 7, surveyResults, "Survey 3")
+                val fourthSurveyState = getSurveyState(baseDate, currentDate, 14, surveyResults, "Survey 4")
 
-            binding.surveys.date1.text = sdfShort.format(firstSurveyDate)
-            binding.surveys.date2.text = sdfShort.format(secondSurveyDate)
-            binding.surveys.date3.text = sdfShort.format(thirdSurveyDate)
-            binding.surveys.date4.text = sdfShort.format(fourthSurveyDate)
+                val firstSurveyDate = getDateForDaysAfter(baseDate, 0)
+                val secondSurveyDate = getDateForDaysAfter(baseDate, 3)
+                val thirdSurveyDate = getDateForDaysAfter(baseDate, 7)
+                val fourthSurveyDate = getDateForDaysAfter(baseDate, 14)
 
-            setSurveyState(binding.surveys.firstSurvey, firstSurveyState, binding.surveys.Icon1)
-            setSurveyState(binding.surveys.secondSurvey, secondSurveyState, binding.surveys.Icon2)
-            setSurveyState(binding.surveys.thirdSurvey, thirdSurveyState, binding.surveys.Icon3)
-            setSurveyState(binding.surveys.lastSurvey, fourthSurveyState, binding.surveys.Icon4)
+                binding.surveys.date1.text = sdfShort.format(firstSurveyDate)
+                binding.surveys.date2.text = sdfShort.format(secondSurveyDate)
+                binding.surveys.date3.text = sdfShort.format(thirdSurveyDate)
+                binding.surveys.date4.text = sdfShort.format(fourthSurveyDate)
 
-            binding.surveys.firstSurvey.setOnClickListener { onSurveyClick(firstSurveyState, "1") }
-            binding.surveys.secondSurvey.setOnClickListener { onSurveyClick(secondSurveyState, "2") }
-            binding.surveys.thirdSurvey.setOnClickListener { onSurveyClick(thirdSurveyState, "3") }
-            binding.surveys.lastSurvey.setOnClickListener { onSurveyClick(fourthSurveyState, "4") }
+                setSurveyState(binding.surveys.firstSurvey, firstSurveyState, binding.surveys.Icon1)
+                setSurveyState(binding.surveys.secondSurvey, secondSurveyState, binding.surveys.Icon2)
+                setSurveyState(binding.surveys.thirdSurvey, thirdSurveyState, binding.surveys.Icon3)
+                setSurveyState(binding.surveys.lastSurvey, fourthSurveyState, binding.surveys.Icon4)
+
+                binding.surveys.firstSurvey.setOnClickListener { onSurveyClick(firstSurveyState, "1") }
+                binding.surveys.secondSurvey.setOnClickListener { onSurveyClick(secondSurveyState, "2") }
+                binding.surveys.thirdSurvey.setOnClickListener { onSurveyClick(thirdSurveyState, "3") }
+                binding.surveys.lastSurvey.setOnClickListener { onSurveyClick(fourthSurveyState, "4") }
+            }.addOnFailureListener { e ->
+                Log.e(TAG, "Failed to get survey results", e)
+            }
         }.addOnFailureListener { e ->
-            Log.e(TAG, "Failed to get survey results", e)
+            Log.e(TAG, "Failed to get startDate", e)
         }
     }
 

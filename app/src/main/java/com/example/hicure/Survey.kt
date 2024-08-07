@@ -139,7 +139,7 @@ class Survey : AppCompatActivity() {
         userRef.child("surveyResult").updateChildren(surveyResult.answers)
             .addOnSuccessListener {
                 Log.d("Survey", "Survey results saved successfully.")
-                val intent = Intent(this, MainActivity::class.java)
+                val intent = Intent(this, UserInfo::class.java)
                 startActivity(intent)
                 finish()
             }
@@ -147,10 +147,6 @@ class Survey : AppCompatActivity() {
                 Log.e("Survey", "Failed to save survey results", e)
             }
 
-        val now = LocalDateTime.now()
-        val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-
-        userRef.child("startDate").setValue(now.format(dateFormatter))
     }
 
 }
