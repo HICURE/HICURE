@@ -19,6 +19,13 @@
     <string name="set_alarm_cancel_button">취소</string>
     <string name="set_alarm_save_button">저장</string>
 
+    <string name="hour_picker_description">Select hour</string>
+    <string name="minute_picker_description">Select minute</string>
+    <string name="am_pm_toggle_description">Toggle AM/PM</string>
+    <string name="cancel_button_description">Cancel alarm</string>
+    <string name="save_button_description">Save alarm</string>
+    <string name="sound_vibration_switch_description">Toggle sound and vibration</string>
+    <string name="alarm_name_edit_text_description">Enter alarm name</string>
 
     <string name="description">add drawable</string>
     <string name="touchScreen">화면을 터지해주세요</string>
