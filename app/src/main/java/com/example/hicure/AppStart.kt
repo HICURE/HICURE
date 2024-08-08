@@ -1,13 +1,22 @@
 package com.example.hicure
 
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.View
+import android.view.animation.LinearInterpolator
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -43,6 +52,17 @@ class AppStart : AppCompatActivity() {
                 true
             }
         }
+
+
+
+        binding.root.setOnClickListener {
+            if (!isNetworkConnected(this)) {
+                Toast.makeText(this, "네트워크에 연결되지 않았습니다. 인터넷 연결을 확인해주세요.", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "LOADING", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     }
 
     // Touch Screen
@@ -215,5 +235,11 @@ class AppStart : AppCompatActivity() {
             isUserLoggedIn = false
             onComplete()
         }
+    }
+
+    private fun isNetworkConnected(context: Context): Boolean {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+        return activeNetwork?.isConnectedOrConnecting == true
     }
 }
