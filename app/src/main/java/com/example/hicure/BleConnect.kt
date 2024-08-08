@@ -14,18 +14,25 @@ import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.hicure.databinding.ActivityBleConnectBinding
+import com.example.hicure.databinding.CheckConnectBinding
+import com.example.hicure.databinding.CheckIdBinding
 
 class BleConnect : AppCompatActivity(), OnDeviceClickListener {
 
@@ -52,7 +59,7 @@ class BleConnect : AppCompatActivity(), OnDeviceClickListener {
 
         Log.d(TAG, "onCreate: Activity started")
 
-        "기기 연결하기".also { binding.actionTitle.text = it }
+        "폐건강 측정하기".also { binding.actionTitle.text = it }
 
         binding.actionTitle.viewTreeObserver.addOnGlobalLayoutListener(object :
             ViewTreeObserver.OnGlobalLayoutListener {
@@ -214,12 +221,33 @@ class BleConnect : AppCompatActivity(), OnDeviceClickListener {
 
     @SuppressLint("MissingPermission")
     override fun onDeviceClick(device: ScanResult) {
+
+        val dialogBinding = CheckConnectBinding.inflate(LayoutInflater.from(this))
+        val dialogBuilder = AlertDialog.Builder(this).setView(dialogBinding.root)
+
+        val alertDialog = dialogBuilder.create()
+        alertDialog.show()
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        dialogBinding.Title.text = "기기 연결하기"
+        dialogBinding.content.text = "연결을 확인하는 중입니다."
+
+        dialogBinding.exitButton.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
         val isConnectable = device.isConnectable
 
         if (isConnectable) {
-            Toast.makeText(this, "This device is connectable.", Toast.LENGTH_SHORT).show()
+            dialogBinding.checkIcon.visibility = View.VISIBLE
+            dialogBinding.checkButton.visibility = View.VISIBLE
+            dialogBinding.progressBar.visibility = View.GONE
+            dialogBinding.content.text = "연결 가능합니다!"
+            dialogBinding.checkButton.text = "측정하러 가기"
+
         } else {
-            Toast.makeText(this, "This device is not connectable.", Toast.LENGTH_SHORT).show()
+            dialogBinding.progressBar.visibility = View.GONE
+            dialogBinding.content.text = "연결이 불가능합니다."
         }
 
         Log.d(TAG, "Device clicked: ${device.device.name ?: "Unknown Device"} - Connectable: $isConnectable")
