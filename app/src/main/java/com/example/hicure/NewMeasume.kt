@@ -6,6 +6,8 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCallback
 import android.bluetooth.BluetoothGattCharacteristic
+import android.bluetooth.BluetoothGattDescriptor
+import android.bluetooth.BluetoothGattService
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
 import android.content.Context
@@ -13,12 +15,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.hicure.databinding.ActivityNewMeasumeBinding
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.Date
+import java.util.UUID
 
 class NewMeasume : AppCompatActivity() {
 
@@ -26,9 +25,8 @@ class NewMeasume : AppCompatActivity() {
 
     private lateinit var bluetoothAdapter: BluetoothAdapter
     private var bluetoothGatt: BluetoothGatt? = null
-
-    private val handler = Handler(Looper.getMainLooper())
-    private val updateInterval = 500L
+    private val batteryLevelUuid = UUID.fromString("00002A19-0000-1000-8000-00805F9B34FB")
+    private val descriptorUuid = UUID.fromString("00002902-0000-1000-8000-00805F9B34FB")
 
     companion object {
         private const val TAG = "NewMeasume"
@@ -73,7 +71,7 @@ class NewMeasume : AppCompatActivity() {
                     bluetoothGatt?.discoverServices()
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     Log.i(TAG, "Disconnected from GATT server.")
-                    binding.connectStatus.text = "NOT CONNECT"
+                    binding.connectStatus.text = "DISCONNECT"
                 }
             }
         }
@@ -83,6 +81,7 @@ class NewMeasume : AppCompatActivity() {
             runOnUiThread {
                 if (status == BluetoothGatt.GATT_SUCCESS) {
                     Log.i(TAG, "Services discovered.")
+                    startBatteryLevelUpdates()
                 } else {
                     Log.w(TAG, "onServicesDiscovered received: $status")
                 }
@@ -95,22 +94,7 @@ class NewMeasume : AppCompatActivity() {
             status: Int
         ) {
             super.onCharacteristicRead(gatt, characteristic, status)
-            runOnUiThread {
-                if (status == BluetoothGatt.GATT_SUCCESS) {
-                    Log.i(TAG, "Characteristic read: ${characteristic?.value?.toString(Charsets.UTF_8)}")
-                }
-            }
-        }
-
-        override fun onCharacteristicWrite(
-            gatt: BluetoothGatt?,
-            characteristic: BluetoothGattCharacteristic?,
-            status: Int
-        ) {
-            super.onCharacteristicWrite(gatt, characteristic, status)
-            runOnUiThread {
-                Log.i(TAG, "Characteristic write status: $status")
-            }
+            // This method is not used for notifications
         }
 
         override fun onCharacteristicChanged(
@@ -119,16 +103,48 @@ class NewMeasume : AppCompatActivity() {
         ) {
             super.onCharacteristicChanged(gatt, characteristic)
             runOnUiThread {
-                Log.i(TAG, "Characteristic changed: ${characteristic?.value?.toString(Charsets.UTF_8)}")
+                if (characteristic?.uuid == batteryLevelUuid) {
+                    val batteryLevel = characteristic!!.value?.get(0)?.toInt() ?: -1
+                    Log.i(TAG, "Battery level changed: $batteryLevel")
+                    binding.batteryLevel.text = "Battery Level: $batteryLevel%"
+                }
             }
         }
     }
 
+    @SuppressLint("MissingPermission")
+    private fun startBatteryLevelUpdates() {
+        bluetoothGatt?.let { gatt ->
+            val batteryService: BluetoothGattService? = gatt.services.find { service ->
+                service.characteristics.any { characteristic ->
+                    characteristic.uuid == batteryLevelUuid
+                }
+            }
+            batteryService?.getCharacteristic(batteryLevelUuid)?.let { characteristic ->
+                // Enable notifications
+                gatt.setCharacteristicNotification(characteristic, true)
+                val descriptor = characteristic.getDescriptor(descriptorUuid)
+                descriptor?.let {
+                    it.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+                    gatt.writeDescriptor(it)
+                }
+            } ?: Log.w(TAG, "Battery level characteristic not found")
+        } ?: Log.w(TAG, "Battery service not found")
+    }
 
     @SuppressLint("MissingPermission")
     override fun onDestroy() {
         super.onDestroy()
-        bluetoothGatt?.close()
+        bluetoothGatt?.let { gatt ->
+            gatt.services.forEach { service ->
+                service.characteristics.forEach { characteristic ->
+                    if (characteristic.uuid == batteryLevelUuid) {
+                        gatt.setCharacteristicNotification(characteristic, false)
+                    }
+                }
+            }
+            bluetoothGatt?.close()
+        }
         bluetoothGatt = null
     }
 }

@@ -42,5 +42,16 @@
             android:text="Connection Status"
             android:textSize="18sp" />
 
+        <TextView
+            android:id="@+id/battery_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/connect_status"
+            android:layout_margin="16dp"
+            android:layout_marginTop="-136dp"
+            android:text="Battery Level"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
