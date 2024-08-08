@@ -16,6 +16,11 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.hicure.databinding.ActivityAlarmListBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.fragment.app.Fragment
+import com.example.hicure.databinding.ActivityAlarmListBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class AlarmList : AppCompatActivity() {
 
@@ -32,33 +37,80 @@ class AlarmList : AppCompatActivity() {
         }
     }
 
+    private val binding: ActivityAlarmListBinding by lazy {
+        ActivityAlarmListBinding.inflate(
+            layoutInflater
+        )
+    }
+    private val bottomNagivationView: BottomNavigationView by lazy { // 하단 네비게이션 바
+        findViewById(R.id.bn_main)
+    }
+
     private var lastClickedAlarmBox: Int = 0
 
     private val PERMISSION_REQUEST_CODE = 1001
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_alarm_list)
+        setContentView(binding.root)
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SET_ALARM) != PackageManager.PERMISSION_GRANTED) {
+        bottomNagivationView.selectedItemId = R.id.ic_Alarm
+
+        binding.bnMain.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.ic_Home -> startNewActivity(MainActivity::class.java)
+                R.id.ic_Alarm -> startNewActivity(AlarmList::class.java)
+                R.id.ic_Serve -> startNewActivity(ServeInfo::class.java)
+                R.id.ic_User -> startNewActivity(UserInfo::class.java)
+            }
+            true
+        }
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.SET_ALARM
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             // 권한이 없으므로 요청
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.SET_ALARM), PERMISSION_REQUEST_CODE)
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.SET_ALARM),
+                PERMISSION_REQUEST_CODE
+            )
         } else {
             // 권한이 이미 부여됨
             setupAlarmBoxListeners()
         }
+
+    }
+
+    private fun startNewActivity(activityClass: Class<*>) {
+        val intent = Intent(this, activityClass)
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
     }
 
     private fun checkAndRequestPermissions() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.SET_ALARM) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.SET_ALARM), PERMISSION_REQUEST_CODE)
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.SET_ALARM
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.SET_ALARM),
+                PERMISSION_REQUEST_CODE
+            )
         } else {
             // 권한이 이미 허용됨
             setupAlarmBoxListeners()
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -73,21 +125,38 @@ class AlarmList : AppCompatActivity() {
     private fun setupAlarmBoxListeners() {
         findViewById<CardView>(R.id.alarmBoxBlue).setOnClickListener {
             lastClickedAlarmBox = R.id.alarmBoxBlue
-            navigateToSetAlarm(R.drawable.set_alarm_box_blue, R.drawable.alarm_switch_track_on_blue, R.drawable.set_alarm_save_button_box_blue)
+            navigateToSetAlarm(
+                R.drawable.set_alarm_box_blue,
+                R.drawable.alarm_switch_track_on_blue,
+                R.drawable.set_alarm_save_button_box_blue
+            )
         }
+        bottomNagivationView.selectedItemId = R.id.ic_Alarm
 
         findViewById<CardView>(R.id.alarmBoxYellow).setOnClickListener {
             lastClickedAlarmBox = R.id.alarmBoxYellow
-            navigateToSetAlarm(R.drawable.set_alarm_box_yellow, R.drawable.alarm_switch_track_on_yellow, R.drawable.set_alarm_save_button_box_yellow)
+            navigateToSetAlarm(
+                R.drawable.set_alarm_box_yellow,
+                R.drawable.alarm_switch_track_on_yellow,
+                R.drawable.set_alarm_save_button_box_yellow
+            )
         }
 
         findViewById<CardView>(R.id.alarmBoxPink).setOnClickListener {
             lastClickedAlarmBox = R.id.alarmBoxPink
-            navigateToSetAlarm(R.drawable.set_alarm_box_pink, R.drawable.alarm_switch_track_on_pink, R.drawable.set_alarm_save_button_box_pink)
+            navigateToSetAlarm(
+                R.drawable.set_alarm_box_pink,
+                R.drawable.alarm_switch_track_on_pink,
+                R.drawable.set_alarm_save_button_box_pink
+            )
         }
     }
 
-    private fun navigateToSetAlarm(boxDrawableResId: Int, switchDrawableResId: Int, buttonDrawableResId: Int) {
+    private fun navigateToSetAlarm(
+        boxDrawableResId: Int,
+        switchDrawableResId: Int,
+        buttonDrawableResId: Int
+    ) {
         val currentTime = getCurrentTimeForBox(lastClickedAlarmBox)
         val intent = Intent(this, SetAlarm::class.java).apply {
             putExtra("EXTRA_BOX_COLOR", boxDrawableResId)
@@ -109,7 +178,9 @@ class AlarmList : AppCompatActivity() {
 
     private fun updateAlarmBox(time: String?, name: String?, isSoundVibrationOn: Boolean) {
         val alarmBox = findViewById<CardView>(lastClickedAlarmBox)
-        val (timeTextViewId, labelTextViewId, amPmTextViewId) = getTextViewIdsForBox(lastClickedAlarmBox)
+        val (timeTextViewId, labelTextViewId, amPmTextViewId) = getTextViewIdsForBox(
+            lastClickedAlarmBox
+        )
 
         val timeTextView = alarmBox.findViewById<TextView>(timeTextViewId)
         val labelTextView = alarmBox.findViewById<TextView>(labelTextViewId)
@@ -127,7 +198,12 @@ class AlarmList : AppCompatActivity() {
     private fun getTextViewIdsForBox(alarmBoxId: Int): Triple<Int, Int, Int> {
         return when (alarmBoxId) {
             R.id.alarmBoxBlue -> Triple(R.id.alarmTimeBlue, R.id.alarmLabelBlue, R.id.alarmAmPmBlue)
-            R.id.alarmBoxYellow -> Triple(R.id.alarmTimeYellow, R.id.alarmLabelYellow, R.id.alarmAmPmYellow)
+            R.id.alarmBoxYellow -> Triple(
+                R.id.alarmTimeYellow,
+                R.id.alarmLabelYellow,
+                R.id.alarmAmPmYellow
+            )
+
             R.id.alarmBoxPink -> Triple(R.id.alarmTimePink, R.id.alarmLabelPink, R.id.alarmAmPmPink)
             else -> Triple(R.id.alarmTimeBlue, R.id.alarmLabelBlue, R.id.alarmAmPmBlue) // Default
         }
