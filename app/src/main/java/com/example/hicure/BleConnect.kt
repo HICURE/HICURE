@@ -245,6 +245,14 @@ class BleConnect : AppCompatActivity(), OnDeviceClickListener {
             dialogBinding.content.text = "연결 가능합니다!"
             dialogBinding.checkButton.text = "측정하러 가기"
 
+            dialogBinding.checkButton.setOnClickListener {
+                val intent = Intent(this, NewMeasume::class.java).apply {
+                    putExtra("EXTRA_DEVICE_NAME", device.device.name)
+                    putExtra("EXTRA_DEVICE_ADDRESS", device.device.address)
+                }
+                startActivity(intent)
+                alertDialog.dismiss()
+            }
         } else {
             dialogBinding.progressBar.visibility = View.GONE
             dialogBinding.content.text = "연결이 불가능합니다."
