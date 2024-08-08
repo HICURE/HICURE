@@ -41,4 +41,7 @@
     <string name="button">버튼 text</string>
     <string name="surveySubTitle">n일차 월/일</string>
     <string name="qNo">no.</string>
+    <string name="userGender">유저 성별</string>
+    <string name="userAge">유저 나이</string>
+    <string name="inquiryText">앱 또는 키트를 사용하면서\n발생한 문제점이나\n어려움을 남겨주세요.</string>
 </resources>

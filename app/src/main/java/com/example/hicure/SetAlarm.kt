@@ -26,15 +26,15 @@ class SetAlarm : AppCompatActivity() {
     private lateinit var alarmManager: AlarmManager
     private lateinit var timePicker: CustomTimePicker
 
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { _ ->
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && alarmManager.canScheduleExactAlarms()) {
-            setAlarm(timePicker.getSelectedTime())
-        } else {
-            showAlarmPermissionDialog()
-        }
-    }
+//    private val requestPermissionLauncher = registerForActivityResult(
+//        ActivityResultContracts.StartActivityForResult()
+//    ) { _ ->
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && alarmManager.canScheduleExactAlarms()) {
+//            setAlarm(timePicker.getSelectedTime())
+//        } else {
+//            showAlarmPermissionDialog()
+//        }
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,20 +61,21 @@ class SetAlarm : AppCompatActivity() {
         soundVibrationSwitch.trackDrawable = switchDrawable
         saveButton.background = buttonDrawable
 
-         initialTime?.let { timePicker.setSelectedTime(it) }
+//         initialTime?.let { timePicker.setSelectedTime(it) }
 
         cancelButton.setOnClickListener {
             setResult(Activity.RESULT_CANCELED)
             finish()
         }
 
+        // 저장하기 버튼
         saveButton.setOnClickListener {
             val selectedTime = timePicker.getSelectedTime()
             val alarmName = alarmNameEditText.text.toString()
             val isSoundVibrationOn = soundVibrationSwitch.isChecked
 
             saveAlarmSettings(selectedTime)
-            checkAlarmPermission()
+//            checkAlarmPermission()
 
             val resultIntent = Intent().apply {
                 putExtra("EXTRA_SELECTED_TIME", selectedTime)
@@ -95,65 +96,65 @@ class SetAlarm : AppCompatActivity() {
         }
     }
 
-    private fun setAlarm(time: String) {
-        try {
-            val intent = Intent(this, AlarmReceiver::class.java)
-            val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+//    private fun setAlarm(time: String) {
+//        try {
+//            val intent = Intent(this, AlarmReceiver::class.java)
+//            val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+//
+//            val calendar = Calendar.getInstance().apply {
+//                val timeParts = time.split(":")
+//                val (hour, minute) = timeParts[0].trim().split(" ")[0].toInt() to timeParts[1].split(" ")[0].toInt()
+//                val amPm = timeParts[1].split(" ")[1]
+//
+//                set(Calendar.HOUR_OF_DAY, if (amPm.equals("PM", ignoreCase = true) && hour != 12) hour + 12 else if (amPm.equals("AM", ignoreCase = true) && hour == 12) 0 else hour)
+//                set(Calendar.MINUTE, minute)
+//                set(Calendar.SECOND, 0)
+//                set(Calendar.MILLISECOND, 0)
+//
+//                if (timeInMillis <= System.currentTimeMillis()) {
+//                    add(Calendar.DAY_OF_YEAR, 1)
+//                }
+//            }
+//
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+//            } else {
+//                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+//            }
+//
+//            println("Alarm set for: ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(calendar.time)}")
+//        } catch (e: SecurityException) {
+//            showAlarmPermissionDialog()
+//        }
+//    }
 
-            val calendar = Calendar.getInstance().apply {
-                val timeParts = time.split(":")
-                val (hour, minute) = timeParts[0].trim().split(" ")[0].toInt() to timeParts[1].split(" ")[0].toInt()
-                val amPm = timeParts[1].split(" ")[1]
+//    private fun checkAlarmPermission() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//            if (!alarmManager.canScheduleExactAlarms()) {
+//                showAlarmPermissionDialog()
+//            } else {
+//                setAlarm(timePicker.getSelectedTime())
+//            }
+//        } else {
+//            setAlarm(timePicker.getSelectedTime())
+//        }
+//    }
 
-                set(Calendar.HOUR_OF_DAY, if (amPm.equals("PM", ignoreCase = true) && hour != 12) hour + 12 else if (amPm.equals("AM", ignoreCase = true) && hour == 12) 0 else hour)
-                set(Calendar.MINUTE, minute)
-                set(Calendar.SECOND, 0)
-                set(Calendar.MILLISECOND, 0)
+//    private fun showAlarmPermissionDialog() {
+//        AlertDialog.Builder(this)
+//            .setTitle("알람 권한 필요")
+//            .setMessage("정확한 알람 설정을 위해 권한이 필요합니다. 설정으로 이동하시겠습니까?")
+//            .setPositiveButton("설정으로 이동") { _, _ -> requestAlarmPermission() }
+//            .setNegativeButton("취소") { dialog, _ -> dialog.dismiss() }
+//            .show()
+//    }
 
-                if (timeInMillis <= System.currentTimeMillis()) {
-                    add(Calendar.DAY_OF_YEAR, 1)
-                }
-            }
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
-            } else {
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
-            }
-
-            println("Alarm set for: ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(calendar.time)}")
-        } catch (e: SecurityException) {
-            showAlarmPermissionDialog()
-        }
-    }
-
-    private fun checkAlarmPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (!alarmManager.canScheduleExactAlarms()) {
-                showAlarmPermissionDialog()
-            } else {
-                setAlarm(timePicker.getSelectedTime())
-            }
-        } else {
-            setAlarm(timePicker.getSelectedTime())
-        }
-    }
-
-    private fun showAlarmPermissionDialog() {
-        AlertDialog.Builder(this)
-            .setTitle("알람 권한 필요")
-            .setMessage("정확한 알람 설정을 위해 권한이 필요합니다. 설정으로 이동하시겠습니까?")
-            .setPositiveButton("설정으로 이동") { _, _ -> requestAlarmPermission() }
-            .setNegativeButton("취소") { dialog, _ -> dialog.dismiss() }
-            .show()
-    }
-
-    private fun requestAlarmPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).also {
-                it.data = Uri.parse("package:$packageName")
-                requestPermissionLauncher.launch(it)
-            }
-        }
-    }
+//    private fun requestAlarmPermission() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//            Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).also {
+//                it.data = Uri.parse("package:$packageName")
+//                requestPermissionLauncher.launch(it)
+//            }
+//        }
+//    }
 }

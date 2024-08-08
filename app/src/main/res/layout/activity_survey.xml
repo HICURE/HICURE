@@ -58,7 +58,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="40dp"
-            android:fontFamily="@font/roboto_regular"
             android:orientation="vertical"
             android:textSize="15sp">
 
@@ -91,25 +90,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-<!--            <include
-                android:id="@+id/q1"
-                layout="@layout/survey_yesno" />
-
-            <include
-                android:id="@+id/q2"
-                layout="@layout/survey_yesno" />
-
-            <include
-                android:id="@+id/q3"
-                android:visibility="visible"
-                layout="@layout/survey_yesno" />
-
-            <include
-                android:id="@+id/q4"
-                layout="@layout/survey_yesno" />-->
-
             <TextView
-                android:id="@+id/q5"
+                android:id="@+id/etc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/tempSurveyQuestion"
@@ -131,7 +113,6 @@
                 android:scrollHorizontally="false"
                 android:textColor="@color/black"
                 android:textColorHint="@color/temporary_text"
-
                 android:textSize="14sp" />
 
             <android.widget.Button
@@ -159,7 +140,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:layout_marginBottom="40dp"
                 android:text="@string/app_name"
                 android:textColor="@color/edge_blue"
                 android:textSize="14sp" />

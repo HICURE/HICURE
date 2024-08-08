@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context=".AlarmList">
 
     <androidx.appcompat.widget.Toolbar
@@ -42,15 +42,15 @@
         </FrameLayout>
     </androidx.appcompat.widget.Toolbar>
 
+
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="528dp"
         android:background="@color/white"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintBottom_toTopOf="@id/holder_fl_alarm"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/alarmBoxBlue"
@@ -262,21 +262,33 @@
         </androidx.cardview.widget.CardView>
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/holder_fl_alarm"
-        android:layout_width="0dp"
-        android:layout_height="70dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bn_alarm"
+        <FrameLayout
+            android:id="@+id/holder_fl_main"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:elevation="10dp"
-            android:outlineSpotShadowColor="@color/black"
-            app:menu="@navigation/bottom_nav"/>
-    </FrameLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="70dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bn_main"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                app:itemActiveIndicatorStyle="@null"
+                android:elevation="10dp"
+                android:checkable ="true"
+                app:labelVisibilityMode="labeled"
+                android:outlineSpotShadowColor="@color/black"
+                app:itemIconTint="@drawable/nav_click_color"
+                app:itemTextColor="@drawable/nav_click_color"
+                app:menu="@navigation/bottom_nav" />
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

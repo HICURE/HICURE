@@ -5,6 +5,42 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".NewMeasume">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".NewMeasume">
+
+        <TextView
+            android:id="@+id/ble_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="Device Name"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/ble_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ble_name"
+            android:layout_margin="16dp"
+            android:textColor="@color/black"
+            android:text="Device Address"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/connect_stat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ble_address"
+            android:layout_margin="16dp"
+            android:textColor="@color/black"
+            android:text="Connection Status"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
