@@ -9,7 +9,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 
-class CustomTimePickerdd @JvmOverloads constructor(
+class CustomTimePicker @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -69,10 +69,9 @@ class CustomTimePickerdd @JvmOverloads constructor(
 
     private fun drawAmPmColumn(canvas: Canvas, items: List<String>, centerX: Float, selected: Int) {
         val y = height / 2f
-
         val offsetFactor = 0.02f
 
-        for (i in 0..1) {
+        for (i in items.indices) {
             paint.color = if (i == selected) ContextCompat.getColor(context, R.color.edge_blue)
             else ContextCompat.getColor(context, R.color.gray)
             paint.typeface = ResourcesCompat.getFont(context, R.font.oxygen_bold)
@@ -108,54 +107,80 @@ class CustomTimePickerdd @JvmOverloads constructor(
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        val x = event.x
+        val y = event.y
+
         when (event.action) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
                 val amPmWidth = width * 0.25f
                 val hourWidth = width * 0.375f
                 val column = when {
-                    event.x < amPmWidth -> 0
-                    event.x < amPmWidth + hourWidth -> 1
+                    x < amPmWidth -> 0
+                    x < amPmWidth + hourWidth -> 1
                     else -> 2
                 }
+
                 when (column) {
                     0 -> {
-                        selectedAmPm = if (event.y < height / 2) 0 else 1
+                        selectedAmPm = if (y < height / 2) 0 else 1
                     }
                     1 -> {
-                        scrollY += event.y * scrollSpeedFactor
-                        selectedHour = ((selectedHour - (scrollY / itemHeight).toInt()) + hours.size) % hours.size
+                        val dy = event.y - height / 2
+                        scrollY += dy * scrollSpeedFactor
+                        selectedHour = ((selectedHour - (scrollY / itemHeight).toInt() + hours.size) % hours.size).coerceIn(0, hours.size - 1)
+                        scrollY = 0f
                     }
                     2 -> {
-                        scrollY += event.y * scrollSpeedFactor
-                        selectedMinute = ((selectedMinute - (scrollY / itemHeight).toInt()) + minutes.size) % minutes.size
+                        val dy = event.y - height / 2
+                        scrollY += dy * scrollSpeedFactor
+                        selectedMinute = ((selectedMinute - (scrollY / itemHeight).toInt() + minutes.size) % minutes.size).coerceIn(0, minutes.size - 1)
+                        scrollY = 0f
                     }
                 }
-                scrollY = 0f
+
                 invalidate()
                 return true
+            }
+            MotionEvent.ACTION_UP -> {
+                scrollY = 0f
             }
         }
         return super.onTouchEvent(event)
     }
 
-//    fun setInitialTime(time: String?) {
-//        time?.let {
-//            val parts = it.split(" ")
-//            if (parts.size == 2) {
-//                val hm = parts[0].split(":")
-//                selectedHour = hours.indexOf(hm[0])
-//                selectedMinute = minutes.indexOf(hm[1])
-//                selectedAmPm = if (parts[1] == "AM") 0 else 1
-//                invalidate()
-//            }
-//        }
-//    }
+    fun setHour(hour: Int) {
+        selectedHour = (hours.indexOf(String.format("%02d", hour)).coerceIn(0, hours.size - 1))
+        invalidate()
+    }
 
+    fun setMinute(minute: Int) {
+        selectedMinute = (minutes.indexOf(String.format("%02d", minute)).coerceIn(0, minutes.size - 1))
+        invalidate()
+    }
+
+    fun setAmPm(amPm: Int) {
+        selectedAmPm = amPm.coerceIn(0, 1)
+        invalidate()
+    }
 
     fun getSelectedTime(): String {
         val hour = hours[selectedHour]
         val minute = minutes[selectedMinute]
         val period = amPm[selectedAmPm]
         return "$hour:$minute $period"
+    }
+
+    fun setSelectedTime(time: String) {
+        val parts = time.split(":")
+        val hourMinute = parts[0].trim()
+        val minuteAmPm = parts[1].trim().split(" ")
+
+        val hour = hourMinute.toInt()
+        val minute = minuteAmPm[0].toInt()
+        val amPm = minuteAmPm[1]
+
+        setHour(hour)
+        setMinute(minute)
+        setAmPm(if (amPm.equals("AM", ignoreCase = true)) 0 else 1)
     }
 }
