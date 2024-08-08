@@ -8,7 +8,8 @@
     android:background="@color/white"
     tools:context=".NewMeasume">
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".NewMeasume">
@@ -26,7 +27,6 @@
             android:id="@+id/ble_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ble_name"
             android:layout_margin="16dp"
             android:textColor="@color/black"
             android:text="Device Address"
@@ -36,7 +36,6 @@
             android:id="@+id/connect_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ble_address"
             android:layout_margin="16dp"
             android:textColor="@color/black"
             android:text="Connection Status"
@@ -46,12 +45,35 @@
             android:id="@+id/battery_level"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/connect_status"
             android:layout_margin="16dp"
             android:layout_marginTop="-136dp"
             android:text="Battery Level"
             android:textColor="@color/black"
             android:textSize="18sp" />
 
-    </RelativeLayout>
+        <TextView
+            android:id="@+id/VC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_marginTop="-24dp"
+            android:text="Vital Capacity"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/edit_text_frame"
+            android:gravity="center"
+            android:hint="@string/temporary_text"
+            android:inputType="text"
+            android:textColor="@color/black"
+            android:textColorHint="@color/temporary_text"
+            android:textSize="14sp" />
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

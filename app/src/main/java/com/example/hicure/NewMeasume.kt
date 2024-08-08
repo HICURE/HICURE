@@ -1,19 +1,9 @@
 package com.example.hicure
 
 import android.annotation.SuppressLint
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothGatt
-import android.bluetooth.BluetoothGattCallback
-import android.bluetooth.BluetoothGattCharacteristic
-import android.bluetooth.BluetoothGattDescriptor
-import android.bluetooth.BluetoothGattService
-import android.bluetooth.BluetoothManager
-import android.bluetooth.BluetoothProfile
+import android.bluetooth.*
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.hicure.databinding.ActivityNewMeasumeBinding
@@ -25,8 +15,10 @@ class NewMeasume : AppCompatActivity() {
 
     private lateinit var bluetoothAdapter: BluetoothAdapter
     private var bluetoothGatt: BluetoothGatt? = null
+
+    private val writeUuid = UUID.fromString("BEF8D6C9-9C21-4C9E-B632-BD58C1009F9F")
+    private val vitalCapacityUuid = UUID.fromString("CBA1D466-344C-4BE3-AB3F-189F80DD7518")
     private val batteryLevelUuid = UUID.fromString("00002A19-0000-1000-8000-00805F9B34FB")
-    private val descriptorUuid = UUID.fromString("00002902-0000-1000-8000-00805F9B34FB")
 
     companion object {
         private const val TAG = "NewMeasume"
@@ -82,6 +74,7 @@ class NewMeasume : AppCompatActivity() {
                 if (status == BluetoothGatt.GATT_SUCCESS) {
                     Log.i(TAG, "Services discovered.")
                     startBatteryLevelUpdates()
+                    writeToCharacteristic("Your Value".toByteArray()) // Call the method to write a value
                 } else {
                     Log.w(TAG, "onServicesDiscovered received: $status")
                 }
@@ -123,13 +116,28 @@ class NewMeasume : AppCompatActivity() {
             batteryService?.getCharacteristic(batteryLevelUuid)?.let { characteristic ->
                 // Enable notifications
                 gatt.setCharacteristicNotification(characteristic, true)
-                val descriptor = characteristic.getDescriptor(descriptorUuid)
+                val descriptor = characteristic.getDescriptor(batteryLevelUuid)
                 descriptor?.let {
                     it.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
                     gatt.writeDescriptor(it)
                 }
             } ?: Log.w(TAG, "Battery level characteristic not found")
         } ?: Log.w(TAG, "Battery service not found")
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun writeToCharacteristic(value: ByteArray) {
+        bluetoothGatt?.let { gatt ->
+            val writeService: BluetoothGattService? = gatt.services.find { service ->
+                service.characteristics.any { characteristic ->
+                    characteristic.uuid == writeUuid
+                }
+            }
+            writeService?.getCharacteristic(writeUuid)?.let { characteristic ->
+                characteristic.value = value
+                gatt.writeCharacteristic(characteristic)
+            } ?: Log.w(TAG, "Write characteristic not found")
+        } ?: Log.w(TAG, "Write service not found")
     }
 
     @SuppressLint("MissingPermission")
