@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
 
         val button1: Button = findViewById(R.id.new_measure)
         button1.setOnClickListener {
-            val intent = Intent(this, NewMeasume::class.java)
+            val intent = Intent(this, BleConnect::class.java)
             startActivity(intent)
         }
         val button2: Button = findViewById(R.id.calender)
