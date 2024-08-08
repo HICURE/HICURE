@@ -211,4 +211,17 @@ class BleConnect : AppCompatActivity(), OnDeviceClickListener {
             }
         }
     }
+
+    @SuppressLint("MissingPermission")
+    override fun onDeviceClick(device: ScanResult) {
+        val isConnectable = device.isConnectable
+
+        if (isConnectable) {
+            Toast.makeText(this, "This device is connectable.", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "This device is not connectable.", Toast.LENGTH_SHORT).show()
+        }
+
+        Log.d(TAG, "Device clicked: ${device.device.name ?: "Unknown Device"} - Connectable: $isConnectable")
+    }
 }
