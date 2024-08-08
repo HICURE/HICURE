@@ -56,11 +56,14 @@
             android:layout_height="0dp"
             android:orientation="vertical">
 
-            <include layout="@layout/my_info" />
+            <include layout="@layout/my_info"
+                android:id="@+id/userState"/>
 
-            <include layout="@layout/inquiry" />
+            <include layout="@layout/inquiry"
+                android:id="@+id/inquiry"/>
 
-            <include layout="@layout/user_survey"/>
+            <include layout="@layout/user_survey"
+                android:id="@+id/surveys"/>
 
             <View
                 android:id="@+id/line"
