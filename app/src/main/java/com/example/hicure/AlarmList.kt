@@ -16,8 +16,6 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.hicure.databinding.ActivityAlarmListBinding
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.fragment.app.Fragment
 import com.example.hicure.databinding.ActivityAlarmListBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -123,8 +121,8 @@ class AlarmList : AppCompatActivity() {
     }
 
     private fun setupAlarmBoxListeners() {
-        findViewById<CardView>(R.id.alarmBoxBlue).setOnClickListener {
-            lastClickedAlarmBox = R.id.alarmBoxBlue
+        findViewById<CardView>(R.id.alarmBoxLayoutBlue).setOnClickListener {
+            lastClickedAlarmBox = R.id.alarmBoxLayoutBlue
             navigateToSetAlarm(
                 R.drawable.set_alarm_box_blue,
                 R.drawable.alarm_switch_track_on_blue,
@@ -133,8 +131,8 @@ class AlarmList : AppCompatActivity() {
         }
         bottomNagivationView.selectedItemId = R.id.ic_Alarm
 
-        findViewById<CardView>(R.id.alarmBoxYellow).setOnClickListener {
-            lastClickedAlarmBox = R.id.alarmBoxYellow
+        findViewById<CardView>(R.id.alarmBoxLayoutYellow).setOnClickListener {
+            lastClickedAlarmBox = R.id.alarmBoxLayoutYellow
             navigateToSetAlarm(
                 R.drawable.set_alarm_box_yellow,
                 R.drawable.alarm_switch_track_on_yellow,
@@ -142,8 +140,8 @@ class AlarmList : AppCompatActivity() {
             )
         }
 
-        findViewById<CardView>(R.id.alarmBoxPink).setOnClickListener {
-            lastClickedAlarmBox = R.id.alarmBoxPink
+        findViewById<CardView>(R.id.alarmBoxLayoutPink).setOnClickListener {
+            lastClickedAlarmBox = R.id.alarmBoxLayoutPink
             navigateToSetAlarm(
                 R.drawable.set_alarm_box_pink,
                 R.drawable.alarm_switch_track_on_pink,
@@ -169,9 +167,9 @@ class AlarmList : AppCompatActivity() {
 
     private fun getCurrentTimeForBox(alarmBoxId: Int): String {
         return when (alarmBoxId) {
-            R.id.alarmBoxBlue -> findViewById<TextView>(R.id.alarmTimeBlue).text.toString()
-            R.id.alarmBoxYellow -> findViewById<TextView>(R.id.alarmTimeYellow).text.toString()
-            R.id.alarmBoxPink -> findViewById<TextView>(R.id.alarmTimePink).text.toString()
+            R.id.alarmBoxLayoutBlue -> findViewById<TextView>(R.id.alarmTimeBlue).text.toString()
+            R.id.alarmBoxLayoutYellow -> findViewById<TextView>(R.id.alarmTimeYellow).text.toString()
+            R.id.alarmBoxLayoutPink -> findViewById<TextView>(R.id.alarmTimePink).text.toString()
             else -> ""
         }
     }
@@ -197,14 +195,14 @@ class AlarmList : AppCompatActivity() {
 
     private fun getTextViewIdsForBox(alarmBoxId: Int): Triple<Int, Int, Int> {
         return when (alarmBoxId) {
-            R.id.alarmBoxBlue -> Triple(R.id.alarmTimeBlue, R.id.alarmLabelBlue, R.id.alarmAmPmBlue)
-            R.id.alarmBoxYellow -> Triple(
+            R.id.alarmBoxLayoutBlue -> Triple(R.id.alarmTimeBlue, R.id.alarmLabelBlue, R.id.alarmAmPmBlue)
+            R.id.alarmBoxLayoutYellow -> Triple(
                 R.id.alarmTimeYellow,
                 R.id.alarmLabelYellow,
                 R.id.alarmAmPmYellow
             )
 
-            R.id.alarmBoxPink -> Triple(R.id.alarmTimePink, R.id.alarmLabelPink, R.id.alarmAmPmPink)
+            R.id.alarmBoxLayoutPink -> Triple(R.id.alarmTimePink, R.id.alarmLabelPink, R.id.alarmAmPmPink)
             else -> Triple(R.id.alarmTimeBlue, R.id.alarmLabelBlue, R.id.alarmAmPmBlue) // Default
         }
     }
