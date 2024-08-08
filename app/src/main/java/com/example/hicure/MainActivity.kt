@@ -12,6 +12,7 @@ import java.util.Date
 import java.util.Locale
 import androidx.fragment.app.Fragment
 import android.widget.Button
+import android.widget.Toast
 import android.widget.RelativeLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -68,25 +69,21 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        bottomNagivationView.selectedItemId = R.id.ic_Home
+
         binding.bnMain.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.ic_Home -> {
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                    true
-                }
-
-                R.id.ic_Alarm -> {
-                    val intent = Intent(this, AlarmList::class.java)
-                    startActivity(intent)
-                    true
-                }
-                else -> false
+                R.id.ic_Home -> startNewActivity(MainActivity::class.java)
+                R.id.ic_Alarm -> startNewActivity(AlarmList::class.java)
+                R.id.ic_Serve -> startNewActivity(ServeInfo::class.java)
+                R.id.ic_User -> startNewActivity(UserInfo::class.java)
             }
+            true
         }
 
+        bottomNagivationView.selectedItemId = R.id.ic_Home
 
-        "원하는 타이틀 입력".also { binding.actionTitle.text = it }
+        "오늘의 폐건강".also { binding.actionTitle.text = it }
 
         binding.actionTitle.viewTreeObserver.addOnGlobalLayoutListener(object :
             ViewTreeObserver.OnGlobalLayoutListener {
@@ -104,6 +101,11 @@ class MainActivity : AppCompatActivity() {
 
         setupPieChart()
         setupLineChart()
+
+        val userName = getUserNameFromPreferences()
+        userName?.let {
+            "$it".also { binding.username.text = it }
+        }
     }
 
     // 화면 전환 구현 메소드
@@ -185,5 +187,15 @@ class MainActivity : AppCompatActivity() {
     private fun addChartItem(labelItem: String, dataItem: Double) {
         val item = ChartData(labelItem, dataItem)
         chartData.add(item)
+    }
+
+    private fun getUserNameFromPreferences(): String? {
+        val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        return sharedPreferences.getString("user_name", null)
+    }
+    private fun startNewActivity(activityClass: Class<*>) {
+        val intent = Intent(this, activityClass)
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
     }
 }

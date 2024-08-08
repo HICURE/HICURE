@@ -2,24 +2,29 @@ package com.example.hicure
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.ViewTreeObserver
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.hicure.databinding.ActivityServeInfoBinding
+import com.example.hicure.databinding.ActivityUserInfoBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class ServeInfo : AppCompatActivity() {
+class UserInfo : AppCompatActivity() {
 
-    val binding: ActivityServeInfoBinding by lazy { ActivityServeInfoBinding. inflate(layoutInflater) }
+    val binding: ActivityUserInfoBinding by lazy { ActivityUserInfoBinding.inflate(layoutInflater) }
     private val bottomNagivationView: BottomNavigationView by lazy { // 하단 네비게이션 바
         findViewById(R.id.bn_main)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        bottomNagivationView.selectedItemId = R.id.ic_Serve
+
+
+        "설정".also { binding.actionTitle.text = it }
+        bottomNagivationView.selectedItemId = R.id.ic_User
 
         binding.bnMain.setOnItemSelectedListener { item ->
             when (item.itemId) {
@@ -30,6 +35,7 @@ class ServeInfo : AppCompatActivity() {
             }
             true
         }
+        bottomNagivationView.selectedItemId = R.id.ic_User
     }
     private fun startNewActivity(activityClass: Class<*>) {
         val intent = Intent(this, activityClass)
