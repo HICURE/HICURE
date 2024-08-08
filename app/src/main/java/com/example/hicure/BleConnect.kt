@@ -39,8 +39,6 @@ class BleConnect : AppCompatActivity(), OnDeviceClickListener {
     private val handler = Handler(Looper.getMainLooper())
     private var isScanning = false
 
-    private var bluetoothGatt: BluetoothGatt? = null
-
     companion object {
         private const val PERMISSION_REQUEST_CODE = 1
         private const val SCAN_PERIOD: Long = 2000 // 2 seconds
@@ -70,7 +68,7 @@ class BleConnect : AppCompatActivity(), OnDeviceClickListener {
             }
         })
 
-        binding.description.text = "ESP32로 시작하는 기기 찾아서 연결하기"
+        binding.description.text = "PeakFlowMeter 기기에 연결하기"
 
         setupRecyclerView()
 
@@ -165,7 +163,7 @@ class BleConnect : AppCompatActivity(), OnDeviceClickListener {
                     isScanning = false
                     bluetoothLeScanner.stopScan(mScanCallback)
                     handler.post {
-                        binding.description.text = "ESP32로 시작하는 기기 찾아서 연결하기"
+                        binding.description.text = "PeakFlowMeter 기기에 연결하기"
                     }
                 }, SCAN_PERIOD)
                 isScanning = true
@@ -199,66 +197,6 @@ class BleConnect : AppCompatActivity(), OnDeviceClickListener {
         }
     }
 
-    @SuppressLint("MissingPermission")
-    override fun onDeviceClick(device: ScanResult){
-        bluetoothGatt = device.device.connectGatt(this, false, gattCallback)
-    }
-
-    private val gattCallback = object : BluetoothGattCallback() {
-        @SuppressLint("MissingPermission")
-        override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
-            val deviceName = gatt.device.name ?: "Unknown Device"
-            val deviceAddress = gatt.device.address
-
-            if (newState == BluetoothProfile.STATE_CONNECTED) {
-                Log.d(TAG, "Connected to GATT server.")
-                gatt.discoverServices()
-
-                val intent = Intent("com.example.hicure.CONNECTION_STATUS").apply {
-                    putExtra("status", "Connected")
-                    putExtra("device_name", deviceName)
-                    putExtra("device_address", deviceAddress)
-                }
-                sendBroadcast(intent)
-
-                val newIntent = Intent(this@BleConnect, NewMeasume::class.java).apply {
-                    putExtra("device_name", deviceName)
-                    putExtra("device_address", deviceAddress)
-                }
-                startActivity(newIntent)
-                finish()
-
-            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-
-                Toast.makeText(this@BleConnect,"연결할 수 없습니다.",Toast.LENGTH_SHORT).show()
-
-                Log.d(TAG, "Disconnected from GATT server.")
-
-                val intent = Intent("com.example.hicure.CONNECTION_STATUS").apply {
-                    putExtra("status", "Disconnected")
-                    putExtra("device_name", deviceName)
-                    putExtra("device_address", deviceAddress)
-                }
-                sendBroadcast(intent)
-            }
-        }
-
-        override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-                Log.d(TAG, "Services discovered: ${gatt.services}")
-                // Handle discovered services
-            } else {
-                Log.w(TAG, "onServicesDiscovered received: $status")
-            }
-        }
-
-        override fun onCharacteristicRead(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-                Log.d(TAG, "Characteristic read: ${characteristic.value}")
-            }
-        }
-    }
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -273,5 +211,4 @@ class BleConnect : AppCompatActivity(), OnDeviceClickListener {
             }
         }
     }
-
 }
