@@ -96,6 +96,11 @@ class SetAlarm : AppCompatActivity() {
         calendar.set(Calendar.MINUTE, minute)
         calendar.set(Calendar.SECOND, 0)
 
+        val now = Calendar.getInstance()
+        if (calendar.before(now)) {
+            calendar.add(Calendar.DAY_OF_YEAR, 1) // Set for next day
+        }
+
         // Set alarm intent
         val intent = Intent(this, AlertReceiver::class.java).apply {
             putExtra("time", time)
