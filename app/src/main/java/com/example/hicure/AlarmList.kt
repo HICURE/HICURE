@@ -14,9 +14,9 @@ class AlarmList : AppCompatActivity() {
 
     private lateinit var requestSetAlarm: ActivityResultLauncher<Intent>
     private var lastClickedAlarmBox: Int = 0
-    private var initialTime: String = ""
-    private var AMPMText: String = ""
-    private var initialLabelText: String = ""
+//    private var initialTime: String = ""
+//    private var AMPMText: String = ""
+//    private var initialLabelText: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,25 +28,25 @@ class AlarmList : AppCompatActivity() {
     private fun setupAlarmBoxListeners() {
         findViewById<CardView>(R.id.alarmBoxBlue).setOnClickListener {
             lastClickedAlarmBox = R.id.alarmBoxBlue
-            initialTime = getCurrentTimeForBox(R.id.alarmBoxBlue)
-            AMPMText = getAMPMForBox(R.id.alarmBoxBlue)
-            initialLabelText = getLabelTextForBox(R.id.alarmBoxBlue)
+//            initialTime = getCurrentTimeForBox(R.id.alarmBoxBlue)
+//            AMPMText = getAMPMForBox(R.id.alarmBoxBlue)
+//            initialLabelText = getLabelTextForBox(R.id.alarmBoxBlue)
             navigateToSetAlarm(R.drawable.set_alarm_box_blue, R.drawable.alarm_switch_track_on_blue, R.drawable.set_alarm_save_button_box_blue)
         }
 
         findViewById<CardView>(R.id.alarmBoxYellow).setOnClickListener {
             lastClickedAlarmBox = R.id.alarmBoxYellow
-            initialTime = getCurrentTimeForBox(R.id.alarmBoxYellow)
-            AMPMText = getAMPMForBox(R.id.alarmBoxYellow)
-            initialLabelText = getLabelTextForBox(R.id.alarmBoxYellow)
+//            initialTime = getCurrentTimeForBox(R.id.alarmBoxYellow)
+//            AMPMText = getAMPMForBox(R.id.alarmBoxYellow)
+//            initialLabelText = getLabelTextForBox(R.id.alarmBoxYellow)
             navigateToSetAlarm(R.drawable.set_alarm_box_yellow, R.drawable.alarm_switch_track_on_yellow, R.drawable.set_alarm_save_button_box_yellow)
         }
 
         findViewById<CardView>(R.id.alarmBoxPink).setOnClickListener {
             lastClickedAlarmBox = R.id.alarmBoxPink
-            initialTime = getCurrentTimeForBox(R.id.alarmBoxPink)
-            AMPMText = getAMPMForBox(R.id.alarmBoxPink)
-            initialLabelText = getLabelTextForBox(R.id.alarmBoxPink)
+//            initialTime = getCurrentTimeForBox(R.id.alarmBoxPink)
+//            AMPMText = getAMPMForBox(R.id.alarmBoxPink)
+//            initialLabelText = getLabelTextForBox(R.id.alarmBoxPink)
             navigateToSetAlarm(R.drawable.set_alarm_box_pink, R.drawable.alarm_switch_track_on_pink, R.drawable.set_alarm_save_button_box_pink)
         }
     }
@@ -71,9 +71,9 @@ class AlarmList : AppCompatActivity() {
             putExtra("EXTRA_BOX_COLOR", boxDrawableResId)
             putExtra("EXTRA_SWITCH_COLOR", switchDrawableResId)
             putExtra("EXTRA_BUTTON_COLOR", buttonDrawableResId)
-            putExtra("EXTRA_ALARM_TIME", initialTime)
-            putExtra("EXTRA_AM_PM", AMPMText)
-            putExtra("EXTRA_LABEL_TEXT", initialLabelText)
+//            putExtra("EXTRA_ALARM_TIME", initialTime)
+//            putExtra("EXTRA_AM_PM", AMPMText)
+//            putExtra("EXTRA_LABEL_TEXT", initialLabelText)
         }
         requestSetAlarm.launch(intent)
     }
