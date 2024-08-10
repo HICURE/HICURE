@@ -59,7 +59,8 @@ class AlarmList : AppCompatActivity() {
                 result.data?.let {
                     val selectedTime = it.getStringExtra("EXTRA_SELECTED_TIME")
                     val alarmName = it.getStringExtra("EXTRA_ALARM_NAME")
-                    updateAlarmBox(selectedTime, alarmName)
+                    val isAlarmEnabled = it.getBooleanExtra("EXTRA_IS_ALARM_ENABLED", false)
+                    updateAlarmBox(selectedTime, alarmName, isAlarmEnabled)
                 }
             }
         }
@@ -104,7 +105,7 @@ class AlarmList : AppCompatActivity() {
         }
     }
 
-    private fun updateAlarmBox(time: String?, name: String?) {
+    private fun updateAlarmBox(time: String?, name: String?, isAlarmEnabled: Boolean) {
         val alarmBox = findViewById<CardView>(lastClickedAlarmBox)
         val textViewIds = getTextViewIdsForBox(lastClickedAlarmBox)
 

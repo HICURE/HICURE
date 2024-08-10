@@ -54,15 +54,23 @@ class SetAlarm : AppCompatActivity() {
         saveButton.setOnClickListener {
             val selectedTime = timePicker.getSelectedTime()
             val alarmName = alarmNameEditText.text.toString()
+            val isAlarmEnabled = soundVibrationSwitch.isChecked // 알람 on, off
 
             saveAlarmSettings(selectedTime)
-
             scheduleAlarm(selectedTime)  // Add this method to schedule the alarm
+
+            if (isAlarmEnabled) {
+                scheduleAlarm(selectedTime) // Schedule alarm with repeat
+            } else {
+                cancelAlarm()
+            }
+
 
             val resultIntent = Intent().apply {
                 putExtra("EXTRA_SELECTED_TIME", selectedTime)
                 putExtra("EXTRA_ALARM_NAME", alarmName)
                 putExtra("EXTRA_BOX_COLOR", boxDrawableResId)
+                putExtra("EXTRA_IS_ALARM_ENABLED", isAlarmEnabled)
             }
 
             setResult(Activity.RESULT_OK, resultIntent)
@@ -108,5 +116,14 @@ class SetAlarm : AppCompatActivity() {
         val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+    }
+
+    @SuppressLint("UnspecifiedImmutableFlag")
+    private fun cancelAlarm() {
+        val intent = Intent(this, AlertReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_NO_CREATE)
+        pendingIntent?.let {
+            alarmManager.cancel(it)
+        }
     }
 }
