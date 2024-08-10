@@ -3,21 +3,18 @@ package com.example.hicure
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.media.RingtoneManager
-import android.os.Vibrator
-import android.widget.Toast
+import androidx.core.app.NotificationCompat
 
-class AlarmReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context, intent: Intent) {
-        // 알람음 재생
-        val ringtone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
-        RingtoneManager.getRingtone(context, ringtone).play()
+class AlertReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context?, intent: Intent?) {
+        val notificationHelper = NotificationHelper(context!!)
 
-        // 진동
-        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        vibrator.vibrate(longArrayOf(0, 1000, 1000), 0)
+        // 넘어온 데이터
+        val time = intent?.extras?.getString("time")
 
-        // 토스트 메시지 표시
-        Toast.makeText(context, "Alarm!", Toast.LENGTH_LONG).show()
+        val nb: NotificationCompat.Builder = notificationHelper.getChannelNotification(time)
+
+        // 알림 호출
+        notificationHelper.getManager().notify(1, nb.build())
     }
 }
