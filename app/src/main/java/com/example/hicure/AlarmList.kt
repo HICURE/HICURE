@@ -12,6 +12,7 @@ import androidx.core.content.res.ResourcesCompat
 
 class AlarmList : AppCompatActivity() {
 
+    private lateinit var requestSetAlarm: ActivityResultLauncher<Intent>
     private var lastClickedAlarmBox: Int = 0
     private var initialTime: String = ""
     private var AMPMText: String = ""
@@ -21,6 +22,7 @@ class AlarmList : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarm_list)
         setupAlarmBoxListeners()
+        initActivityResultLauncher()
     }
 
     private fun setupAlarmBoxListeners() {
@@ -46,6 +48,20 @@ class AlarmList : AppCompatActivity() {
             AMPMText = getAMPMForBox(R.id.alarmBoxPink)
             initialLabelText = getLabelTextForBox(R.id.alarmBoxPink)
             navigateToSetAlarm(R.drawable.set_alarm_box_pink, R.drawable.alarm_switch_track_on_pink, R.drawable.set_alarm_save_button_box_pink)
+        }
+    }
+
+    private fun initActivityResultLauncher() {
+        requestSetAlarm = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.let {
+                    val selectedTime = it.getStringExtra("EXTRA_SELECTED_TIME")
+                    val alarmName = it.getStringExtra("EXTRA_ALARM_NAME")
+                    updateAlarmBox(selectedTime, alarmName)
+                }
+            }
         }
     }
 
@@ -85,18 +101,6 @@ class AlarmList : AppCompatActivity() {
             R.id.alarmBoxYellow -> findViewById<TextView>(R.id.alarmLabelYellow).text.toString()
             R.id.alarmBoxPink -> findViewById<TextView>(R.id.alarmLabelPink).text.toString()
             else -> ""
-        }
-    }
-
-    private val requestSetAlarm: ActivityResultLauncher<Intent> = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            result.data?.let {
-                val selectedTime = it.getStringExtra("EXTRA_SELECTED_TIME")
-                val alarmName = it.getStringExtra("EXTRA_ALARM_NAME")
-                updateAlarmBox(selectedTime, alarmName)
-            }
         }
     }
 
