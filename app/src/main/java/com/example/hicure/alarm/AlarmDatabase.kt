@@ -15,7 +15,7 @@ abstract class AlarmDatabase : RoomDatabase() {
         private var INSTANCE: AlarmDatabase? = null
 
         @Synchronized
-        fun getInstance(context: Context, scope: CoroutineScope): AlarmDatabase {
+        fun getInstance(context: Context): AlarmDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
