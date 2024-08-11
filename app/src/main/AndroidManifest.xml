@@ -23,7 +23,7 @@
             android:name=".NewMeasume"
             android:exported="false" />
         <activity
-            android:name=".Calendar"
+            android:name=".AppStart"
             android:exported="false" />
         <activity
             android:name=".AlarmList"
@@ -44,7 +44,7 @@
             android:name=".InitialSurvey"
             android:exported="false" />
         <activity
-            android:name=".AppStart"
+            android:name=".Calendar"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
