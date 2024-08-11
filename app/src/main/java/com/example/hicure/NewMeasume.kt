@@ -3,13 +3,23 @@ package com.example.hicure
 import android.annotation.SuppressLint
 import android.bluetooth.*
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewTreeObserver
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.hicure.databinding.ActivityNewMeasumeBinding
+import com.example.hicure.databinding.CheckIdBinding
+import com.example.hicure.databinding.CheckResultBinding
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import java.util.UUID
 
 class NewMeasume : AppCompatActivity() {
@@ -83,6 +93,8 @@ class NewMeasume : AppCompatActivity() {
                             binding.time.visibility = View.GONE
                             binding.progessBar.visibility = View.GONE
                             binding.button.visibility = View.VISIBLE
+                            binding.VC.text = "--.--"
+                            showResultDialog()
                         }
                     }
                     secondTimer.start()
@@ -106,6 +118,21 @@ class NewMeasume : AppCompatActivity() {
                 binding.behindTitle.layoutParams = layoutParams
             }
         })
+    }
+
+    private fun showResultDialog() {
+        val dialogBinding = CheckResultBinding.inflate(LayoutInflater.from(this))
+        val dialogBuilder = AlertDialog.Builder(this).setView(dialogBinding.root)
+
+        val alertDialog = dialogBuilder.create()
+        alertDialog.show()
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+        dialogBinding.Title.text = "측정 결과"
+
+        dialogBinding.exitButton.setOnClickListener{
+            alertDialog.dismiss()
+        }
     }
 
     @SuppressLint("MissingPermission")
