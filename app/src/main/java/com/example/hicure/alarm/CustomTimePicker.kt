@@ -1,4 +1,4 @@
-package com.example.hicure
+package com.example.hicure.alarm
 
 import android.content.Context
 import android.graphics.Canvas
@@ -8,6 +8,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import com.example.hicure.R
 
 class CustomTimePicker @JvmOverloads constructor(
     context: Context,

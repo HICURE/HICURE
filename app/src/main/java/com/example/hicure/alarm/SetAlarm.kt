@@ -1,4 +1,4 @@
-package com.example.hicure
+package com.example.hicure.alarm
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -6,13 +6,9 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
+import com.example.hicure.R
 import com.example.hicure.databinding.ActivitySetAlarmBinding
 import java.util.Calendar
 

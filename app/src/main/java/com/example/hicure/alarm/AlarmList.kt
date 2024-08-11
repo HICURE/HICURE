@@ -1,4 +1,4 @@
-package com.example.hicure
+package com.example.hicure.alarm
 
 import android.app.Activity
 import android.content.Intent
@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.core.content.res.ResourcesCompat
+import com.example.hicure.R
 import com.example.hicure.databinding.ActivityAlarmListBinding
 
 class AlarmList : AppCompatActivity() {
@@ -32,17 +33,29 @@ class AlarmList : AppCompatActivity() {
     private fun setupAlarmBoxListeners() {
         binding.alarmBoxBlue.setOnClickListener {
             lastClickedAlarmBox = R.id.alarmBoxBlue
-            navigateToSetAlarm(R.drawable.set_alarm_box_blue, R.drawable.alarm_switch_track_on_blue, R.drawable.set_alarm_save_button_box_blue)
+            navigateToSetAlarm(
+                R.drawable.set_alarm_box_blue,
+                R.drawable.alarm_switch_track_on_blue,
+                R.drawable.set_alarm_save_button_box_blue
+            )
         }
 
         binding.alarmBoxYellow.setOnClickListener {
             lastClickedAlarmBox = R.id.alarmBoxYellow
-            navigateToSetAlarm(R.drawable.set_alarm_box_yellow, R.drawable.alarm_switch_track_on_yellow, R.drawable.set_alarm_save_button_box_yellow)
+            navigateToSetAlarm(
+                R.drawable.set_alarm_box_yellow,
+                R.drawable.alarm_switch_track_on_yellow,
+                R.drawable.set_alarm_save_button_box_yellow
+            )
         }
 
         binding.alarmBoxPink.setOnClickListener {
             lastClickedAlarmBox = R.id.alarmBoxPink
-            navigateToSetAlarm(R.drawable.set_alarm_box_pink, R.drawable.alarm_switch_track_on_pink, R.drawable.set_alarm_save_button_box_pink)
+            navigateToSetAlarm(
+                R.drawable.set_alarm_box_pink,
+                R.drawable.alarm_switch_track_on_pink,
+                R.drawable.set_alarm_save_button_box_pink
+            )
         }
     }
 
@@ -91,7 +104,11 @@ class AlarmList : AppCompatActivity() {
     private fun getTextViewIdsForBox(alarmBoxId: Int): Triple<Int, Int, Int> {
         return when (alarmBoxId) {
             R.id.alarmBoxBlue -> Triple(R.id.alarmTimeBlue, R.id.alarmLabelBlue, R.id.alarmAmPmBlue)
-            R.id.alarmBoxYellow -> Triple(R.id.alarmTimeYellow, R.id.alarmLabelYellow, R.id.alarmAmPmYellow)
+            R.id.alarmBoxYellow -> Triple(
+                R.id.alarmTimeYellow,
+                R.id.alarmLabelYellow,
+                R.id.alarmAmPmYellow
+            )
             R.id.alarmBoxPink -> Triple(R.id.alarmTimePink, R.id.alarmLabelPink, R.id.alarmAmPmPink)
             else -> Triple(R.id.alarmTimeBlue, R.id.alarmLabelBlue, R.id.alarmAmPmBlue)
         }

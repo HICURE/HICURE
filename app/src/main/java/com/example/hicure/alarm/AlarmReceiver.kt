@@ -1,4 +1,4 @@
-package com.example.hicure
+package com.example.hicure.alarm
 
 import android.content.BroadcastReceiver
 import android.content.Context

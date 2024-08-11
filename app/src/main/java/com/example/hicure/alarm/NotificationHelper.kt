@@ -1,4 +1,4 @@
-package com.example.hicure
+package com.example.hicure.alarm
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import com.example.hicure.R
 
 class NotificationHelper(base: Context) : ContextWrapper(base) {
 
