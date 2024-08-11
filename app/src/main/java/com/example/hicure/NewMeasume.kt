@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,19 +16,31 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.hicure.databinding.ActivityNewMeasumeBinding
-import com.example.hicure.databinding.CheckIdBinding
 import com.example.hicure.databinding.CheckResultBinding
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import java.util.ArrayList
 import java.util.UUID
 
+data class ResultData(
+    var lableData: String = "",
+    var lineData: Double = 0.0
+)
+
 class NewMeasume : AppCompatActivity() {
+
+
+    lateinit var lineChart: LineChart
+    private val resultData = ArrayList<ResultData>()
 
     private lateinit var binding: ActivityNewMeasumeBinding
     private lateinit var bluetoothAdapter: BluetoothAdapter
     private var bluetoothGatt: BluetoothGatt? = null
     private var isDataProcessingEnabled = false
+    private val vcValues = mutableListOf<String>()
 
     private val writeUuid = UUID.fromString("BEF8D6C9-9C21-4C9E-B632-BD58C1009F9F")
     private val vitalCapacityUuid = UUID.fromString("CBA1D466-344C-4BE3-AB3F-189F80DD7518")
@@ -63,6 +76,7 @@ class NewMeasume : AppCompatActivity() {
             binding.progessBar.visibility = View.VISIBLE
             binding.help.text = "3초 후에 바람을 불어주세요."
             isDataProcessingEnabled = false
+            vcValues.clear()
 
             // ready timer
             val firstTimer = object : CountDownTimer(3000, 10) {
@@ -130,9 +144,62 @@ class NewMeasume : AppCompatActivity() {
 
         dialogBinding.Title.text = "측정 결과"
 
-        dialogBinding.exitButton.setOnClickListener{
+        lineChart = dialogBinding.root.findViewById(R.id.result_chart)
+
+        setupLineChart()
+
+        dialogBinding.exitButton.setOnClickListener {
             alertDialog.dismiss()
         }
+
+        dialogBinding.reMeasure.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+        dialogBinding.saveBtn.setOnClickListener {
+            val result = vcValues.joinToString(", ")
+            Toast.makeText(this, "측정 값: $result", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun setupLineChart() {
+        resultData.clear()
+
+        for (index in vcValues.indices) {
+            val labelItem = String.format("%.1f", (index + 1) * 0.5) + "s"
+            val dataItem = vcValues[index].toDoubleOrNull() ?: 0.0
+            addResultItem(labelItem, dataItem)
+        }
+
+        val entries = mutableListOf<Entry>()
+
+        for (item in resultData) {
+            entries.add(
+                Entry(
+                    item.lableData.replace("[^\\d.]".toRegex(), "").toFloat(),
+                    item.lineData.toFloat()
+                )
+            )
+        }
+
+        val lineDataSet = LineDataSet(entries, "")
+        lineDataSet.color = Color.BLUE
+        lineDataSet.setCircleColor(Color.DKGRAY)
+        lineDataSet.setCircleHoleColor(Color.DKGRAY)
+
+        val dataSets = ArrayList<ILineDataSet>()
+        dataSets.add(lineDataSet)
+
+        val data = LineData(dataSets)
+
+        lineChart.data = data
+        lineChart.description.isEnabled = false
+        lineChart.invalidate()
+    }
+
+    private fun addResultItem(labelItem: String, dataItem: Double) {
+        val item = ResultData(labelItem, dataItem)
+        resultData.add(item)
     }
 
     @SuppressLint("MissingPermission")
@@ -168,8 +235,8 @@ class NewMeasume : AppCompatActivity() {
                 if (status == BluetoothGatt.GATT_SUCCESS) {
                     Log.i(TAG, "Services discovered.")
                     startBatteryLevelUpdates()
-                    // 직접 배터리 수준을 읽어옵니다.
-                    val batteryCharacteristic = gatt?.getService(batteryLevelUuid)?.getCharacteristic(batteryLevelUuid)
+                    val batteryCharacteristic =
+                        gatt?.getService(batteryLevelUuid)?.getCharacteristic(batteryLevelUuid)
                     batteryCharacteristic?.let {
                         gatt.readCharacteristic(it)
                     }
@@ -220,6 +287,7 @@ class NewMeasume : AppCompatActivity() {
                                 characteristic?.value?.let { String(it).substringBefore("L/min") }
                             Log.i(TAG, "Vital Capacity changed: $vcValue")
                             binding.VC.text = "$vcValue"
+                            vcValues.add(vcValue ?: "")
                         }
                     }
                 }
