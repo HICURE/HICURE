@@ -12,7 +12,6 @@ import com.example.hicure.R
 import com.example.hicure.databinding.ActivitySetAlarmBinding
 import java.util.Calendar
 
-
 class SetAlarm : AppCompatActivity() {
 
     private lateinit var binding: ActivitySetAlarmBinding
@@ -36,6 +35,8 @@ class SetAlarm : AppCompatActivity() {
             intent.getIntExtra("EXTRA_BUTTON_COLOR", R.drawable.set_alarm_save_button_box_blue)
         val alarmName = intent.getStringExtra("EXTRA_ALARM_NAME")
         val isAlarmEnabled = intent.getBooleanExtra("EXTRA_IS_ALARM_ENABLED", false)
+        val alarmId = intent.getIntExtra("EXTRA_ALARM_ID", 0)
+        val isSoundAndVibration = intent.getBooleanExtra("EXTRA_IS_SOUND_AND_VIBRATION", false)
 
         val boxDrawable = ContextCompat.getDrawable(this, boxDrawableResId)
         val switchDrawable = ContextCompat.getDrawable(this, switchDrawableResId)
@@ -62,7 +63,7 @@ class SetAlarm : AppCompatActivity() {
         binding.saveButton.setOnClickListener {
             val selectedTime = timePicker.getSelectedTime()
             val alarmName = binding.alarmNameEditText.text.toString()
-            val isAlarmEnabled = binding.soundVibrationSwitch.isChecked
+            val isSoundAndVibration = binding.soundVibrationSwitch.isChecked
 
             saveAlarmSettings(selectedTime)
             if (isAlarmEnabled) {
@@ -77,6 +78,8 @@ class SetAlarm : AppCompatActivity() {
                 putExtra("EXTRA_BOX_COLOR", boxDrawableResId)
                 putExtra("EXTRA_AM_PM", amPm)
                 putExtra("EXTRA_IS_ALARM_ENABLED", isAlarmEnabled)
+                putExtra("EXTRA_IS_SOUND_AND_VIBRATION", isSoundAndVibration)
+                putExtra("EXTRA_ALARM_ID", alarmId)
             }
 
             setResult(Activity.RESULT_OK, resultIntent)
