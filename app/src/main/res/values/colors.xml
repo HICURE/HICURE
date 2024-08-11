@@ -25,4 +25,5 @@
     <color name="temporary_text">#676767</color>
     <color name="light_blue">#ADBEE6</color>
     <color name="gray_frame">#CCCCCC</color>
+    <color name="warning">#D1180B</color>
 </resources>

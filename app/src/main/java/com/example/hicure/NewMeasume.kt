@@ -5,6 +5,7 @@ import android.bluetooth.*
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.ViewTreeObserver
 import androidx.appcompat.app.AppCompatActivity
 import com.example.hicure.databinding.ActivityNewMeasumeBinding
 import java.util.UUID
@@ -32,9 +33,6 @@ class NewMeasume : AppCompatActivity() {
         val deviceName = intent.getStringExtra("EXTRA_DEVICE_NAME")
         val deviceAddress = intent.getStringExtra("EXTRA_DEVICE_ADDRESS")
 
-        binding.bleName.text = deviceName ?: "Unknown Device"
-        binding.bleAddress.text = deviceAddress ?: "Unknown Address"
-
         if (deviceAddress != null) {
             val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
             bluetoothAdapter = bluetoothManager.adapter
@@ -53,6 +51,22 @@ class NewMeasume : AppCompatActivity() {
         binding.stop.setOnClickListener {
             writeToCharacteristic("STOP".toByteArray())
         }
+
+        "$deviceName".also { binding.actionTitle.text = it }
+
+        binding.actionTitle.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                binding.actionTitle.viewTreeObserver.removeOnGlobalLayoutListener(this)
+
+                val actionTextWidth = binding.actionTitle.width
+                binding.actionTitle.width = actionTextWidth + 10
+
+                val layoutParams = binding.behindTitle.layoutParams
+                layoutParams.width = actionTextWidth + 30
+                binding.behindTitle.layoutParams = layoutParams
+            }
+        })
     }
 
     @SuppressLint("MissingPermission")
@@ -67,11 +81,16 @@ class NewMeasume : AppCompatActivity() {
             runOnUiThread {
                 if (newState == BluetoothProfile.STATE_CONNECTED) {
                     Log.i(TAG, "Connected to GATT server.")
-                    binding.connectStatus.text = "CONNECT"
+                    binding.connectStatus.text = "연결된 상태입니다."
+                    binding.connectStatus.setTextColor(resources.getColor(R.color.edge_blue, null))
                     bluetoothGatt?.discoverServices()
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                     Log.i(TAG, "Disconnected from GATT server.")
-                    binding.connectStatus.text = "DISCONNECT"
+                    binding.connectStatus.text = "연결이 해제되었습니다."
+                    binding.connectStatus.setTextColor(resources.getColor(R.color.warning, null))
+                    binding.line.setBackgroundColor(resources.getColor(R.color.warning, null))
+                    binding.batteryBar.progress = 0
+                    binding.batteryLevel.text = "???"
                 }
             }
         }
@@ -99,7 +118,8 @@ class NewMeasume : AppCompatActivity() {
                     batteryLevelUuid -> {
                         val batteryLevel = characteristic?.value?.get(0)?.toInt() ?: -1
                         Log.i(TAG, "Battery level changed: $batteryLevel")
-                        binding.batteryLevel.text = "Battery Level: $batteryLevel%"
+                        binding.batteryBar.progress = batteryLevel
+                        binding.batteryLevel.text = "$batteryLevel%"
                     }
                     vitalCapacityUuid -> {
                         val vcValue = characteristic?.value?.let { String(it) }

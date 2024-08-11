@@ -166,7 +166,7 @@ class AppStart : AppCompatActivity() {
                     }
                 } else {
                     contentTextView.text = "올바르지 않은 식별코드입니다."
-                    contentTextView.setTextColor(Color.parseColor("#D1180B"))
+                    contentTextView.setTextColor(resources.getColor(R.color.warning, null))
                 }
             }
 
