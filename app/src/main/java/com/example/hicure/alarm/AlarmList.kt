@@ -1,6 +1,5 @@
 package com.example.hicure.alarm
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
@@ -11,21 +10,27 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.res.ResourcesCompat
 import com.example.hicure.R
 import com.example.hicure.databinding.ActivityAlarmListBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class AlarmList : AppCompatActivity() {
 
     private lateinit var binding: ActivityAlarmListBinding
     private lateinit var requestSetAlarm: ActivityResultLauncher<Intent>
     private var lastClickedAlarmBox: Int = 0
-    private var savedTime: String? = null
-    private var savedAmPm: String? = null
-    private var savedLabel: String? = null
-    private var savedIsEnabled: Boolean = false
+    private lateinit var alarmRepository: AlarmRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAlarmListBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Initialize repository
+        val database = AlarmDatabase.getInstance(applicationContext)
+        alarmRepository = AlarmRepository(database.alarmDao())
+
         setupAlarmBoxListeners()
         initActivityResultLauncher()
     }
@@ -36,7 +41,8 @@ class AlarmList : AppCompatActivity() {
             navigateToSetAlarm(
                 R.drawable.set_alarm_box_blue,
                 R.drawable.alarm_switch_track_on_blue,
-                R.drawable.set_alarm_save_button_box_blue
+                R.drawable.set_alarm_save_button_box_blue,
+                1
             )
         }
 
@@ -45,7 +51,8 @@ class AlarmList : AppCompatActivity() {
             navigateToSetAlarm(
                 R.drawable.set_alarm_box_yellow,
                 R.drawable.alarm_switch_track_on_yellow,
-                R.drawable.set_alarm_save_button_box_yellow
+                R.drawable.set_alarm_save_button_box_yellow,
+                2
             )
         }
 
@@ -54,39 +61,61 @@ class AlarmList : AppCompatActivity() {
             navigateToSetAlarm(
                 R.drawable.set_alarm_box_pink,
                 R.drawable.alarm_switch_track_on_pink,
-                R.drawable.set_alarm_save_button_box_pink
+                R.drawable.set_alarm_save_button_box_pink,
+                3
             )
         }
     }
 
     private fun initActivityResultLauncher() {
         requestSetAlarm = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
+            if (result.resultCode == RESULT_OK) {
                 result.data?.let {
-                    savedTime = it.getStringExtra("EXTRA_SELECTED_TIME")
-                    savedAmPm = it.getStringExtra("EXTRA_AM_PM")
-                    savedLabel = it.getStringExtra("EXTRA_ALARM_NAME")
-                    savedIsEnabled = it.getBooleanExtra("EXTRA_IS_ALARM_ENABLED", false)
-                    updateAlarmBox()
+                    val time = it.getStringExtra("EXTRA_SELECTED_TIME")
+                    val amPm = it.getStringExtra("EXTRA_AM_PM")
+                    val label = it.getStringExtra("EXTRA_ALARM_NAME")
+                    val isEnabled = it.getBooleanExtra("EXTRA_IS_ALARM_ENABLED", false)
+                    val id = it.getIntExtra("EXTRA_ALARM_ID", 0)
+                    val isSoundAndVibration = it.getBooleanExtra("EXTRA_IS_SOUND_AND_VIBRATION", false)
+
+                    val alarmEntity = AlarmEntity(
+                        id = id,
+                        time = time ?: "",
+                        amPm = amPm ?: "",
+                        label = label ?: "",
+                        isEnabled = isEnabled,
+                        isSoundAndVibration = isSoundAndVibration
+                    )
+
+                    CoroutineScope(Dispatchers.IO).launch {
+                        alarmRepository.insertOrUpdateAlarm(alarmEntity)
+                    }
+
+                    updateAlarmBox(time, amPm, label)
                 }
             }
         }
     }
 
-    private fun navigateToSetAlarm(boxDrawableResId: Int, switchDrawableResId: Int, buttonDrawableResId: Int) {
-        val intent = Intent(this, SetAlarm::class.java).apply {
-            putExtra("EXTRA_BOX_COLOR", boxDrawableResId)
-            putExtra("EXTRA_SWITCH_COLOR", switchDrawableResId)
-            putExtra("EXTRA_BUTTON_COLOR", buttonDrawableResId)
-            putExtra("EXTRA_ALARM_TIME", savedTime)
-            putExtra("EXTRA_AM_PM", savedAmPm)
-            putExtra("EXTRA_ALARM_NAME", savedLabel)
-            putExtra("EXTRA_IS_ALARM_ENABLED", savedIsEnabled)
+    private fun navigateToSetAlarm(boxDrawableResId: Int, switchDrawableResId: Int, buttonDrawableResId: Int, id: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val alarmEntity = alarmRepository.getAlarmById(id)
+            val intent = Intent(this@AlarmList, SetAlarm::class.java).apply {
+                putExtra("EXTRA_BOX_COLOR", boxDrawableResId)
+                putExtra("EXTRA_SWITCH_COLOR", switchDrawableResId)
+                putExtra("EXTRA_BUTTON_COLOR", buttonDrawableResId)
+                putExtra("EXTRA_ALARM_TIME", alarmEntity?.time)
+                putExtra("EXTRA_AM_PM", alarmEntity?.amPm)
+                putExtra("EXTRA_ALARM_NAME", alarmEntity?.label)
+                putExtra("EXTRA_IS_ALARM_ENABLED", alarmEntity?.isEnabled ?: false)
+                putExtra("EXTRA_IS_SOUND_AND_VIBRATION", alarmEntity?.isSoundAndVibration ?: false)
+                putExtra("EXTRA_ALARM_ID", id)
+            }
+            requestSetAlarm.launch(intent)
         }
-        requestSetAlarm.launch(intent)
     }
 
-    private fun updateAlarmBox() {
+    private fun updateAlarmBox(time: String?, amPm: String?, label: String?) {
         val alarmBox = binding.root.findViewById<CardView>(lastClickedAlarmBox)
         val textViewIds = getTextViewIdsForBox(lastClickedAlarmBox)
 
@@ -95,20 +124,16 @@ class AlarmList : AppCompatActivity() {
         val amPmTextView = alarmBox.findViewById<TextView>(textViewIds.third)
 
         timeTextView.typeface = ResourcesCompat.getFont(this, R.font.oxygen_bold)
-        val (newTime, amPm) = splitTimeAndAmPm(savedTime)
+        val (newTime, amPmText) = splitTimeAndAmPm(time)
         timeTextView.text = newTime
-        amPmTextView.text = amPm
-        labelTextView.text = savedLabel
+        amPmTextView.text = amPmText
+        labelTextView.text = label
     }
 
     private fun getTextViewIdsForBox(alarmBoxId: Int): Triple<Int, Int, Int> {
         return when (alarmBoxId) {
             R.id.alarmBoxBlue -> Triple(R.id.alarmTimeBlue, R.id.alarmLabelBlue, R.id.alarmAmPmBlue)
-            R.id.alarmBoxYellow -> Triple(
-                R.id.alarmTimeYellow,
-                R.id.alarmLabelYellow,
-                R.id.alarmAmPmYellow
-            )
+            R.id.alarmBoxYellow -> Triple(R.id.alarmTimeYellow, R.id.alarmLabelYellow, R.id.alarmAmPmYellow)
             R.id.alarmBoxPink -> Triple(R.id.alarmTimePink, R.id.alarmLabelPink, R.id.alarmAmPmPink)
             else -> Triple(R.id.alarmTimeBlue, R.id.alarmLabelBlue, R.id.alarmAmPmBlue)
         }
