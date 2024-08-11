@@ -50,8 +50,8 @@ class CustomTimePicker @JvmOverloads constructor(
             }
         }
 
-        // 기본 초기값 설정
-        setInitialValues(3, 25, 0) // 기본 시간, 분, AM 설정
+         //기본 초기값 설정
+         setInitialValues(3, 24, 1) // 기본 시간, 분, AM 설정
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -175,16 +175,20 @@ class CustomTimePicker @JvmOverloads constructor(
 
     fun setSelectedTime(time: String) {
         val parts = time.split(":")
-        val hourMinute = parts[0].trim()
-        val minuteAmPm = parts[1].trim().split(" ")
+        if (parts.size == 2) {
+            val hourMinute = parts[0].trim()
+            val minuteAmPm = parts[1].trim().split(" ")
 
-        val hour = hourMinute.toInt()
-        val minute = minuteAmPm[0].toInt()
-        val amPm = minuteAmPm[1]
+            if (minuteAmPm.size == 2) {
+                val hour = hourMinute.toIntOrNull() ?: 12
+                val minute = minuteAmPm[0].toIntOrNull() ?: 0
+                val amPm = minuteAmPm[1]
 
-        setHour(hour)
-        setMinute(minute)
-        setAmPm(if (amPm.equals("AM", ignoreCase = true)) 0 else 1)
+                setHour(hour)
+                setMinute(minute)
+                setAmPm(if (amPm.equals("AM", ignoreCase = true)) 0 else 1)
+            }
+        }
     }
 
     // 초기값 설정 메서드
