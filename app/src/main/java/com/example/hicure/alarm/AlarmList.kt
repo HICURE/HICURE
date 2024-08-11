@@ -33,6 +33,25 @@ class AlarmList : AppCompatActivity() {
 
         setupAlarmBoxListeners()
         initActivityResultLauncher()
+        initializeDefaultAlarms()
+    }
+
+    private fun initializeDefaultAlarms() {
+        CoroutineScope(Dispatchers.IO).launch {
+            // Check if alarms are already set
+            val existingAlarms = alarmRepository.getAllAlarms.first()
+            if (existingAlarms.isEmpty()) {
+                // Insert default alarms
+                val defaultAlarms = listOf(
+                    AlarmEntity(id = 1, time = "08:00", amPm = "AM", label = "Wake Up", isEnabled = true, isSoundAndVibration = true),
+                    AlarmEntity(id = 2, time = "12:00", amPm = "PM", label = "Lunch", isEnabled = true, isSoundAndVibration = true),
+                    AlarmEntity(id = 3, time = "06:00", amPm = "PM", label = "Dinner", isEnabled = true, isSoundAndVibration = true)
+                )
+                defaultAlarms.forEach { alarm ->
+                    alarmRepository.insertAlarm(defaultAlarms)
+                }
+            }
+        }
     }
 
     private fun setupAlarmBoxListeners() {
