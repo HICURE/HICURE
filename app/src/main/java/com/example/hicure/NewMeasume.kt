@@ -45,6 +45,14 @@ class NewMeasume : AppCompatActivity() {
             Log.e(TAG, "Device address is null")
             binding.connectStatus.text = "Device address is null"
         }
+
+        binding.start.setOnClickListener {
+            writeToCharacteristic("START".toByteArray())
+        }
+
+        binding.stop.setOnClickListener {
+            writeToCharacteristic("STOP".toByteArray())
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -74,20 +82,11 @@ class NewMeasume : AppCompatActivity() {
                 if (status == BluetoothGatt.GATT_SUCCESS) {
                     Log.i(TAG, "Services discovered.")
                     startBatteryLevelUpdates()
-                    writeToCharacteristic("Your Value".toByteArray()) // Call the method to write a value
+                    startVitalCapacityUpdates()
                 } else {
                     Log.w(TAG, "onServicesDiscovered received: $status")
                 }
             }
-        }
-
-        override fun onCharacteristicRead(
-            gatt: BluetoothGatt?,
-            characteristic: BluetoothGattCharacteristic?,
-            status: Int
-        ) {
-            super.onCharacteristicRead(gatt, characteristic, status)
-            // This method is not used for notifications
         }
 
         override fun onCharacteristicChanged(
@@ -96,10 +95,17 @@ class NewMeasume : AppCompatActivity() {
         ) {
             super.onCharacteristicChanged(gatt, characteristic)
             runOnUiThread {
-                if (characteristic?.uuid == batteryLevelUuid) {
-                    val batteryLevel = characteristic!!.value?.get(0)?.toInt() ?: -1
-                    Log.i(TAG, "Battery level changed: $batteryLevel")
-                    binding.batteryLevel.text = "Battery Level: $batteryLevel%"
+                when (characteristic?.uuid) {
+                    batteryLevelUuid -> {
+                        val batteryLevel = characteristic?.value?.get(0)?.toInt() ?: -1
+                        Log.i(TAG, "Battery level changed: $batteryLevel")
+                        binding.batteryLevel.text = "Battery Level: $batteryLevel%"
+                    }
+                    vitalCapacityUuid -> {
+                        val vcValue = characteristic?.value?.let { String(it) }
+                        Log.i(TAG, "Vital Capacity changed: $vcValue")
+                        binding.VC.text = "Vital Capacity: $vcValue"
+                    }
                 }
             }
         }
@@ -114,7 +120,6 @@ class NewMeasume : AppCompatActivity() {
                 }
             }
             batteryService?.getCharacteristic(batteryLevelUuid)?.let { characteristic ->
-                // Enable notifications
                 gatt.setCharacteristicNotification(characteristic, true)
                 val descriptor = characteristic.getDescriptor(batteryLevelUuid)
                 descriptor?.let {
@@ -123,6 +128,25 @@ class NewMeasume : AppCompatActivity() {
                 }
             } ?: Log.w(TAG, "Battery level characteristic not found")
         } ?: Log.w(TAG, "Battery service not found")
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun startVitalCapacityUpdates() {
+        bluetoothGatt?.let { gatt ->
+            val vcService: BluetoothGattService? = gatt.services.find { service ->
+                service.characteristics.any { characteristic ->
+                    characteristic.uuid == vitalCapacityUuid
+                }
+            }
+            vcService?.getCharacteristic(vitalCapacityUuid)?.let { characteristic ->
+                gatt.setCharacteristicNotification(characteristic, true)
+                val descriptor = characteristic.getDescriptor(vitalCapacityUuid)
+                descriptor?.let {
+                    it.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+                    gatt.writeDescriptor(it)
+                }
+            } ?: Log.w(TAG, "Vital Capacity characteristic not found")
+        } ?: Log.w(TAG, "Vital Capacity service not found")
     }
 
     @SuppressLint("MissingPermission")
@@ -146,7 +170,7 @@ class NewMeasume : AppCompatActivity() {
         bluetoothGatt?.let { gatt ->
             gatt.services.forEach { service ->
                 service.characteristics.forEach { characteristic ->
-                    if (characteristic.uuid == batteryLevelUuid) {
+                    if (characteristic.uuid == batteryLevelUuid || characteristic.uuid == vitalCapacityUuid) {
                         gatt.setCharacteristicNotification(characteristic, false)
                     }
                 }
