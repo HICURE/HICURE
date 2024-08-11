@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
-    tools:context=".AlarmList">
+    tools:context=".alarm.AlarmList">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
