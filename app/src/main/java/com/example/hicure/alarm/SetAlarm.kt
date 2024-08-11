@@ -50,10 +50,10 @@ class SetAlarm : AppCompatActivity() {
         if (initialTime != null) {
             timePicker.setSelectedTime(initialTime)
         }
-
-        if (isAlarmEnabled) {
-            binding.soundVibrationSwitch.isChecked = true
+        if (alarmName != null) {
+            binding.alarmNameEditText.setText(alarmName)
         }
+        binding.soundVibrationSwitch.isChecked = isSoundAndVibration
 
         binding.cancelButton.setOnClickListener {
             setResult(Activity.RESULT_CANCELED)
