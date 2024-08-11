@@ -1,9 +1,11 @@
 package com.example.hicure
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.graphics.Color
 import android.view.View
+import android.widget.Button
 import android.widget.CalendarView
 import android.widget.TextView
 import com.github.mikephil.charting.charts.LineChart
@@ -17,18 +19,12 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.util.ArrayList
 
 class Calendar : AppCompatActivity() {
-    // Firebase Database 초기화
     private val database = FirebaseDatabase.getInstance("https://hicure-d5c99-default-rtdb.firebaseio.com/")
     private val userRef: DatabaseReference = database.getReference("users")
-    private val localDateTime: LocalDateTime = LocalDateTime.now()
-    private val localDate: LocalDate = LocalDate.now()
 
-    lateinit var fname: String
-    lateinit var str: String
     lateinit var calendarView: CalendarView
     lateinit var diaryTextView: TextView
     lateinit var breathTextView: TextView
@@ -41,38 +37,73 @@ class Calendar : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calendar)
 
+        val backB: Button = findViewById(R.id.backB)
+        backB.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+
         // UI 초기화
         calendarView = findViewById(R.id.calendarView)
         diaryTextView = findViewById(R.id.diaryTextView)
         breathTextView = findViewById(R.id.breathTextView)
+
+        val userId = getUserNameFromPreferences()
+        val currentDate = LocalDate.now().toString()
+
+        if (userId != null) {
+            diaryTextView.visibility = View.VISIBLE
+            diaryTextView.text = currentDate
+            readFirebaseData(currentDate, userId)
+        } else {
+            breathTextView.text = "User ID를 찾을 수 없습니다"
+        }
 
         // 날짜가 선택되었을 때 Firebase에서 데이터를 읽어옴
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
             val date = String.format("%d-%02d-%02d", year, month + 1, dayOfMonth)
             diaryTextView.visibility = View.VISIBLE
             diaryTextView.text = date
-            readFirebaseData(date)
+
+            if (userId != null) {
+                readFirebaseData(date, userId)
+            } else {
+                breathTextView.text = "User ID를 찾을 수 없습니다"
+            }
         }
+
 
         // 예시 데이터 초기화 및 설정
         setupLineChart()
     }
-
+    private fun getUserNameFromPreferences(): String? {
+        val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        return sharedPreferences.getString("user_id", null)
+    }
     // Firebase에서 데이터 읽기
-    private fun readFirebaseData(date: String) {
-        val dataRef = userRef.child("00100").child("data").child(date).child("1").child("0")
+    private fun readFirebaseData(date: String,userIDD: String) {
+        val dataRef = userRef.child(userIDD).child("data").child(date)
 
         dataRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val value = snapshot.getValue(Int::class.java) ?: 0
+                var sum=0
+                val valuesList = mutableListOf<String>()
 
-                // 데이터를 TextView에 설정
-                breathTextView.text = "Value: $value"
+                for (sectionSnapshot in snapshot.children) {
+                    // 각 섹션의 하위 항목들을 순회하며 값 합산
+                    for (childSnapshot in sectionSnapshot.children) {
+                        val value = childSnapshot.getValue(Int::class.java) ?: 0
+                        sum += value
+                        valuesList.add(value.toString())  // 각 value를 리스트에 추가
+                    }
+                }
+                sum=sum/20
+                breathTextView.text = "하루 평균 : $sum"
             }
 
             override fun onCancelled(error: DatabaseError) {
                 // 실패 시 처리
-                breathTextView.text = "Failed to load data."
+                breathTextView.text = "데이터를 다시 생성해주세요"
             }
         })
     }
