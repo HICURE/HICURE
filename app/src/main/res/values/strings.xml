@@ -3,15 +3,30 @@
     <string name="main_title">Title</string>
     <string name="sub_title">맞춤형 헬스케어 진단 서비스</string>
     <string name="title_alarm_list">알람</string>
+    <string name="title_set_alarm">알람 설정</string>>
 
-    <string name="alarm_box_blue_time">05:30</string>
-    <string name="alarm_box_yellow_time">12:30</string>
-    <string name="alarm_box_pink_time">06:30</string>
+    <string name="alarm_box_blue_time">08:00</string>
+    <string name="alarm_box_yellow_time">12:00</string>
+    <string name="alarm_box_pink_time">06:00</string>
     <string name="alarm_box_AM">AM</string>
     <string name="alarm_box_PM">PM</string>
-    <string name="alarm_box_name_blue">측정 1회차</string>
-    <string name="alarm_box_name_yellow">측정 2회차</string>
-    <string name="alarm_box_name_pink">측정 3회차</string>
+    <string name="alarm_box_name_blue">아침</string>
+    <string name="alarm_box_name_yellow">점심</string>
+    <string name="alarm_box_name_pink">저녁</string>
+
+    <string name="set_alarm_name">알람 이름</string>
+    <string name="set_alarm_name_text_field">내용을 입력해주세요.</string>
+    <string name="set_alarm_sound_vibrate">소리 및 진동</string>
+    <string name="set_alarm_cancel_button">취소</string>
+    <string name="set_alarm_save_button">저장</string>
+
+<!--    <string name="hour_picker_description">Select hour</string>-->
+<!--    <string name="minute_picker_description">Select minute</string>-->
+<!--    <string name="am_pm_toggle_description">Toggle AM/PM</string>-->
+<!--    <string name="cancel_button_description">Cancel alarm</string>-->
+<!--    <string name="save_button_description">Save alarm</string>-->
+<!--    <string name="sound_vibration_switch_description">Toggle sound and vibration</string>-->
+<!--    <string name="alarm_name_edit_text_description">Enter alarm name</string>-->
 
     <string name="description">add drawable</string>
     <string name="touchScreen">화면을 터지해주세요</string>
