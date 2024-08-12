@@ -2,6 +2,7 @@ package com.example.hicure
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlarmManager
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
@@ -12,6 +13,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -41,7 +43,7 @@ class AppStart : AppCompatActivity() {
     private var isUserLoggedIn = false
     private var isSurvey = false
 
-    companion object{
+    companion object {
         private const val PERMISSION_REQUEST_CODE = 1
     }
 
@@ -51,7 +53,7 @@ class AppStart : AppCompatActivity() {
         setContentView(binding.root)
 
         if (checkAndRequestPermissions()) {
-                promptEnableBluetooth()
+            promptEnableBluetooth()
         }
 
         // User data load
@@ -95,8 +97,25 @@ class AppStart : AppCompatActivity() {
             ) {
                 permissionsNeeded.add(Manifest.permission.BLUETOOTH_CONNECT)
             }
+
+            // Check for exact alarm permission (if needed)
+            val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+            if (!alarmManager.canScheduleExactAlarms()) {
+                // We cannot directly request this permission, but we should add a user prompt
+                requestExactAlarmPermission()
+            }
         }
 
+        // Request notification permission (Android 13+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && PackageManager.PERMISSION_DENIED == ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            )
+        ) {
+            permissionsNeeded.add(Manifest.permission.POST_NOTIFICATIONS)
+        }
+
+        // Request location permission
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -117,6 +136,22 @@ class AppStart : AppCompatActivity() {
         }
     }
 
+    private fun requestExactAlarmPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            AlertDialog.Builder(this)
+                .setTitle("정확한 알람 권한 요청")
+                .setMessage("앱이 정확한 알람을 설정할 수 있도록 권한이 필요합니다.")
+                .setPositiveButton("권한 설정하기") { _, _ ->
+                    val intent = Intent().apply {
+                        action = Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
+                    }
+                    startActivity(intent)
+                }
+                .setNegativeButton("취소", null)
+                .show()
+        }
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -125,12 +160,17 @@ class AppStart : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == com.example.hicure.AppStart.PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+                    if (!alarmManager.canScheduleExactAlarms()) {
+                        requestExactAlarmPermission()
+                    }
+                }
             } else {
                 Toast.makeText(this, "권한이 필요합니다.", Toast.LENGTH_SHORT).show()
             }
         }
     }
-
 
     // Touch Screen
     private fun handleTouchEvent(event: MotionEvent?) {
@@ -227,14 +267,23 @@ class AppStart : AppCompatActivity() {
                     user?.let {
                         saveUserToPreferences(it, id)
 
-                        val intent = if(isSurvey){
-                            Intent(this@AppStart, MainActivity::class.java)
-                        }else{
-                            Intent(this@AppStart, InitialSurvey::class.java)
-                        }
-                        alertDialog.dismiss()
-                        startActivity(intent)
-                        finish()
+                        userRef.child(id).child("survey").get()
+                            .addOnSuccessListener { surveySnapshot ->
+                                val isSurvey = surveySnapshot.getValue(Boolean::class.java) ?: false
+
+                                val intent = if (isSurvey) {
+                                    Intent(this@AppStart, MainActivity::class.java)
+                                } else {
+                                    Intent(this@AppStart, InitialSurvey::class.java)
+                                }
+                                alertDialog.dismiss()
+                                startActivity(intent)
+                                finish()
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e("AppStart", "Failed to get survey value", e)
+                                // 에러 처리 로직 (필요한 경우)
+                            }
                     }
                 } else {
                     contentTextView.text = "올바르지 않은 식별코드입니다."
