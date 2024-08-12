@@ -10,6 +10,7 @@ import com.example.hicure.MainActivity
 import com.example.hicure.R
 import com.example.hicure.UserInfo
 import com.example.hicure.databinding.ActivityServeInfoBinding
+import com.example.hicure.utils.FirebaseCheckDate
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class ServeInfo : AppCompatActivity(), InfoAdapter.OnItemClickListener {
@@ -70,6 +71,11 @@ class ServeInfo : AppCompatActivity(), InfoAdapter.OnItemClickListener {
     }
 
     override fun onItemClick(position: Int) {
+        val userId = getUserIdFromPreferences()
+        userId?.let {
+            FirebaseCheckDate.checkAndUpdateDate(it, position)
+        }
+
         val selectedItem = adapter.items[position] // 선택된 InfoItem 가져오기
         val intent = Intent()
 
@@ -90,6 +96,10 @@ class ServeInfo : AppCompatActivity(), InfoAdapter.OnItemClickListener {
         startActivity(intent)
     }
 
+    private fun getUserIdFromPreferences(): String? {
+        val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        return sharedPreferences.getString("user_id", null)
+    }
 
     private fun startNewActivity(activityClass: Class<*>) {
         val intent = Intent(this, activityClass)

@@ -23,7 +23,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.hicure.BleConnect.Companion
 import com.example.hicure.databinding.ActivityAppStartBinding
 import com.example.hicure.databinding.CheckIdBinding
 import com.google.firebase.database.DataSnapshot
@@ -31,9 +30,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import com.example.hicure.utils.FirebaseCheckDate
 
 class AppStart : AppCompatActivity() {
 
@@ -343,8 +339,6 @@ class AppStart : AppCompatActivity() {
                                 isSurvey = true
                             }
                         }
-
-                        FirebaseCheckDate.checkAndUpdateDate(userId)
 
                     } else {
                         // User ID does not exist in Firebase
