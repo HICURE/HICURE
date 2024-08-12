@@ -24,11 +24,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="30dp"
         android:fontFamily="@font/roboto_black"
         android:text="@string/pop_up_title"
         android:textColor="@color/black"
         android:textSize="25sp" />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="30dp"
+        android:fontFamily="@font/roboto_regular"
+        android:gravity="center"
+        android:text="날짜"
+        android:textColor="@color/edge_blue"
+        android:textSize="15sp" />
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/result_chart"

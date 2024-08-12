@@ -22,6 +22,16 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.database.values
+import com.google.firebase.ktx.Firebase
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.ArrayList
 import java.util.UUID
 
@@ -32,7 +42,7 @@ data class ResultData(
 
 class NewMeasume : AppCompatActivity() {
 
-
+    private lateinit var alertDialog: AlertDialog
     lateinit var lineChart: LineChart
     private val resultData = ArrayList<ResultData>()
 
@@ -138,11 +148,16 @@ class NewMeasume : AppCompatActivity() {
         val dialogBinding = CheckResultBinding.inflate(LayoutInflater.from(this))
         val dialogBuilder = AlertDialog.Builder(this).setView(dialogBinding.root)
 
-        val alertDialog = dialogBuilder.create()
+        alertDialog = dialogBuilder.create()
         alertDialog.show()
         alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         dialogBinding.Title.text = "측정 결과"
+
+        val now = LocalDateTime.now()
+        val date = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        val time = now.format(DateTimeFormatter.ofPattern("HH:mm"))
+        dialogBinding.date.text = "$date\n$time"
 
         lineChart = dialogBinding.root.findViewById(R.id.result_chart)
 
@@ -157,9 +172,48 @@ class NewMeasume : AppCompatActivity() {
         }
 
         dialogBinding.saveBtn.setOnClickListener {
-            val result = vcValues.joinToString(", ")
-            Toast.makeText(this, "측정 값: $result", Toast.LENGTH_LONG).show()
+            getAndSaveResultNumber(date)
         }
+    }
+
+    private fun getAndSaveResultNumber(date: String) {
+        val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        val userId = sharedPreferences.getString("user_id", null) ?: return
+
+        val userRef = Firebase.database("https://hicure-d5c99-default-rtdb.firebaseio.com/")
+            .getReference("users").child(userId).child("data").child(date)
+
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                Log.d(TAG, "DataSnapshot children count: ${dataSnapshot.childrenCount}")
+                val resultNumber = (dataSnapshot.childrenCount + 1).toString()
+                submitResult(userRef, resultNumber)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.e(TAG, "Failed to get result number", databaseError.toException())
+            }
+        })
+    }
+
+    private fun submitResult(userRef: DatabaseReference, resultNumber: String) {
+        val resultMap = vcValues.mapIndexed { index, value ->
+            "${index + 1}" to (value.toDoubleOrNull() ?: 0.0)
+        }.toMap()
+
+        userRef.child(resultNumber).setValue(resultMap)
+            .addOnSuccessListener {
+                Log.d(TAG, "Result saved successfully.")
+                runOnUiThread {
+                    alertDialog.dismiss()
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("WOW", "Failed to save result", e)
+                runOnUiThread {
+                    Toast.makeText(this, "다시 시도해주세요.", Toast.LENGTH_LONG).show()
+                }
+            }
     }
 
     private fun setupLineChart() {

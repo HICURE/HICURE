@@ -27,7 +27,7 @@
             android:name=".NewMeasume"
             android:exported="false" />
         <activity
-            android:name=".AppStart"
+            android:name=".BleConnect"
             android:exported="false" />
         <activity
             android:name=".Calendar"
@@ -51,7 +51,7 @@
             android:name=".InitialSurvey"
             android:exported="false" />
         <activity
-            android:name=".BleConnect"
+            android:name=".AppStart"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
