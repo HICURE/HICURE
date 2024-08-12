@@ -13,7 +13,7 @@ class AlarmRepository(
     // Insert a single alarm into the database
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun insertAlarm(alarm: List<AlarmEntity>) {
+    suspend fun insertAlarm(alarm: AlarmEntity) {
         alarmDao.insert(alarm)
     }
 
@@ -32,12 +32,16 @@ class AlarmRepository(
         if (existingAlarm != null) {
             updateAlarm(alarm)
         } else {
-            insertAlarm(listOf(alarm))
+            insertAlarm(alarm)
         }
     }
 
     @WorkerThread
     suspend fun getAlarmById(id: Int): AlarmEntity? {
         return alarmDao.getAlarmById(id)
+    }
+
+    suspend fun clearAllAlarms() {
+        alarmDao.deleteAllAlarms()
     }
 }
