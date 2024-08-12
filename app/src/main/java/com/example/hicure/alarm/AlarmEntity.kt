@@ -8,8 +8,8 @@ data class AlarmEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val time: String,
-    val amPm: String,
+    val amPm: String, // 필요없음
     val label: String,
-    val isEnabled: Boolean,
+    var isEnabled: Boolean,
     val isSoundAndVibration: Boolean,
 )

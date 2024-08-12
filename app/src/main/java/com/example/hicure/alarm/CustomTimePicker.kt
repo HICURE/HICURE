@@ -52,7 +52,7 @@ class CustomTimePicker @JvmOverloads constructor(
         }
 
          //기본 초기값 설정
-         setInitialValues(3, 24, 1) // 기본 시간, 분, AM 설정
+//         setInitialValues(3, 24, 1) // 기본 시간, 분, AM 설정
     }
 
     override fun onDraw(canvas: Canvas) {
