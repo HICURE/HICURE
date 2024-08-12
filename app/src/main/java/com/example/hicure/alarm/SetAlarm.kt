@@ -29,10 +29,8 @@ class SetAlarm : AppCompatActivity() {
         val initialTime = intent.getStringExtra("EXTRA_ALARM_TIME")
         val amPm = intent.getStringExtra("EXTRA_AM_PM")
         val boxDrawableResId = intent.getIntExtra("EXTRA_BOX_COLOR", R.drawable.set_alarm_box_blue)
-        val switchDrawableResId =
-            intent.getIntExtra("EXTRA_SWITCH_COLOR", R.drawable.alarm_switch_track_on_blue)
-        val buttonDrawableResId =
-            intent.getIntExtra("EXTRA_BUTTON_COLOR", R.drawable.set_alarm_save_button_box_blue)
+        val switchDrawableResId = intent.getIntExtra("EXTRA_SWITCH_COLOR", R.drawable.alarm_switch_track_on_blue)
+        val buttonDrawableResId = intent.getIntExtra("EXTRA_BUTTON_COLOR", R.drawable.set_alarm_save_button_box_blue)
         val alarmName = intent.getStringExtra("EXTRA_ALARM_NAME")
         val isAlarmEnabled = intent.getBooleanExtra("EXTRA_IS_ALARM_ENABLED", false)
         val alarmId = intent.getIntExtra("EXTRA_ALARM_ID", 0)
