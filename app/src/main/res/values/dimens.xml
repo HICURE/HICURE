@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="selected_text_size">150sp</dimen>
+    <dimen name="normal_text_size">140sp</dimen>
+    <dimen name="am_pm_text_size">80sp</dimen>
+</resources>
