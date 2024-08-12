@@ -1,5 +1,7 @@
 package com.example.hicure.serveinfo
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
@@ -44,6 +46,17 @@ class ActivityLungCapacityPrediction : AppCompatActivity() {
         binding.content3.visibility = View.GONE
         binding.content4.visibility = View.GONE
         binding.content5.visibility = View.GONE
-        binding.image.visibility = View.GONE
+
+        binding.imageRes.setImageResource(R.drawable.image2)
+        binding.imageRes.setOnClickListener {
+            val intent = Intent(this, FullScreenImageActivity::class.java).apply {
+                putExtra("imageResId", R.drawable.image2)
+            }
+            startActivity(intent)
+        }
+
+        binding.backBtn.setOnClickListener{
+            finish()
+        }
     }
 }
