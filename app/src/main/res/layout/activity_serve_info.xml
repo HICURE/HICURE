@@ -5,43 +5,56 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ServeInfo"
-    android:background="@color/white">
+    android:background="@color/white"
+    tools:context=".ServeInfo">
 
-
-    <ImageView
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/infobox"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.505"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.859" />
+        android:background="@color/white"
+        android:elevation="8dp"
+        android:outlineSpotShadowColor="@color/black"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/infobox"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.514" />
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/infobox"
+            <ImageView
+                android:id="@+id/behind_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="13dp"
+                android:contentDescription="@string/description"
+                android:src="@drawable/behind_action_title" />
+
+            <com.example.hicure.OutLineTextView
+                android:id="@+id/action_title"
+                style="@style/mainTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:text="@string/main_title" />
+
+        </FrameLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/info_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="80dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.505"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.156" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        tools:layout_editor_absoluteX="15dp" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -50,26 +63,25 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/bn_main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:checkable ="true"
+                android:checkable="true"
                 android:elevation="10dp"
-                app:itemIconTint="@drawable/nav_click_color"
-                app:itemTextColor="@drawable/nav_click_color"
                 android:outlineSpotShadowColor="@color/black"
                 app:itemActiveIndicatorStyle="@null"
+                app:itemIconTint="@drawable/nav_click_color"
+                app:itemTextColor="@drawable/nav_click_color"
                 app:labelVisibilityMode="labeled"
                 app:menu="@navigation/bottom_nav" />
         </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
