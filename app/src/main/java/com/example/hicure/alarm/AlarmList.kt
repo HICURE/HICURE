@@ -32,6 +32,7 @@ class AlarmList : AppCompatActivity() {
         alarmRepository = AlarmRepository(database.alarmDao())
 
         setupAlarmBoxListeners()
+        setupSwitchListeners()
         initActivityResultLauncher()
         CoroutineScope(Dispatchers.IO).launch {
             alarmRepository.clearAllAlarms() // Clear the database
@@ -47,8 +48,8 @@ class AlarmList : AppCompatActivity() {
                 // Insert default alarms
                 val defaultAlarms = listOf(
                     AlarmEntity(id = 1, time = "08:00 AM", amPm = "", label = "아침", isEnabled = false, isSoundAndVibration = false),
-                    AlarmEntity(id = 2, time = "12:00 PM", amPm = "PM", label = "점심", isEnabled = false, isSoundAndVibration = false),
-                    AlarmEntity(id = 3, time = "06:00 PM", amPm = "PM", label = "저녁", isEnabled = false, isSoundAndVibration = false)
+                    AlarmEntity(id = 2, time = "12:00 PM", amPm = "", label = "점심", isEnabled = false, isSoundAndVibration = false),
+                    AlarmEntity(id = 3, time = "06:00 PM", amPm = "", label = "저녁", isEnabled = false, isSoundAndVibration = false)
                 )
                 defaultAlarms.forEach { alarm ->
                     alarmRepository.insertAlarm(alarm)
@@ -86,6 +87,30 @@ class AlarmList : AppCompatActivity() {
                 R.drawable.set_alarm_save_button_box_pink,
                 3
             )
+        }
+    }
+
+    private fun setupSwitchListeners() {
+        binding.alarmSwitchBlue.setOnCheckedChangeListener { _, isChecked ->
+            updateAlarmStatus(1, isChecked)
+        }
+
+        binding.alarmSwitchYellow.setOnCheckedChangeListener { _, isChecked ->
+            updateAlarmStatus(2, isChecked)
+        }
+
+        binding.alarmSwitchPink.setOnCheckedChangeListener { _, isChecked ->
+            updateAlarmStatus(3, isChecked)
+        }
+    }
+
+    private fun updateAlarmStatus(alarmId: Int, isEnabled: Boolean) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val alarm = alarmRepository.getAlarmById(alarmId)
+            alarm?.let {
+                it.isEnabled = isEnabled
+                alarmRepository.insertOrUpdateAlarm(it)
+            }
         }
     }
 
