@@ -46,9 +46,9 @@ class AlarmList : AppCompatActivity() {
             if (existingAlarms.isEmpty()) {
                 // Insert default alarms
                 val defaultAlarms = listOf(
-                    AlarmEntity(id = 1, time = "08:00", amPm = "AM", label = "Wake Up", isEnabled = true, isSoundAndVibration = true),
-                    AlarmEntity(id = 2, time = "12:00", amPm = "PM", label = "Lunch", isEnabled = true, isSoundAndVibration = true),
-                    AlarmEntity(id = 3, time = "06:00", amPm = "PM", label = "Dinner", isEnabled = true, isSoundAndVibration = true)
+                    AlarmEntity(id = 1, time = "08:00 AM", amPm = "", label = "아침", isEnabled = false, isSoundAndVibration = false),
+                    AlarmEntity(id = 2, time = "12:00 PM", amPm = "PM", label = "점심", isEnabled = false, isSoundAndVibration = false),
+                    AlarmEntity(id = 3, time = "06:00 PM", amPm = "PM", label = "저녁", isEnabled = false, isSoundAndVibration = false)
                 )
                 defaultAlarms.forEach { alarm ->
                     alarmRepository.insertAlarm(alarm)
