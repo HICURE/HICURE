@@ -6,8 +6,6 @@ import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
-import androidx.core.content.res.ResourcesCompat
 import com.example.hicure.R
 import com.example.hicure.databinding.ActivityAlarmListBinding
 import kotlinx.coroutines.CoroutineScope
@@ -31,13 +29,16 @@ class AlarmList : AppCompatActivity() {
         val database = AlarmDatabase.getInstance(applicationContext)
         alarmRepository = AlarmRepository(database.alarmDao())
 
+        initializeDefaultAlarms()
+        displayExistingAlarms()
         setupAlarmBoxListeners()
         setupSwitchListeners()
         initActivityResultLauncher()
-        CoroutineScope(Dispatchers.IO).launch {
-            alarmRepository.clearAllAlarms() // Clear the database
-            initializeDefaultAlarms() // Initialize default alarms
-        }
+        // 앱 실행 시 알람 정보 초기화 코드
+//        CoroutineScope(Dispatchers.IO).launch {
+//            alarmRepository.clearAllAlarms() // Clear the database
+//            initializeDefaultAlarms() // Initialize default alarms
+//        }
     }
 
     private fun initializeDefaultAlarms() {
@@ -54,6 +55,7 @@ class AlarmList : AppCompatActivity() {
                 defaultAlarms.forEach { alarm ->
                     alarmRepository.insertAlarm(alarm)
                 }
+                displayExistingAlarms()
             }
         }
     }
@@ -87,6 +89,47 @@ class AlarmList : AppCompatActivity() {
                 R.drawable.set_alarm_save_button_box_pink,
                 3
             )
+        }
+    }
+
+    private fun displayExistingAlarms() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val alarms = alarmRepository.getAllAlarms.first()
+            runOnUiThread {
+                alarms.forEach { alarm ->
+
+                    when (alarm.id) {
+                        1 -> {
+                            val (initialTime, initialAMPM) = splitTimeAndAmPm(alarm.time)
+                            binding.alarmTimeBlue.text = getString(R.string.alarm_box_blue_time, initialTime)
+                            binding.alarmAmPmBlue.text = getString(R.string.alarm_box_AMPM, initialAMPM)
+                            binding.alarmLabelBlue.text = getString(R.string.alarm_box_name_blue, alarm.label)
+                        }
+                        2 -> {
+                            val (initialTime, initialAMPM) = splitTimeAndAmPm(alarm.time)
+                            binding.alarmTimeYellow.text = getString(R.string.alarm_box_yellow_time, initialTime)
+                            binding.alarmAmPmYellow.text = getString(R.string.alarm_box_AMPM, initialAMPM)
+                            binding.alarmLabelYellow.text = getString(R.string.alarm_box_name_yellow, alarm.label)
+                        }
+                        3 -> {
+                            val (initialTime, initialAMPM) = splitTimeAndAmPm(alarm.time)
+                            binding.alarmTimePink.text = getString(R.string.alarm_box_pink_time, initialTime)
+                            binding.alarmAmPmPink.text = getString(R.string.alarm_box_AMPM, initialAMPM)
+                            binding.alarmLabelPink.text = getString(R.string.alarm_box_name_pink, alarm.label)
+                        }
+                    }
+                    updateSwitchState(alarm)
+                }
+            }
+        }
+    }
+
+
+    private fun updateSwitchState(alarm: AlarmEntity) {
+        when (alarm.id) {
+            1 -> binding.alarmSwitchBlue.isChecked = alarm.isEnabled
+            2 -> binding.alarmSwitchYellow.isChecked = alarm.isEnabled
+            3 -> binding.alarmSwitchPink.isChecked = alarm.isEnabled
         }
     }
 
@@ -138,7 +181,7 @@ class AlarmList : AppCompatActivity() {
                         alarmRepository.insertOrUpdateAlarm(alarmEntity)
                     }
 
-                    updateAlarmBox(time, amPm, label)
+                    updateAlarmBox(time, label)
                 }
             }
         }
@@ -162,15 +205,31 @@ class AlarmList : AppCompatActivity() {
         }
     }
 
-    private fun updateAlarmBox(time: String?, amPm: String?, label: String?) {
-        val alarmBox = binding.root.findViewById<CardView>(lastClickedAlarmBox)
+    private fun updateAlarmBox(time: String?, label: String?) {
+        // ViewBinding을 통해 CardView를 참조
+        val alarmBox = when (lastClickedAlarmBox) {
+            R.id.alarmBoxBlue -> binding.alarmBoxBlue
+            R.id.alarmBoxYellow -> binding.alarmBoxYellow
+            R.id.alarmBoxPink -> binding.alarmBoxPink
+            else -> null
+        }
+
+        if (alarmBox == null) {
+            // Handle case where alarmBox is null
+            return
+        }
+
         val textViewIds = getTextViewIdsForBox(lastClickedAlarmBox)
 
         val timeTextView = alarmBox.findViewById<TextView>(textViewIds.first)
         val labelTextView = alarmBox.findViewById<TextView>(textViewIds.second)
         val amPmTextView = alarmBox.findViewById<TextView>(textViewIds.third)
 
-        timeTextView.typeface = ResourcesCompat.getFont(this, R.font.oxygen_bold)
+        if (timeTextView == null || labelTextView == null || amPmTextView == null) {
+            // Handle case where any of the TextViews are null
+            return
+        }
+
         val (newTime, amPmText) = splitTimeAndAmPm(time)
         timeTextView.text = newTime
         amPmTextView.text = amPmText
