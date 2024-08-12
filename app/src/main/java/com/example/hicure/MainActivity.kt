@@ -3,6 +3,7 @@ package com.example.hicure
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.hicure.databinding.ActivityMainBinding
@@ -12,6 +13,7 @@ import java.util.Date
 import java.util.Locale
 import androidx.fragment.app.Fragment
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import android.widget.RelativeLayout
 import com.example.hicure.serveinfo.ServeInfo
@@ -69,6 +71,7 @@ class MainActivity : AppCompatActivity() {
         textViewDate.text = currentDate
         val textViewTime: TextView = findViewById(R.id.textViewTime)
         textViewTime.text = currentTime
+        val lungImage: ImageView = findViewById(R.id.lungimage)
 
         val button1: Button = findViewById(R.id.new_measure)
         button1.setOnClickListener {
@@ -140,17 +143,25 @@ class MainActivity : AppCompatActivity() {
         userId?.let {
             userRef.child(it).child("score").addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val score = dataSnapshot.getValue(Double::class.java) ?: 0
+                    val score = dataSnapshot.getValue(Double::class.java) ?: 0.0 // Double 타입으로 받음
                     Myscore.text = score.toString()
 
                     // 사용자 이름과 점수를 결합하여 표시
                     userName?.let {
                         val myscore = "나의 점수: ${score}"
                         binding.myscore.text = myscore
+
+                        // 점수를 숫자형으로 비교
+                        if (score >= 60) { // score를 직접 비교
+                            lungImage.setImageResource(R.drawable.goodlung)
+                        } else {
+                            lungImage.setImageResource(R.drawable.badlung)
+                        }
                     }
 
                     setupPieChart(score.toString())
                 }
+
 
                 override fun onCancelled(databaseError: DatabaseError) {
                     Myscore.text = "Failed to load score."
@@ -206,40 +217,40 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun setupLineChart(cnt:String) {
+    private fun setupLineChart(cnt: String) {
         lineChart = findViewById(R.id.linechart)
         val userId = getUserNameFromPreferences()
         val currentDate = LocalDate.now().toString()
 
         if (userId != null) {
-            // Firebase 데이터베이스 참조
             val database: FirebaseDatabase = FirebaseDatabase.getInstance()
             val dataRef: DatabaseReference = database.getReference("users/$userId/data/$currentDate/$cnt")
 
-            // Firebase에서 데이터 가져오기
             dataRef.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     chartData.clear() // 기존 데이터 초기화
-
-                    // Firebase 데이터 가져오기
-                    for (dataSnapshot in snapshot.children) {
-                        val label = dataSnapshot.key?.replace("[^\\d.]".toRegex(), "") ?: "0"
-                        val value = dataSnapshot.getValue(Double::class.java) ?: 0.0
-                        addChartItem(label + "초", value)
+                    if (snapshot.exists()) {
+                        for (dataSnapshot in snapshot.children) {
+                            val label = dataSnapshot.key?.replace("[^\\d.]".toRegex(), "") ?: "0"
+                            val value = dataSnapshot.getValue(Double::class.java) ?: 0.0
+                            addChartItem(label + "초", value)
+                        }
+                        updateChart()
+                    } else {
+                        Log.e("Firebase", "No data found for the given path")
                     }
-
-                    // 차트 업데이트
-                    updateChart()
                 }
+
 
                 override fun onCancelled(error: DatabaseError) {
                 }
             })
+
         }
     }
 
+
     private fun updateChart() {
-        // 차트 데이터를 추가한 후, 차트를 업데이트하는 함수
         val entries = mutableListOf<Entry>()
 
         for (item in chartData) {
@@ -265,6 +276,7 @@ class MainActivity : AppCompatActivity() {
         lineChart.description.isEnabled = false
         lineChart.invalidate()
     }
+
 
     private fun addChartItem(labelItem: String, dataItem: Double) {
         val item = MyChartData1(labelItem, dataItem)

@@ -135,6 +135,9 @@ class Calendar : AppCompatActivity() {
                         valuesList.add(value.toString())  // 각 value를 리스트에 추가
                     }
                 }
+                if(maxValue<0){
+                    maxValue=0
+                }
                 breathTextView.text = "하루중 최대값 : $maxValue"
             }
 
