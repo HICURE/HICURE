@@ -83,11 +83,7 @@ class MainActivity : AppCompatActivity() {
             "$it".also { binding.username.text = it }
         }
 
-
         Myscore = findViewById(R.id.myscore)
-
-        // Firebase Realtime Database 인스턴스 가져오기
-        val databaseReff = userRef.child(userName.toString()).child("score")//= FirebaseDatabase.getInstance().getReference("users/$userId/score")
 
         val min=findViewById<Button>(R.id.leftB)
         val plus =findViewById<Button>(R.id.rightB)
@@ -136,24 +132,29 @@ class MainActivity : AppCompatActivity() {
                 binding.behindTitle.layoutParams = layoutParams
             }
         })
-        databaseReff.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val score = dataSnapshot.getValue(Double::class.java) ?: 0
-                Myscore.text = score.toString()
 
-                // 사용자 이름과 점수를 결합하여 표시
-                userName?.let {
-                    val displayText = "$it 점수: ${score}"
-                    binding.username.text = displayText
+        val userId = getUserIdFromPreferences()
+
+        userId?.let {
+            userRef.child(it).child("score").addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val score = dataSnapshot.getValue(Double::class.java) ?: 0
+                    Myscore.text = score.toString()
+
+                    // 사용자 이름과 점수를 결합하여 표시
+                    userName?.let {
+                        val displayText = "$it 점수: ${score}"
+                        binding.username.text = displayText
+                    }
+
+                    setupPieChart(score.toString())
                 }
 
-                setupPieChart(score.toString())
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                Myscore.text = "Failed to load score."
-            }
-        })
+                override fun onCancelled(databaseError: DatabaseError) {
+                    Myscore.text = "Failed to load score."
+                }
+            })
+        }
 
     }
 
@@ -273,6 +274,12 @@ class MainActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
         return sharedPreferences.getString("user_name", null)
     }
+
+    private fun getUserIdFromPreferences(): String? {
+        val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        return sharedPreferences.getString("user_id", null)
+    }
+
     private fun startNewActivity(activityClass: Class<*>) {
         val intent = Intent(this, activityClass)
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
