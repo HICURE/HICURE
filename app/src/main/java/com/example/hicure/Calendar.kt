@@ -57,7 +57,7 @@ class Calendar : AppCompatActivity() {
         val min=findViewById<Button>(R.id.leftB)
         val plus =findViewById<Button>(R.id.rightB)
         val count_number =findViewById<TextView>(R.id.count_number)
-        var num=0
+        var num=1
 
         min.setOnClickListener{
             num--

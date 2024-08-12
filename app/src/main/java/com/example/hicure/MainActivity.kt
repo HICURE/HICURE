@@ -40,10 +40,14 @@ data class ChartData(
 )
 
 class MainActivity : AppCompatActivity() {
-    private val TAG = this.javaClass.simpleName
+    private var database: FirebaseDatabase =
+        FirebaseDatabase.getInstance("https://hicure-d5c99-default-rtdb.firebaseio.com/")
+    private val userRef: DatabaseReference = database.getReference("users")
+
     lateinit var lineChart: LineChart
     private val chartData = ArrayList<ChartData>()
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private lateinit var Myscore: TextView
 
     private val frame: RelativeLayout by lazy { // activity_main의 화면 부분
         findViewById(R.id.main)
@@ -55,7 +59,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        setContentView(R.layout.activity_calendar)
 
         val currentDate = getCurrentDate()
         val currentTime = getCurrentTime()
@@ -74,6 +77,34 @@ class MainActivity : AppCompatActivity() {
         button2.setOnClickListener {
             val intent = Intent(this, Calendar::class.java)
             startActivity(intent)
+        }
+        val userName = getUserNameFromPreferences()
+        userName?.let {
+            "$it".also { binding.username.text = it }
+        }
+
+
+        Myscore = findViewById(R.id.myscore)
+
+        // Firebase Realtime Database 인스턴스 가져오기
+        val databaseReff = userRef.child(userName.toString()).child("score")//= FirebaseDatabase.getInstance().getReference("users/$userId/score")
+
+        val min=findViewById<Button>(R.id.leftB)
+        val plus =findViewById<Button>(R.id.rightB)
+        val count_number =findViewById<TextView>(R.id.count_number)
+        var num=1
+
+        min.setOnClickListener{
+            num--
+            count_number.setText(num.toString())
+            // 예시 데이터 초기화 및 설정
+            setupLineChart(num.toString())
+        }
+        plus.setOnClickListener{
+            num++
+            count_number.setText(num.toString())
+            // 예시 데이터 초기화 및 설정
+            setupLineChart(num.toString())
         }
 
         bottomNagivationView.selectedItemId = R.id.ic_Home
@@ -105,30 +136,25 @@ class MainActivity : AppCompatActivity() {
                 binding.behindTitle.layoutParams = layoutParams
             }
         })
+        databaseReff.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val score = dataSnapshot.getValue(Double::class.java) ?: 0
+                Myscore.text = score.toString()
 
-        setupPieChart()
-        val min=findViewById<Button>(R.id.leftB)
-        val plus =findViewById<Button>(R.id.rightB)
-        val count_number =findViewById<TextView>(R.id.count_number)
-        var num=0
+                // 사용자 이름과 점수를 결합하여 표시
+                userName?.let {
+                    val displayText = "$it 점수: ${score}"
+                    binding.username.text = displayText
+                }
 
-        min.setOnClickListener{
-            num--
-            count_number.setText(num.toString())
-            // 예시 데이터 초기화 및 설정
-            setupLineChart(num.toString())
-        }
-        plus.setOnClickListener{
-            num++
-            count_number.setText(num.toString())
-            // 예시 데이터 초기화 및 설정
-            setupLineChart(num.toString())
-        }
+                setupPieChart(score.toString())
+            }
 
-        val userName = getUserNameFromPreferences()
-        userName?.let {
-            "$it".also { binding.username.text = it }
-        }
+            override fun onCancelled(databaseError: DatabaseError) {
+                Myscore.text = "Failed to load score."
+            }
+        })
+
     }
 
     // 화면 전환 구현 메소드
@@ -146,14 +172,21 @@ class MainActivity : AppCompatActivity() {
         return dateFormat.format(Date())
     }
 
-    private fun setupPieChart() {
+    private fun setupPieChart(sco: String) {
         val pieChart = findViewById<PieChart>(R.id.pieChart)
 
-        val entries = ArrayList<PieEntry>()
-        entries.add(PieEntry(40f, ""))
-        entries.add(PieEntry(60f, ""))
+        // 데이터 변환 (예: "40,60" -> [40f, 60f])
+        val values = sco.split(",").map { it.trim().toFloatOrNull() ?: 0f }
 
-        val dataSet = PieDataSet(entries, "Election Results")
+        val entries = ArrayList<PieEntry>()
+        if (values.size >= 2) {
+            entries.add(PieEntry(values[0], "Part 1"))
+            entries.add(PieEntry(values[1], "Part 2"))
+        } else {
+            entries.add(PieEntry(100f, "Unknown")) // If not enough values, display default
+        }
+
+        val dataSet = PieDataSet(entries, "Pie Chart Data")
         dataSet.colors = listOf(Color.GRAY, Color.LTGRAY)
         dataSet.setDrawValues(false)
 
@@ -169,6 +202,7 @@ class MainActivity : AppCompatActivity() {
         pieChart.data = data
         pieChart.invalidate()
     }
+
 
     private fun setupLineChart(cnt:String) {
         lineChart = findViewById(R.id.linechart)
