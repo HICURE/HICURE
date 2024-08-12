@@ -2,12 +2,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+
+
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -20,13 +29,47 @@
         android:theme="@style/Theme.HICURE"
         tools:targetApi="31">
         <activity
+            android:name=".alarm.CustomTimePicker"
+            android:exported="false" />
+        <activity
+            android:name=".alarm.SetAlarm"
+            android:exported="false" />
+        <receiver android:name=".alarm.AlertReceiver" android:exported="true" />
+        <activity
+            android:name=".serveinfo.FullScreenImageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".serveinfo.ActivityAnatomy"
+            android:exported="false" />
+        <activity
+            android:name=".serveinfo.ActivityMeasurementPrinciple"
+            android:exported="false" />
+        <activity
+            android:name=".serveinfo.ActivityDeviceScience"
+            android:exported="false" />
+        <activity
+            android:name=".serveinfo.ActivityHealthyFoods"
+            android:exported="false" />
+        <activity
+            android:name=".serveinfo.ActivityBreathExercises"
+            android:exported="false" />
+        <activity
+            android:name=".serveinfo.ActivityImportanceOfLungCapacity"
+            android:exported="false" />
+        <activity
+            android:name=".serveinfo.ActivityLungCapacityPrediction"
+            android:exported="false" />
+        <activity
             android:name=".NewMeasume"
             android:exported="false" />
         <activity
-            android:name=".AppStart"
+            android:name=".BleConnect"
             android:exported="false" />
         <activity
-            android:name=".AlarmList"
+            android:name=".Calendar"
+            android:exported="false" />
+        <activity
+            android:name=".alarm.AlarmList"
             android:exported="false" />
         <activity
             android:name=".UserInfo"
@@ -35,7 +78,7 @@
             android:name=".Survey"
             android:exported="false" />
         <activity
-            android:name=".ServeInfo"
+            android:name=".serveinfo.ServeInfo"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
@@ -44,7 +87,7 @@
             android:name=".InitialSurvey"
             android:exported="false" />
         <activity
-            android:name=".Calendar"
+            android:name=".AppStart"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

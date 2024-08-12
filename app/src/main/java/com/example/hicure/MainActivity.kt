@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment
 import android.widget.Button
 import android.widget.Toast
 import android.widget.RelativeLayout
+import com.example.hicure.serveinfo.ServeInfo
+import com.example.hicure.alarm.AlarmList
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 import com.github.mikephil.charting.charts.PieChart
@@ -70,7 +72,7 @@ class MainActivity : AppCompatActivity() {
 
         val button1: Button = findViewById(R.id.new_measure)
         button1.setOnClickListener {
-            val intent = Intent(this, NewMeasume::class.java)
+            val intent = Intent(this, BleConnect::class.java)
             startActivity(intent)
         }
         val button2: Button = findViewById(R.id.calender)
