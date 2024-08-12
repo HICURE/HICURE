@@ -231,6 +231,7 @@ class AppStart : AppCompatActivity() {
                                         age = 0
                                         gender = "Unknown"
                                         survey = false
+                                        score = 0
                                     }
                                     userRef.child(newId).setValue(user)
                                         .addOnSuccessListener {

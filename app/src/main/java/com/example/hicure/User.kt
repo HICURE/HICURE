@@ -6,6 +6,7 @@ class User {
     var gender: String = ""
     var survey: Boolean = false
     var surveyResult: SurveyResult? = null
+    var score: Int = 0
 }
 
 class SurveyResult {
