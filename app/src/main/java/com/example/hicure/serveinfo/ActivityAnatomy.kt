@@ -1,6 +1,7 @@
 package com.example.hicure.serveinfo
 
 import android.os.Bundle
+import android.view.View
 import android.view.ViewTreeObserver
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +17,7 @@ class ActivityAnatomy : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        val infoSubTitle = intent.getStringExtra("subTitle")
         val infoTitle = intent.getStringExtra("title")
 
         "$infoTitle".also { binding.actionTitle.text = it }
@@ -33,5 +35,14 @@ class ActivityAnatomy : AppCompatActivity() {
                 binding.behindTitle.layoutParams = layoutParams
             }
         })
+
+        binding.subTitle.text = infoSubTitle
+
+        binding.content1.visibility = View.GONE
+        binding.content2.visibility = View.GONE
+        binding.content3.visibility = View.GONE
+        binding.content4.visibility = View.GONE
+        binding.content5.visibility = View.GONE
+        binding.image.visibility = View.GONE
     }
 }

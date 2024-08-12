@@ -65,7 +65,6 @@
         <activity
             android:name=".Survey"
             android:exported="false" />
-
         <activity
             android:name=".serveinfo.ServeInfo"
             android:exported="false" />

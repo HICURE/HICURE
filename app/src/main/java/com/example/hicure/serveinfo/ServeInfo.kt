@@ -86,6 +86,7 @@ class ServeInfo : AppCompatActivity(), InfoAdapter.OnItemClickListener {
 
         // Title을 Intent에 추가하여 다음 Activity에 전달
         intent.putExtra("title", selectedItem.title)
+        intent.putExtra("subTitle",selectedItem.content)
         startActivity(intent)
     }
 
