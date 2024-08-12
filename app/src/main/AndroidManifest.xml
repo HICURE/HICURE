@@ -10,12 +10,11 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
 
     <application
         android:allowBackup="true"
@@ -27,6 +26,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HICURE"
         tools:targetApi="31">
+        <activity
+            android:name=".serveinfo.ActivityAnatomy"
+            android:exported="false" />
+        <activity
+            android:name=".serveinfo.ActivityMeasurementPrinciple"
+            android:exported="false" />
+        <activity
+            android:name=".serveinfo.ActivityDeviceScience"
+            android:exported="false" />
+        <activity
+            android:name=".serveinfo.ActivityHealthyFoods"
+            android:exported="false" />
+        <activity
+            android:name=".serveinfo.ActivityBreathExercises"
+            android:exported="false" />
+        <activity
+            android:name=".serveinfo.ActivityImportanceOfLungCapacity"
+            android:exported="false" />
+        <activity
+            android:name=".serveinfo.ActivityLungCapacityPrediction"
+            android:exported="false" />
         <activity
             android:name=".NewMeasume"
             android:exported="false" />
@@ -45,8 +65,9 @@
         <activity
             android:name=".Survey"
             android:exported="false" />
+
         <activity
-            android:name=".ServeInfo"
+            android:name=".serveinfo.ServeInfo"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

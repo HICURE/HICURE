@@ -2,13 +2,9 @@ package com.example.hicure
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.ViewTreeObserver
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.Fragment
 import com.example.hicure.databinding.ActivityAlarmListBinding
+import com.example.hicure.serveinfo.ServeInfo
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class AlarmList : AppCompatActivity() {

@@ -1,4 +1,4 @@
-package com.example.hicure
+package com.example.hicure.serveinfo
 
 data class InfoItem(
     val title: String,

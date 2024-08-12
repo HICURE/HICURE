@@ -1,18 +1,14 @@
-package com.example.hicure
+package com.example.hicure.serveinfo
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.hicure.R
 import com.example.hicure.databinding.CardInfoBinding
 
 class InfoAdapter(
     private val context: Context,
-    private val items: List<InfoItem>,
+    val items: List<InfoItem>,
     private val onItemClickListener: OnItemClickListener
 ) : RecyclerView.Adapter<InfoAdapter.InfoViewHolder>() {
 
@@ -22,7 +18,7 @@ class InfoAdapter(
 
     inner class InfoViewHolder(val binding: CardInfoBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
-            binding.checkButton.setOnClickListener {
+            binding.detailBtn.setOnClickListener {
                 onItemClickListener.onItemClick(adapterPosition)
             }
         }
