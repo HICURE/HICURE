@@ -9,6 +9,7 @@ import com.example.hicure.databinding.ActivityUserInfoBinding
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.Toast
+import com.example.hicure.serveinfo.ServeInfo
 import com.example.hicure.alarm.AlarmList
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase

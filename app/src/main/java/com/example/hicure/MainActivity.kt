@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import android.widget.Button
 import android.widget.Toast
 import android.widget.RelativeLayout
+import com.example.hicure.serveinfo.ServeInfo
 import com.example.hicure.alarm.AlarmList
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
