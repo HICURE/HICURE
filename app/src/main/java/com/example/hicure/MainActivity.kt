@@ -47,9 +47,9 @@ class MainActivity : AppCompatActivity() {
     private val userRef: DatabaseReference = database.getReference("users")
 
     lateinit var lineChart: LineChart
-    private val chartData = ArrayList<ChartData>()
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private lateinit var Myscore: TextView
+    private val chartData = ArrayList<MyChartData1>()
 
     private val frame: RelativeLayout by lazy { // activity_main의 화면 부분
         findViewById(R.id.main)
@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
         userName?.let {
             "$it".also { binding.username.text = it }
         }
-
+        setupLineChart(1.toString())
         Myscore = findViewById(R.id.myscore)
 
         val min=findViewById<Button>(R.id.leftB)
@@ -145,8 +145,8 @@ class MainActivity : AppCompatActivity() {
 
                     // 사용자 이름과 점수를 결합하여 표시
                     userName?.let {
-                        val displayText = "$it 점수: ${score}"
-                        binding.username.text = displayText
+                        val myscore = "나의 점수: ${score}"
+                        binding.myscore.text = myscore
                     }
 
                     setupPieChart(score.toString())
@@ -178,19 +178,18 @@ class MainActivity : AppCompatActivity() {
     private fun setupPieChart(sco: String) {
         val pieChart = findViewById<PieChart>(R.id.pieChart)
 
-        // 데이터 변환 (예: "40,60" -> [40f, 60f])
-        val values = sco.split(",").map { it.trim().toFloatOrNull() ?: 0f }
+        // sco 값을 숫자로 변환 (예: "52.0" -> 52f)
+        val scoreValue = sco.toFloatOrNull() ?: 0f
+
+        // 52%와 48%로 나누기
+        val values = listOf(scoreValue, 100f - scoreValue)
 
         val entries = ArrayList<PieEntry>()
-        if (values.size >= 2) {
-            entries.add(PieEntry(values[0], "Part 1"))
-            entries.add(PieEntry(values[1], "Part 2"))
-        } else {
-            entries.add(PieEntry(100f, "Unknown")) // If not enough values, display default
-        }
+        entries.add(PieEntry(values[0], "$scoreValue"))
+        entries.add(PieEntry(values[1], ""))
 
         val dataSet = PieDataSet(entries, "Pie Chart Data")
-        dataSet.colors = listOf(Color.GRAY, Color.LTGRAY)
+        dataSet.colors = listOf(Color.DKGRAY, Color.LTGRAY)
         dataSet.setDrawValues(false)
 
         // 도넛 차트 효과를 위해 가운데 원을 비웁니다.
@@ -246,7 +245,7 @@ class MainActivity : AppCompatActivity() {
         for (item in chartData) {
             entries.add(
                 Entry(
-                    item.lableData.replace("[^\\d.]".toRegex(), "").toFloat(),
+                    item.labelData.replace("[^\\d.]".toRegex(), "").toFloat(),
                     item.lineData.toFloat()
                 )
             )
@@ -268,7 +267,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun addChartItem(labelItem: String, dataItem: Double) {
-        val item = ChartData(labelItem, dataItem)
+        val item = MyChartData1(labelItem, dataItem)
         chartData.add(item)
     }
 
@@ -288,3 +287,5 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 }
+
+data class MyChartData1(val labelData: String, val lineData: Double)

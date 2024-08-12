@@ -59,6 +59,7 @@ class Calendar : AppCompatActivity() {
         val count_number =findViewById<TextView>(R.id.count_number)
         var num=1
 
+        setupLineChart(1.toString())
         min.setOnClickListener{
             num--
             count_number.setText(num.toString())
