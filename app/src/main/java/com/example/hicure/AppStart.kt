@@ -31,6 +31,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import com.example.hicure.utils.FirebaseCheckDate
 
 class AppStart : AppCompatActivity() {
 
@@ -56,6 +59,7 @@ class AppStart : AppCompatActivity() {
             promptEnableBluetooth()
         }
 
+
         // User data load
         loadUserFromPreferences {
             binding.root.setOnTouchListener { _, event ->
@@ -71,7 +75,6 @@ class AppStart : AppCompatActivity() {
                 Toast.makeText(this, "LOADING", Toast.LENGTH_SHORT).show()
             }
         }
-
     }
 
     @SuppressLint("MissingPermission")
@@ -174,6 +177,7 @@ class AppStart : AppCompatActivity() {
 
     // Touch Screen
     private fun handleTouchEvent(event: MotionEvent?) {
+
         if (isUserLoggedIn) {
             val nextActivity = if (isSurvey) MainActivity::class.java else InitialSurvey::class.java
             startActivity(Intent(this, nextActivity))
@@ -225,6 +229,7 @@ class AppStart : AppCompatActivity() {
                                     ).show()
 
                                 } else {
+
                                     val user = User().apply {
                                         name = "New User"
                                         age = 0
@@ -338,6 +343,9 @@ class AppStart : AppCompatActivity() {
                                 isSurvey = true
                             }
                         }
+
+                        FirebaseCheckDate.checkAndUpdateDate(userId)
+
                     } else {
                         // User ID does not exist in Firebase
                         editor.putString("user_id", "")
