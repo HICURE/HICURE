@@ -157,7 +157,12 @@ class AppStart : AppCompatActivity() {
                     val user = snapshot.getValue(User::class.java)
                     user?.let {
                         saveUserToPreferences(it, id)
-                        val intent = Intent(this@AppStart, InitialSurvey::class.java)
+
+                        val intent = if(isSurvey){
+                            Intent(this@AppStart, MainActivity::class.java)
+                        }else{
+                            Intent(this@AppStart, InitialSurvey::class.java)
+                        }
                         alertDialog.dismiss()
                         startActivity(intent)
                         finish()
