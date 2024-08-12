@@ -3,12 +3,7 @@ package com.example.hicure
 import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothGatt
-import android.bluetooth.BluetoothGattCallback
-import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothManager
-import android.bluetooth.BluetoothProfile
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
@@ -32,7 +27,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.hicure.databinding.ActivityBleConnectBinding
 import com.example.hicure.databinding.CheckConnectBinding
-import com.example.hicure.databinding.CheckIdBinding
 
 class BleConnect : AppCompatActivity(), OnDeviceClickListener {
 
@@ -47,7 +41,6 @@ class BleConnect : AppCompatActivity(), OnDeviceClickListener {
     private var isScanning = false
 
     companion object {
-        private const val PERMISSION_REQUEST_CODE = 1
         private const val SCAN_PERIOD: Long = 2000 // 2 seconds
         private const val TAG = "BleConnect"
     }
@@ -79,7 +72,7 @@ class BleConnect : AppCompatActivity(), OnDeviceClickListener {
 
         setupRecyclerView()
 
-        binding.btnScan.setOnClickListener {
+/*        binding.btnScan.setOnClickListener {
             if (checkAndRequestPermissions()) {
                 if (isBluetoothEnabled()) {
                     deviceAdapter.clearDevices()
@@ -88,7 +81,16 @@ class BleConnect : AppCompatActivity(), OnDeviceClickListener {
                     promptEnableBluetooth()
                 }
             }
+        }*/
+
+        binding.btnScan.setOnClickListener{
+            if (isBluetoothEnabled()){
+                startScan()
+            }else{
+                promptEnableBluetooth()
+            }
         }
+
         val bluetoothManager = getSystemService(BLUETOOTH_SERVICE) as? BluetoothManager
 
         if (bluetoothManager != null) {
@@ -117,7 +119,7 @@ class BleConnect : AppCompatActivity(), OnDeviceClickListener {
         binding.deviceList.adapter = deviceAdapter
     }
 
-    private fun checkAndRequestPermissions(): Boolean {
+/*    private fun checkAndRequestPermissions(): Boolean {
         val permissionsNeeded = mutableListOf<String>()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -155,7 +157,22 @@ class BleConnect : AppCompatActivity(), OnDeviceClickListener {
         } else {
             true
         }
-    }
+    }*/
+
+/*    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                startScan()
+            } else {
+                Toast.makeText(this, "권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }*/
 
     private fun startScan() {
         deviceAdapter.clearDevices()
@@ -201,21 +218,6 @@ class BleConnect : AppCompatActivity(), OnDeviceClickListener {
         override fun onScanFailed(errorCode: Int) {
             super.onScanFailed(errorCode)
             Log.d(TAG, "onScanResult errorCode: $errorCode")
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
-                startScan()
-            } else {
-                Toast.makeText(this, "권한이 필요합니다.", Toast.LENGTH_SHORT).show()
-            }
         }
     }
 

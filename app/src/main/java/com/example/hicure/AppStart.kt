@@ -1,26 +1,27 @@
 package com.example.hicure
 
-import android.animation.ObjectAnimator
+import android.Manifest
 import android.annotation.SuppressLint
+import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
-import android.view.View
-import android.view.animation.LinearInterpolator
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.example.hicure.BleConnect.Companion
 import com.example.hicure.databinding.ActivityAppStartBinding
 import com.example.hicure.databinding.CheckIdBinding
 import com.google.firebase.database.DataSnapshot
@@ -40,10 +41,18 @@ class AppStart : AppCompatActivity() {
     private var isUserLoggedIn = false
     private var isSurvey = false
 
+    companion object{
+        private const val PERMISSION_REQUEST_CODE = 1
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        if (checkAndRequestPermissions()) {
+                promptEnableBluetooth()
+        }
 
         // User data load
         loadUserFromPreferences {
@@ -62,6 +71,66 @@ class AppStart : AppCompatActivity() {
         }
 
     }
+
+    @SuppressLint("MissingPermission")
+    private fun promptEnableBluetooth() {
+        startActivity(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
+    }
+
+    private fun checkAndRequestPermissions(): Boolean {
+        val permissionsNeeded = mutableListOf<String>()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.BLUETOOTH_SCAN
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                permissionsNeeded.add(Manifest.permission.BLUETOOTH_SCAN)
+            }
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.BLUETOOTH_CONNECT
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                permissionsNeeded.add(Manifest.permission.BLUETOOTH_CONNECT)
+            }
+        }
+
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            permissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+
+        return if (permissionsNeeded.isNotEmpty()) {
+            ActivityCompat.requestPermissions(
+                this,
+                permissionsNeeded.toTypedArray(),
+                AppStart.PERMISSION_REQUEST_CODE
+            )
+            false
+        } else {
+            true
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == com.example.hicure.AppStart.PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+            } else {
+                Toast.makeText(this, "권한이 필요합니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
 
     // Touch Screen
     private fun handleTouchEvent(event: MotionEvent?) {
