@@ -26,6 +26,12 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import java.time.LocalDate
 import java.util.ArrayList
 
 data class ChartData(
@@ -49,6 +55,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        setContentView(R.layout.activity_calendar)
 
         val currentDate = getCurrentDate()
         val currentTime = getCurrentTime()
@@ -100,7 +107,23 @@ class MainActivity : AppCompatActivity() {
         })
 
         setupPieChart()
-        setupLineChart()
+        val min=findViewById<Button>(R.id.leftB)
+        val plus =findViewById<Button>(R.id.rightB)
+        val count_number =findViewById<TextView>(R.id.count_number)
+        var num=0
+
+        min.setOnClickListener{
+            num--
+            count_number.setText(num.toString())
+            // 예시 데이터 초기화 및 설정
+            setupLineChart(num.toString())
+        }
+        plus.setOnClickListener{
+            num++
+            count_number.setText(num.toString())
+            // 예시 데이터 초기화 및 설정
+            setupLineChart(num.toString())
+        }
 
         val userName = getUserNameFromPreferences()
         userName?.let {
@@ -147,17 +170,40 @@ class MainActivity : AppCompatActivity() {
         pieChart.invalidate()
     }
 
-    private fun setupLineChart() {
+    private fun setupLineChart(cnt:String) {
         lineChart = findViewById(R.id.linechart)
+        val userId = getUserNameFromPreferences()
+        val currentDate = LocalDate.now().toString()
 
-        // LineChart 데이터 초기화
-        chartData.clear()
-        addChartItem("1월", 7.9)
-        addChartItem("2월", 8.2)
-        addChartItem("3월", 8.3)
-        addChartItem("4월", 8.5)
-        addChartItem("5월", 7.3)
+        if (userId != null) {
+            // Firebase 데이터베이스 참조
+            val database: FirebaseDatabase = FirebaseDatabase.getInstance()
+            val dataRef: DatabaseReference = database.getReference("users/$userId/data/$currentDate/$cnt")
 
+            // Firebase에서 데이터 가져오기
+            dataRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    chartData.clear() // 기존 데이터 초기화
+
+                    // Firebase 데이터 가져오기
+                    for (dataSnapshot in snapshot.children) {
+                        val label = dataSnapshot.key?.replace("[^\\d.]".toRegex(), "") ?: "0"
+                        val value = dataSnapshot.getValue(Double::class.java) ?: 0.0
+                        addChartItem(label + "초", value)
+                    }
+
+                    // 차트 업데이트
+                    updateChart()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                }
+            })
+        }
+    }
+
+    private fun updateChart() {
+        // 차트 데이터를 추가한 후, 차트를 업데이트하는 함수
         val entries = mutableListOf<Entry>()
 
         for (item in chartData) {

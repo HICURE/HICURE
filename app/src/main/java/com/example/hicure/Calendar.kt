@@ -22,12 +22,14 @@ import java.time.LocalDate
 import java.util.ArrayList
 
 class Calendar : AppCompatActivity() {
-    private val database = FirebaseDatabase.getInstance("https://hicure-d5c99-default-rtdb.firebaseio.com/")
+    private val database =
+        FirebaseDatabase.getInstance("https://hicure-d5c99-default-rtdb.firebaseio.com/")
     private val userRef: DatabaseReference = database.getReference("users")
 
     lateinit var calendarView: CalendarView
     lateinit var diaryTextView: TextView
     lateinit var breathTextView: TextView
+    lateinit var textViewTime: TextView
     lateinit var title: TextView
 
     lateinit var lineChart: LineChart
@@ -42,11 +44,28 @@ class Calendar : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+        val min=findViewById<Button>(R.id.leftB)
+        val plus =findViewById<Button>(R.id.rightB)
+        val count_number =findViewById<TextView>(R.id.count_number)
+        var num=0
 
+        min.setOnClickListener{
+            num--
+            count_number.setText(num.toString())
+            // 예시 데이터 초기화 및 설정
+            setupLineChart(num.toString())
+        }
+        plus.setOnClickListener{
+            num++
+            count_number.setText(num.toString())
+            // 예시 데이터 초기화 및 설정
+            setupLineChart(num.toString())
+        }
         // UI 초기화
         calendarView = findViewById(R.id.calendarView)
         diaryTextView = findViewById(R.id.diaryTextView)
         breathTextView = findViewById(R.id.breathTextView)
+        textViewTime = findViewById(R.id.breathTextView)
 
         val userId = getUserNameFromPreferences()
         val currentDate = LocalDate.now().toString()
@@ -71,34 +90,33 @@ class Calendar : AppCompatActivity() {
                 breathTextView.text = "User ID를 찾을 수 없습니다"
             }
         }
-
-
-        // 예시 데이터 초기화 및 설정
-        setupLineChart()
     }
+
     private fun getUserNameFromPreferences(): String? {
         val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
         return sharedPreferences.getString("user_id", null)
     }
+
     // Firebase에서 데이터 읽기
-    private fun readFirebaseData(date: String,userIDD: String) {
+    private fun readFirebaseData(date: String, userIDD: String) {
         val dataRef = userRef.child(userIDD).child("data").child(date)
 
         dataRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                var sum=0
+                var maxValue = Int.MIN_VALUE
                 val valuesList = mutableListOf<String>()
 
                 for (sectionSnapshot in snapshot.children) {
-                    // 각 섹션의 하위 항목들을 순회하며 값 합산
+                    // 각 섹션의 하위 항목들을 순회하며 최대값을 찾음
                     for (childSnapshot in sectionSnapshot.children) {
                         val value = childSnapshot.getValue(Int::class.java) ?: 0
-                        sum += value
+                        if (value > maxValue) {
+                            maxValue = value
+                        }
                         valuesList.add(value.toString())  // 각 value를 리스트에 추가
                     }
                 }
-                sum=sum/20
-                breathTextView.text = "하루 평균 : $sum"
+                breathTextView.text = "하루중 최대값 : $maxValue"
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -108,17 +126,44 @@ class Calendar : AppCompatActivity() {
         })
     }
 
-    private fun setupLineChart() {
+
+    private fun setupLineChart(cnt:String) {
         lineChart = findViewById(R.id.linechart)
+        val userId = getUserNameFromPreferences()
+        val currentDate = LocalDate.now().toString()
 
-        // LineChart 데이터 초기화
-        chartData.clear()
-        addChartItem("1월", 7.9)
-        addChartItem("2월", 8.2)
-        addChartItem("3월", 8.3)
-        addChartItem("4월", 8.5)
-        addChartItem("5월", 7.3)
+        if (userId != null) {
+            // Firebase 데이터베이스 참조
+            val database: FirebaseDatabase = FirebaseDatabase.getInstance()
+            val dataRef: DatabaseReference = database.getReference("users/$userId/data/$currentDate/$cnt")
 
+            // Firebase에서 데이터 가져오기
+            dataRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    chartData.clear() // 기존 데이터 초기화
+
+                    // Firebase 데이터 가져오기
+                    for (dataSnapshot in snapshot.children) {
+                        val label = dataSnapshot.key?.replace("[^\\d.]".toRegex(), "") ?: "0"
+                        val value = dataSnapshot.getValue(Double::class.java) ?: 0.0
+                        addChartItem(label + "초", value)
+                    }
+
+                    // 차트 업데이트
+                    updateChart()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    breathTextView.text = "데이터를 가져오는 데 실패했습니다: ${error.message}"
+                }
+            })
+        } else {
+            breathTextView.text = "User ID를 찾을 수 없습니다"
+        }
+    }
+
+    private fun updateChart() {
+        // 차트 데이터를 추가한 후, 차트를 업데이트하는 함수
         val entries = mutableListOf<Entry>()
 
         for (item in chartData) {

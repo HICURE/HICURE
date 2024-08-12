@@ -221,8 +221,7 @@
                         android:id="@+id/textViewTime"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="시간을 표시" />
+                        android:gravity="center" />
 
                     <View
                         android:layout_width="wrap_content"
