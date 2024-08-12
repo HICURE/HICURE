@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.ViewTreeObserver
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.hicure.AlarmList
+import com.example.hicure.alarm.AlarmList
 import com.example.hicure.MainActivity
 import com.example.hicure.R
 import com.example.hicure.UserInfo
