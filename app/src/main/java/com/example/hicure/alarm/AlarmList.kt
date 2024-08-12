@@ -33,7 +33,10 @@ class AlarmList : AppCompatActivity() {
 
         setupAlarmBoxListeners()
         initActivityResultLauncher()
-        initializeDefaultAlarms()
+        CoroutineScope(Dispatchers.IO).launch {
+            alarmRepository.clearAllAlarms() // Clear the database
+            initializeDefaultAlarms() // Initialize default alarms
+        }
     }
 
     private fun initializeDefaultAlarms() {
@@ -48,7 +51,7 @@ class AlarmList : AppCompatActivity() {
                     AlarmEntity(id = 3, time = "06:00", amPm = "PM", label = "Dinner", isEnabled = true, isSoundAndVibration = true)
                 )
                 defaultAlarms.forEach { alarm ->
-                    alarmRepository.insertAlarm(defaultAlarms)
+                    alarmRepository.insertAlarm(alarm)
                 }
             }
         }
