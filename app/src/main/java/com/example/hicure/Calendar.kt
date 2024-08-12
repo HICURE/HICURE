@@ -18,8 +18,11 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.ArrayList
+import java.util.Date
+import java.util.Locale
 
 class Calendar : AppCompatActivity() {
     private val database =
@@ -29,7 +32,6 @@ class Calendar : AppCompatActivity() {
     lateinit var calendarView: CalendarView
     lateinit var diaryTextView: TextView
     lateinit var breathTextView: TextView
-    lateinit var textViewTime: TextView
     lateinit var title: TextView
 
     lateinit var lineChart: LineChart
@@ -38,6 +40,14 @@ class Calendar : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calendar)
+
+        val currentDate = getCurrentDate()
+        val currentTime = getCurrentTime()
+
+        val textViewDate: TextView = findViewById(R.id.textViewDate)
+        textViewDate.text = currentDate
+        val textViewTime: TextView = findViewById(R.id.textViewTime)
+        textViewTime.text = currentTime
 
         val backB: Button = findViewById(R.id.backB)
         backB.setOnClickListener {
@@ -65,10 +75,8 @@ class Calendar : AppCompatActivity() {
         calendarView = findViewById(R.id.calendarView)
         diaryTextView = findViewById(R.id.diaryTextView)
         breathTextView = findViewById(R.id.breathTextView)
-        textViewTime = findViewById(R.id.breathTextView)
 
         val userId = getUserNameFromPreferences()
-        val currentDate = LocalDate.now().toString()
 
         if (userId != null) {
             diaryTextView.visibility = View.VISIBLE
@@ -90,6 +98,16 @@ class Calendar : AppCompatActivity() {
                 breathTextView.text = "User ID를 찾을 수 없습니다"
             }
         }
+    }
+
+    private fun getCurrentDate(): String {
+        val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
+        return dateFormat.format(Date())
+    }
+
+    private fun getCurrentTime(): String {
+        val dateFormat = SimpleDateFormat("hh : mm", Locale.getDefault())
+        return dateFormat.format(Date())
     }
 
     private fun getUserNameFromPreferences(): String? {
