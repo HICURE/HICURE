@@ -62,6 +62,10 @@ class UserInfo : AppCompatActivity() {
             true
         }
 
+        binding.userState.reset.setOnClickListener{
+            resetUserIdAndNavigate()
+        }
+
         val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
         val userId = sharedPreferences.getString("user_id", null) ?: return
 
@@ -127,6 +131,18 @@ class UserInfo : AppCompatActivity() {
         }.addOnFailureListener { e ->
             Log.e(TAG, "Failed to get startDate", e)
         }
+    }
+
+    private fun resetUserIdAndNavigate() {
+        val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            putString("user_id", " ")
+            apply()
+        }
+
+        val intent = Intent(this, AppStart::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
     }
 
     private fun startNewActivity(activityClass: Class<*>) {
