@@ -5,9 +5,11 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.graphics.Color
 import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.Button
 import android.widget.CalendarView
 import android.widget.TextView
+import com.example.hicure.databinding.ActivityCalendarBinding
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -29,6 +31,8 @@ class Calendar : AppCompatActivity() {
         FirebaseDatabase.getInstance("https://hicure-d5c99-default-rtdb.firebaseio.com/")
     private val userRef: DatabaseReference = database.getReference("users")
 
+    val binding: ActivityCalendarBinding by lazy { ActivityCalendarBinding.inflate(layoutInflater) }
+
     lateinit var calendarView: CalendarView
     lateinit var diaryTextView: TextView
     lateinit var breathTextView: TextView
@@ -39,7 +43,23 @@ class Calendar : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_calendar)
+        setContentView(binding.root)
+
+        "캘린더".also { binding.actionTitle.text = it }
+
+        binding.actionTitle.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                binding.actionTitle.viewTreeObserver.removeOnGlobalLayoutListener(this)
+
+                val actionTextWidth = binding.actionTitle.width
+                binding.actionTitle.width = actionTextWidth + 10
+
+                val layoutParams = binding.behindTitle.layoutParams
+                layoutParams.width = actionTextWidth + 30
+                binding.behindTitle.layoutParams = layoutParams
+            }
+        })
 
         val currentDate = getCurrentDate()
         val currentTime = getCurrentTime()
@@ -96,6 +116,7 @@ class Calendar : AppCompatActivity() {
                 breathTextView.text = "User ID를 찾을 수 없습니다"
             }
         }
+
     }
 
     private fun getCurrentDate(): String {

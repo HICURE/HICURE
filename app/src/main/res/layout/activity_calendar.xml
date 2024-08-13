@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     tools:context=".Calendar">
-
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -49,9 +48,11 @@
                 android:text="@string/main_title" />
 
         </FrameLayout>
+
     </androidx.appcompat.widget.Toolbar>
 
     <ScrollView
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginHorizontal="20dp"
@@ -193,12 +194,16 @@
                     android:layout_marginVertical="20dp"
                     android:fontFamily="@font/oxygen_light"
                     android:gravity="center"
-                    android:text="새로 측정하기로 데이터를 기록하세요."
+                    android:text="데이터가 존재하지 않습니다."
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     android:visibility="gone" />
 
             </FrameLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="100dp"/>
 
         </LinearLayout>
     </ScrollView>
