@@ -30,7 +30,7 @@ class CustomTimePicker @JvmOverloads constructor(
 
     private var itemHeight = 0f
     private var scrollY = 0f
-    private val scrollSpeedFactor = 0.5f
+    private val scrollSpeedFactor = 0.2f // 스크롤 속도를 줄임
 
     private val selectedTextSize: Float
     private val normalTextSize: Float
@@ -51,8 +51,8 @@ class CustomTimePicker @JvmOverloads constructor(
             }
         }
 
-         //기본 초기값 설정
-//         setInitialValues(3, 24, 1) // 기본 시간, 분, AM 설정
+        // 기본 초기값 설정
+        // setInitialValues(3, 24, 1) // 기본 시간, 분, AM 설정
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -60,10 +60,10 @@ class CustomTimePicker @JvmOverloads constructor(
 
         itemHeight = (height / 5f)
 
-        val amPmWidth = width * 0.25f
-        val hourWidth = width * 0.25f
+        val amPmWidth = width * 0.2f // AM/PM 열의 넓이를 줄임
+        val hourWidth = width * 0.3f  // 시간 열의 넓이
         val colonWidth = width * 0.005f
-        val minuteWidth = width * 0.25f
+        val minuteWidth = width * 0.3f // 분 열의 넓이를 줄임
 
         drawAmPmColumn(canvas, amPm, amPmWidth / 2, selectedAmPm)
         drawColumn(canvas, hours, amPmWidth + hourWidth / 2, selectedHour)
@@ -110,32 +110,35 @@ class CustomTimePicker @JvmOverloads constructor(
         canvas.drawText(":", centerX, y + itemHeight / 2, paint)
     }
 
+    // 스크롤
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val x = event.x
         val y = event.y
 
         when (event.action) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
-                val amPmWidth = width * 0.25f
-                val hourWidth = width * 0.375f
+                val amPmWidth = width * 0.2f // AM/PM 열의 넓이
+                val hourWidth = width * 0.3f  // 시간 열의 넓이
                 val column = when {
                     x < amPmWidth -> 0
                     x < amPmWidth + hourWidth -> 1
                     else -> 2
                 }
 
+                // 스크롤 위치
+                val dy = y - height / 2
+
                 when (column) {
                     0 -> {
                         selectedAmPm = if (y < height / 2) 0 else 1
+                        scrollY = 0f // AM/PM 열은 스크롤이 필요하지 않음
                     }
                     1 -> {
-                        val dy = event.y - height / 2
                         scrollY += dy * scrollSpeedFactor
                         selectedHour = ((selectedHour - (scrollY / itemHeight).toInt() + hours.size) % hours.size).coerceIn(0, hours.size - 1)
                         scrollY = 0f
                     }
                     2 -> {
-                        val dy = event.y - height / 2
                         scrollY += dy * scrollSpeedFactor
                         selectedMinute = ((selectedMinute - (scrollY / itemHeight).toInt() + minutes.size) % minutes.size).coerceIn(0, minutes.size - 1)
                         scrollY = 0f
@@ -193,9 +196,9 @@ class CustomTimePicker @JvmOverloads constructor(
     }
 
     // 초기값 설정 메서드
-    fun setInitialValues(hour: Int, minute: Int, amPm: Int) {
-        setHour(hour)
-        setMinute(minute)
-        setAmPm(amPm)
-    }
+//    fun setInitialValues(hour: Int, minute: Int, amPm: Int) {
+//        setHour(hour)
+//        setMinute(minute)
+//        setAmPm(amPm)
+//    }
 }
