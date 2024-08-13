@@ -1,7 +1,30 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.HICURE" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <!-- Primary color settings -->
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorSecondary">@color/black</item>
+
+        <!-- Status bar settings -->
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item> <!-- 상태바 아이콘을 검정색으로 설정 -->
+
+        <!-- Default text color settings -->
+        <item name="android:textColorPrimary">@color/edge_blue</item> <!-- 기본 텍스트 색상 -->
+        <item name="android:textColorSecondary">@color/edge_blue</item> <!-- 보조 텍스트 색상 -->
+        <item name="android:textColorTertiary">@color/edge_blue</item> <!-- 3차 텍스트 색상 -->
+        <item name="android:textColorHint">@color/edge_blue</item> <!-- 힌트 텍스트 색상 -->
+        <item name="android:textColorLink">@color/edge_blue</item> <!-- 링크 텍스트 색상 -->
+        <item name="android:textColor">@color/edge_blue</item> <!-- 일반 텍스트 색상 -->
+
+        <!-- Background and surface color settings -->
+        <item name="android:colorBackground">@color/white</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnPrimary">@color/edge_blue</item>
+        <item name="colorOnSecondary">@color/edge_blue</item>
+        <item name="colorOnBackground">@color/edge_blue</item>
+        <item name="colorOnSurface">@color/edge_blue</item>
+        <item name="colorOnError">@color/edge_blue</item>
     </style>
 </resources>

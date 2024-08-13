@@ -16,6 +16,16 @@
         android:outlineSpotShadowColor="@color/black"
         app:layout_constraintTop_toTopOf="parent">
 
+        <android.widget.Button
+            android:id="@+id/backB"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/oxygen_bold"
+            android:text="«"
+            android:textColor="@color/edge_blue"
+            android:textSize="25dp" />
+
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -64,90 +74,50 @@
 
             <CalendarView
                 android:id="@+id/calendarView"
-                android:background="@drawable/calendar_style"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp" />
-
-            <TextView
-                android:id="@+id/diaryTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                android:background="@drawable/calendar_style" />
 
-            <EditText
-                android:id="@+id/contextEditText"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
-                android:ems="10"
-                android:hint="내용을 입력하세요."
-                android:inputType="textMultiLine"
-                android:visibility="visible" />
-
-            <TextView
-                android:id="@+id/diaryContent"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:gravity="center"
-                android:textSize="25sp"
-                android:visibility="visible" />
-
-            <android.widget.Button
-                android:id="@+id/saveBtn"
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/button_blue"
-                android:fontFamily="@font/oxygen_light"
-                android:textSize="20sp"
-                android:layout_gravity="center_horizontal"
-                android:text="저장"
-                android:visibility="visible" />
+            <View
+                android:id="@+id/space"
+                android:layout_width="0dp"
+                android:layout_height="20dp" />
 
             <LinearLayout
-                android:gravity="center_horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_width="330dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:layout_constraintTop_toBottomOf="@id/space1"
+                app:layout_constraintStart_toStartOf="@id/space"
+                android:background="@drawable/rectangle_style"
+                android:orientation="vertical">
 
-                <android.widget.Button
-                    android:id="@+id/updateBtn"
-                    android:layout_width="100dp"
+                <TextView
+                    android:id="@+id/diaryTextView"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="8dp"
-                    android:background="@drawable/button_blue"
-                    android:fontFamily="@font/oxygen_light"
-                    android:text="수정"
-                    android:textSize="20sp"
-                    android:visibility="visible" />
+                    android:layout_marginRight="8dp"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-                <android.widget.Button
-                    android:id="@+id/deleteBtn"
-                    android:layout_width="100dp"
+                <TextView
+                    android:id="@+id/breathTextView"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="8dp"
-                    android:background="@drawable/button_yellow"
-                    android:fontFamily="@font/oxygen_light"
-                    android:text="삭제"
-                    android:textSize="20sp"
-                    android:visibility="visible" />
+                    android:layout_marginRight="8dp"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
             </LinearLayout>
 
             <View
@@ -251,8 +221,7 @@
                         android:id="@+id/textViewTime"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="시간을 표시" />
+                        android:gravity="center" />
 
                     <View
                         android:layout_width="wrap_content"
