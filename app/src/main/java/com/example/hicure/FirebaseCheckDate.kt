@@ -3,14 +3,51 @@ package com.example.hicure.utils
 import android.util.Log
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import java.time.LocalDateTime
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 object FirebaseCheckDate {
 
-    private val userRef = Firebase.database("https://hicure-d5c99-default-rtdb.firebaseio.com/").getReference("users")
+    private val userRef =
+        Firebase.database("https://hicure-d5c99-default-rtdb.firebaseio.com/").getReference("users")
 
-    fun updateVisitedStatus(userId: String, buttonIndex: Int) {
+    fun updateDate(userId: String) {
+        userRef.child(userId).child("lastAccessDate").get()
+            .addOnSuccessListener { lastAccessSnapshot ->
+                val lastVisited = lastAccessSnapshot.getValue(String::class.java)
+                val now = LocalDate.now()
+                val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                val nowFormatted = now.format(dateFormatter)
+
+                if (lastVisited == null || lastVisited != nowFormatted) {
+                    userRef.child(userId).child("infoVisited").setValue(0)
+                        .addOnSuccessListener {
+                            Log.d("FirebaseCheckDate", "InfoVisited 리셋 완료")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("FirebaseCheckDate", "InfoVisited 리셋 실패", e)
+                        }
+
+                    userRef.child(userId).child("lastAccessDate").setValue(nowFormatted)
+                        .addOnSuccessListener {
+                            Log.d("FirebaseCheckDate", "LastAccessDate 갱신 완료")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("FirebaseCheckDate", "LastAccessDate 갱신 실패", e)
+                        }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("FirebaseCheckDate", "Failed to get lastAccessDate value", e)
+            }
+    }
+
+    fun updateStatus(userId: String, buttonIndex: Int) {
+        if (buttonIndex < 0) {
+            Log.e("FirebaseCheckDate", "Invalid buttonIndex: $buttonIndex")
+            return
+        }
+
         userRef.child(userId).child("infoVisited").get()
             .addOnSuccessListener { visitedSnapshot ->
                 var visitedBitmask = visitedSnapshot.getValue(Int::class.java) ?: 0
