@@ -44,8 +44,6 @@ class Calendar : AppCompatActivity() {
         val currentDate = getCurrentDate()
         val currentTime = getCurrentTime()
 
-        val textViewDate: TextView = findViewById(R.id.textViewDate)
-        textViewDate.text = currentDate
         val textViewTime: TextView = findViewById(R.id.textViewTime)
         textViewTime.text = currentTime
 
