@@ -65,7 +65,7 @@
                 android:layout_marginHorizontal="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="17dp"
+                android:layout_marginBottom="7dp"
                 android:gravity="start"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toTopOf="@id/holder_fl_main"
@@ -87,6 +87,17 @@
                     android:textSize="20sp" />
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/reference"
+                android:layout_marginStart="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:fontFamily="@font/oxygen_regular"
+                android:text="나의 폐활량 정적치  : null"
+                android:layout_marginBottom="10dp"
+                android:textSize="15sp" />
 
             <FrameLayout
                 android:layout_width="match_parent"

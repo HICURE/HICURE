@@ -58,6 +58,15 @@ class MainActivity : AppCompatActivity() {
 
         lineChart = findViewById(R.id.linechart)
 
+        val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+
+        val userRefValue = sharedPreferences.getInt("reference_value", 0)
+
+        binding.reference.setText("나의 폐활량 정적치  : $userRefValue")
+
+        val userName = sharedPreferences.getString("user_name", null)
+        val userId = sharedPreferences.getString("user_id", null)
+
         val currentDate = getCurrentDate()
         val currentTime = getCurrentTime()
 
@@ -76,7 +85,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, Calendar::class.java)
             startActivity(intent)
         }
-        val userName = getUserNameFromPreferences()
+
         userName?.let {
             "$it".also { binding.username.text = it }
         }
@@ -91,7 +100,7 @@ class MainActivity : AppCompatActivity() {
 
             num--
             binding.countNumber.text = "$num 회차"
-            setupLineChart(num.toString())
+            setupLineChart(num.toString(), userId!!)
 
             if (num == 1) {
                 binding.leftB.visibility = View.GONE
@@ -102,7 +111,7 @@ class MainActivity : AppCompatActivity() {
 
             num++
             binding.countNumber.text = "$num 회차"
-            setupLineChart(num.toString())
+            setupLineChart(num.toString(), userId!!)
 
             if (binding.leftB.visibility == View.GONE) {
                 binding.leftB.visibility = View.VISIBLE
@@ -139,8 +148,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        val userId = getUserIdFromPreferences()
-
         userId?.let {
             userRef.child(it).child("score")
                 .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -157,11 +164,10 @@ class MainActivity : AppCompatActivity() {
                 })
         }
 
-        checkAndSetupInitialChart()
+        checkAndSetupInitialChart(userId!!)
     }
 
-    private fun checkAndSetupInitialChart() {
-        val userId = getUserIdFromPreferences()
+    private fun checkAndSetupInitialChart(userId: String) {
         val currentDate = LocalDate.now().toString()
 
         if (userId != null) {
@@ -187,7 +193,7 @@ class MainActivity : AppCompatActivity() {
                         binding.dataChart.visibility = View.VISIBLE
                         binding.noneData.visibility = View.GONE
 
-                        setupLineChart("1")
+                        setupLineChart("1", userId)
                     } else {
                         // 데이터가 없으면 차트를 숨김
                         binding.dataChart.visibility = View.GONE
@@ -246,9 +252,8 @@ class MainActivity : AppCompatActivity() {
         pieChart.invalidate()
     }
 
-    private fun setupLineChart(cnt: String) {
+    private fun setupLineChart(cnt: String, userId: String) {
         lineChart = findViewById(R.id.linechart)
-        val userId = getUserIdFromPreferences()
         val currentDate = LocalDate.now().toString()
 
         if (userId != null) {
@@ -306,7 +311,7 @@ class MainActivity : AppCompatActivity() {
 
                         } else {
                             binding.countNumber.text = "$totalSessions 회차"
-                            setupLineChart(totalSessions.toString())
+                            setupLineChart(totalSessions.toString(), userId)
                         }
 
                     } else {
@@ -359,16 +364,6 @@ class MainActivity : AppCompatActivity() {
     private fun addChartItem(labelItem: String, dataItem: Double) {
         val item = ChartData(labelItem, dataItem)
         chartData.add(item)
-    }
-
-    private fun getUserNameFromPreferences(): String? {
-        val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
-        return sharedPreferences.getString("user_name", null)
-    }
-
-    private fun getUserIdFromPreferences(): String? {
-        val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
-        return sharedPreferences.getString("user_id", null)
     }
 
     private fun startNewActivity(activityClass: Class<*>) {
