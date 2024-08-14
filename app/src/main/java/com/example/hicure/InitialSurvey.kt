@@ -105,7 +105,14 @@ class InitialSurvey : AppCompatActivity() {
         if (adapter.allQuestionsAnswered()) {
             val surveyData = SurveyData().apply {
                 answers = adapter.selectedAnswers.mapIndexed { index, checkedId ->
-                    (index + 1).toString() to getAnswerText(checkedId)
+                    val question = adapter.listData[index].title
+                    val safeKey = question.replace(".", "")
+                        .replace("#", "")
+                        .replace("$", "")
+                        .replace("[", "")
+                        .replace("]", "")
+                        .replace(" ", "_") // 공백을 언더스코어로 대체
+                    safeKey to getAnswerText(checkedId)
                 }.toMap()
 
                 answers = answers + ("기타" to binding.editText.text.toString())

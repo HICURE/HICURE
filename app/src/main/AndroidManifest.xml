@@ -84,10 +84,10 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".AppStart"
+            android:name=".UserInfo"
             android:exported="false" />
         <activity
-            android:name=".UserInfo"
+            android:name=".AppStart"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
