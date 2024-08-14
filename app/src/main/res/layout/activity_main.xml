@@ -42,9 +42,12 @@
 
     </androidx.appcompat.widget.Toolbar>
 
+    <include layout="@layout/background_circle" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginHorizontal="20dp"
         android:fillViewport="true"
         android:scrollbars="none">
 
@@ -59,9 +62,11 @@
                 android:layout_height="87dp" />
 
             <LinearLayout
+                android:layout_marginHorizontal="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:layout_marginBottom="7dp"
+                android:gravity="start"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toTopOf="@id/holder_fl_main"
                 app:layout_constraintTop_toBottomOf="@id/toolbar">
@@ -70,153 +75,164 @@
                     android:id="@+id/username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:fontFamily="@font/oxygen_bold"
                     android:text="user_name"
-                    android:textSize="20dp" />
-
-                <View
-                    android:layout_width="5dp"
-                    android:layout_height="0dp" />
+                    android:textSize="20sp" />
 
                 <TextView
-                    android:id="@+id/score1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="님의 점수"
-                    android:textSize="20dp" />
-
-                <View
-                    android:layout_width="180dp"
-                    android:layout_height="0dp" />
+                    android:text="님 어서오세요!"
+                    android:textSize="20sp" />
 
             </LinearLayout>
 
-            <View
+            <TextView
+                android:id="@+id/maxValue"
+                android:layout_marginStart="5dp"
                 android:layout_width="wrap_content"
-                android:layout_height="12dp" />
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:fontFamily="@font/oxygen_regular"
+                android:text="오늘 나의 최대 수치  : 0.0"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/reference"
+                android:layout_marginStart="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/oxygen_regular"
+                android:text="나의 폐활량 정적치  : null"
+                android:textSize="12sp" />
 
             <FrameLayout
-                android:layout_width="320dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center">
+                android:layout_gravity="center"
+                android:layout_marginBottom="17dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="160dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/pop_up_frame"
                     android:orientation="vertical">
-                    
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="20dp"/>
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
+                    <FrameLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="20dp"
                         android:orientation="horizontal">
 
                         <ImageView
                             android:id="@+id/lungimage"
                             android:layout_width="130dp"
                             android:layout_height="120dp"
+                            android:layout_gravity="start"
+                            android:layout_marginEnd="15dp"
                             app:srcCompat="@drawable/goodlung" />
-
-                        <View
-                            android:layout_width="31dp"
-                            android:layout_height="100dp" />
 
                         <LinearLayout
                             android:layout_width="108dp"
                             android:layout_height="120dp"
+                            android:layout_gravity="end"
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/myscore"
                                 android:layout_width="match_parent"
                                 android:layout_height="30dp"
                                 android:text="나의 점수"
                                 android:textColor="@color/edge_blue"
                                 android:textSize="15sp" />
 
-                            <com.github.mikephil.charting.charts.PieChart
-                                android:id="@+id/pieChart"
+                            <FrameLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent" />
+                                android:layout_gravity="center"
+                                android:layout_height="match_parent">
 
+                                <com.github.mikephil.charting.charts.PieChart
+                                    android:id="@+id/pieChart"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent" >
+                                </com.github.mikephil.charting.charts.PieChart>
 
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+                                    <TextView
+                                        android:layout_marginTop="5dp"
+                                        android:id="@+id/myscore"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/oxygen_bold"
+                                        android:gravity="center"
+                                        android:text="나의 점수"
+                                        android:textColor="@color/edge_blue"
+                                        android:textSize="20sp" />
+                                    <TextView
+                                        android:id="@+id/gap_value"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/oxygen_regular"
+                                        android:layout_marginTop="-3dp"
+                                        android:gravity="center"
+                                        android:text="+ 0"
+                                        android:textColor="@color/edge_blue"
+                                        android:textSize="12sp" />
+                                </LinearLayout>
+                            </FrameLayout>
                         </LinearLayout>
-                    </LinearLayout>
+                    </FrameLayout>
                 </LinearLayout>
-
-                <TextView
-                    android:id="@+id/Square1"
-                    android:layout_width="320dp"
-                    android:layout_height="160dp"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@drawable/rectangle_style" />
-
             </FrameLayout>
 
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="16dp" />
-
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="49dp"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toTopOf="@id/holder_fl_main"
-                app:layout_constraintTop_toBottomOf="@id/Square1">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="23dp"
+                android:orientation="horizontal">
 
                 <android.widget.Button
                     android:id="@+id/new_measure"
                     android:layout_width="152dp"
+                    android:layout_marginEnd="15dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center|start"
                     android:background="@drawable/button_blue"
                     android:fontFamily="@font/oxygen_light"
                     android:text="새로 측정하기"
-                    android:textSize="20dp" />
-
-                <View
-                    android:layout_width="25dp"
-                    android:layout_height="wrap_content" />
+                    android:textSize="20sp" />
 
                 <android.widget.Button
                     android:id="@+id/calender"
                     android:layout_width="152dp"
+                    android:layout_gravity="center|end"
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_yellow"
                     android:fontFamily="@font/oxygen_light"
                     android:text="캘린더"
-                    android:textSize="20dp" />
+                    android:textSize="20sp" />
 
-            </LinearLayout>
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="23dp" />
+            </FrameLayout>
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="275dp"
-                android:background="@drawable/rectangle_style"
-                android:layout_marginHorizontal="40dp"
-                android:layout_gravity="center">
-
-                <TextView
-                    android:id="@+id/Square2"
-                    android:layout_width="320dp"
-                    android:layout_height="275dp"
-                    android:layout_gravity="center" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/pop_up_frame">
 
                 <LinearLayout
+                    android:id="@+id/dataChart"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:padding="15dp"
+                    android:gravity="center"
                     android:orientation="vertical">
-
-                    <View
-                        android:layout_width="wrap_content"
-                        android:layout_height="10dp" />
 
                     <TextView
                         android:id="@+id/textViewDate"
@@ -226,11 +242,9 @@
                         android:text="날짜를 표시"
                         android:textSize="18sp" />
 
-                    <View
-                        android:layout_width="wrap_content"
-                        android:layout_height="10dp" />
 
-                    <LinearLayout
+                    <FrameLayout
+                        android:layout_marginTop="10sp"
                         android:id="@+id/countL"
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
@@ -241,90 +255,78 @@
                             android:id="@+id/leftB"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
+                            android:layout_marginHorizontal="50dp"
                             android:background="@android:color/transparent"
                             android:fontFamily="@font/oxygen_bold"
+                            android:layout_gravity="center|start"
                             android:text="«"
                             android:textColor="@color/edge_blue"
-                            android:textSize="25dp" />
-
-                        <View
-                            android:layout_width="50dp"
-                            android:layout_height="wrap_content" />
+                            android:textSize="25sp" />
 
                         <TextView
                             android:id="@+id/count_number"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/oxygen_bold"
-                            android:text="1"
+                            android:layout_gravity="center"
+                            android:text="n 회차"
                             android:textColor="@color/edge_blue"
-                            android:textSize="23dp" />
-
-                        <TextView
-                            android:id="@+id/count"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/oxygen_bold"
-                            android:text="회차"
-                            android:textColor="@color/edge_blue"
-                            android:textSize="23dp" />
-
-                        <View
-                            android:layout_width="50dp"
-                            android:layout_height="wrap_content" />
+                            android:textSize="23sp" />
 
                         <android.widget.Button
                             android:id="@+id/rightB"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
+                            android:layout_marginHorizontal="50dp"
+                            android:layout_gravity="center|end"
                             android:background="@android:color/transparent"
                             android:fontFamily="@font/oxygen_bold"
                             android:text="»"
                             android:textColor="@color/edge_blue"
-                            android:textSize="25dp" />
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="wrap_content"
-                        android:layout_height="10dp" />
+                            android:textSize="25sp" />
+                    </FrameLayout>
 
                     <TextView
+                        android:layout_marginTop="10sp"
                         android:id="@+id/textViewTime"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="시간을 표시" />
 
-                    <View
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:layout_marginVertical="15dp"
+                        android:id="@+id/linechart"
+                        android:layout_width="260dp"
+                        android:layout_height="160dp" />
+
+                    <ProgressBar
+                        android:id="@+id/progressBar"
                         android:layout_width="wrap_content"
-                        android:layout_height="10dp" />
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        tools:context=".MainActivity">
-
-                        <LinearLayout
-                            android:layout_width="260dp"
-                            android:layout_height="160dp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            tools:ignore="MissingConstraints">
-
-                            <com.github.mikephil.charting.charts.LineChart
-                                android:id="@+id/linechart"
-                                android:layout_width="260dp"
-                                android:layout_height="160dp" />
-
-                        </LinearLayout>
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:visibility="visible" />
 
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/noneData"
+                    android:layout_marginVertical="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:text="새로 측정하기로 데이터를 기록하세요."
+                    android:textSize="15sp"
+                    android:textColor="@color/black"
+                    android:visibility="gone"
+                    android:fontFamily="@font/oxygen_light"/>
+
             </FrameLayout>
+
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="70dp"/>
+                android:layout_height="75dp" />
 
         </LinearLayout>
     </ScrollView>
@@ -338,20 +340,20 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/bn_main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
+                android:checkable="true"
                 android:elevation="10dp"
-                android:checkable ="true"
                 android:outlineSpotShadowColor="@color/black"
+                app:itemActiveIndicatorStyle="@null"
                 app:itemIconTint="@drawable/nav_click_color"
                 app:itemTextColor="@drawable/nav_click_color"
-                app:itemActiveIndicatorStyle="@null"
                 app:labelVisibilityMode="labeled"
                 app:menu="@navigation/bottom_nav" />
         </FrameLayout>

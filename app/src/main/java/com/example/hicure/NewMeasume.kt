@@ -172,11 +172,11 @@ class NewMeasume : AppCompatActivity() {
         }
 
         dialogBinding.saveBtn.setOnClickListener {
-            getAndSaveResultNumber(date)
+            getAndSaveResultNumber(date, time)
         }
     }
 
-    private fun getAndSaveResultNumber(date: String) {
+    private fun getAndSaveResultNumber(date: String, time: String) {
         val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
         val userId = sharedPreferences.getString("user_id", null) ?: return
 
@@ -187,7 +187,7 @@ class NewMeasume : AppCompatActivity() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 Log.d(TAG, "DataSnapshot children count: ${dataSnapshot.childrenCount}")
                 val resultNumber = (dataSnapshot.childrenCount + 1).toString()
-                submitResult(userRef, resultNumber)
+                submitResult(userRef, resultNumber, time)
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -196,10 +196,14 @@ class NewMeasume : AppCompatActivity() {
         })
     }
 
-    private fun submitResult(userRef: DatabaseReference, resultNumber: String) {
-        val resultMap = vcValues.mapIndexed { index, value ->
-            "${index + 1}" to (value.toDoubleOrNull() ?: 0.0)
-        }.toMap()
+    private fun submitResult(userRef: DatabaseReference, resultNumber: String, time: String) {
+        val resultMap = mutableMapOf<String, Any>()
+
+        for ((index, value) in vcValues.withIndex()) {
+            resultMap["${index + 1}"] = value.toDoubleOrNull() ?: 0.0
+        }
+
+        resultMap["time"] = time
 
         userRef.child(resultNumber).setValue(resultMap)
             .addOnSuccessListener {

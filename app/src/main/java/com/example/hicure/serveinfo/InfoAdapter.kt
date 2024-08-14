@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.hicure.databinding.CardInfoBinding
+import com.google.android.gms.tasks.Task
+import com.google.firebase.database.FirebaseDatabase
 
 class InfoAdapter(
     private val context: Context,

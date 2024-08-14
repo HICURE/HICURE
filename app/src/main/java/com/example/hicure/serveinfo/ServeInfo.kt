@@ -39,8 +39,13 @@ class ServeInfo : AppCompatActivity(), InfoAdapter.OnItemClickListener {
             true
         }
 
+
         val userId = getUserIdFromPreferences()
         userId?.let {
+            // 진입할 때 DB 업데이트 수행
+            FirebaseCheckDate.updateDate(it)
+
+            // 날짜가 변경된 경우 infoItems를 초기화하고 리사이클러뷰를 리셋
             loadVisitedStatusAndSetupRecyclerView(it)
         } ?: run {
             // Default list if userId is not found
@@ -66,21 +71,34 @@ class ServeInfo : AppCompatActivity(), InfoAdapter.OnItemClickListener {
 
     private fun loadVisitedStatusAndSetupRecyclerView(userId: String) {
         FirebaseCheckDate.getInfoVisited(userId) { visitedValue ->
-            setupRecyclerView(visitedValue)
+            resetRecyclerView(visitedValue)
         }
     }
 
-    private fun setupRecyclerView(visitedValue: Int) {
+    private fun resetRecyclerView(visitedValue: Int) {
+        // infoItems 리스트를 초기화
         infoItems = listOf(
-            InfoItem("‘폐’ 해부생리학적 정보", "폐의 구조와 기능에 대해 알아보기", visitedValue and (1 shl 0) != 0),
-            InfoItem("폐활량을 측정하는 과학적인 원리", "폐활량 측정 방법과 기기의 원리", visitedValue and (1 shl 1) != 0),
-            InfoItem("개발된 기기에 사용된 과학 원리", "기기 작동에 사용된 과학적 원리 탐구", visitedValue and (1 shl 2) != 0),
-            InfoItem("폐 건강을 지켜주는 유익한 음식들", "폐활량에 도움이 되는 음식", visitedValue and (1 shl 3) != 0),
-            InfoItem("폐활량 향상에 효과적인 운동 방법", "폐활량을 높이는 운동", visitedValue and (1 shl 4) != 0),
-            InfoItem("폐활량이 중요한 이유", "폐활량이 건강에 미치는 영향", visitedValue and (1 shl 5) != 0),
-            InfoItem("나의 폐활량 적정치 알기", "연령, 나이, 성별에 따른 폐활량 예측치", visitedValue and (1 shl 6) != 0)
+            InfoItem("‘폐’ 해부생리학적 정보", "폐의 구조와 기능에 대해 알아보기", false),
+            InfoItem("폐활량을 측정하는 과학적인 원리", "폐활량 측정 방법과 기기의 원리", false),
+            InfoItem("개발된 기기에 사용된 과학 원리", "기기 작동에 사용된 과학적 원리 탐구", false),
+            InfoItem("폐 건강을 지켜주는 유익한 음식들", "폐활량에 도움이 되는 음식", false),
+            InfoItem("폐활량 향상에 효과적인 운동 방법", "폐활량을 높이는 운동", false),
+            InfoItem("폐활량이 중요한 이유", "폐활량이 건강에 미치는 영향", false),
+            InfoItem("나의 폐활량 적정치 알기", "연령, 나이, 성별에 따른 폐활량 예측치", false)
         )
 
+        // 비트마스킹에 따라 상태를 업데이트
+        infoItems.forEachIndexed { index, item ->
+            if (visitedValue and (1 shl index) != 0) {
+                item.visited = true
+            }
+        }
+
+        // 리사이클러뷰 갱신
+        setupRecyclerView(visitedValue)
+    }
+
+    private fun setupRecyclerView(visitedValue: Int) {
         binding.infoList.layoutManager = LinearLayoutManager(this)
         adapter = InfoAdapter(this, infoItems, this)
         binding.infoList.adapter = adapter
@@ -94,7 +112,8 @@ class ServeInfo : AppCompatActivity(), InfoAdapter.OnItemClickListener {
             adapter.notifyItemChanged(position)
 
             // Firebase에 업데이트 및 점수 증가 처리
-            FirebaseCheckDate.updateVisitedStatus(it, position)
+            FirebaseCheckDate.updateStatus(it, position)
+            FirebaseCheckDate.updateDate(it) // 날짜도 업데이트
         }
 
         val selectedItem = infoItems[position] // 선택된 InfoItem 가져오기

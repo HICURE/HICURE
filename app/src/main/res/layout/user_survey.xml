@@ -20,7 +20,7 @@
         android:layout_weight="5"
         android:background="@drawable/pop_up_frame"
         android:orientation="horizontal"
-        android:paddingHorizontal="5dp"
+        android:paddingHorizontal="10dp"
         android:paddingVertical="20dp">
 
         <LinearLayout

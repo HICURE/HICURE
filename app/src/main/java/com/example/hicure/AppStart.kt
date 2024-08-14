@@ -229,6 +229,7 @@ class AppStart : AppCompatActivity() {
                                     val user = User().apply {
                                         name = "New User"
                                         age = 0
+                                        height = 0
                                         gender = "Unknown"
                                         survey = false
                                         score = 0
@@ -307,7 +308,9 @@ class AppStart : AppCompatActivity() {
             putString("user_name", user.name)
             putInt("user_age", user.age)
             putString("user_gender", user.gender)
+            putInt("user_height", user.height)
             putBoolean("user_survey", user.survey)
+            putInt("reference_value", user.referenceValue)
             apply()
         }
     }
@@ -334,6 +337,8 @@ class AppStart : AppCompatActivity() {
                             editor.putInt("user_age", it.age)
                             editor.putString("user_gender", it.gender)
                             editor.putBoolean("user_survey", it.survey)
+                            editor.putInt("user_height", it.height)
+                            editor.putInt("reference_value", it.referenceValue)
                             editor.apply()
 
                             if (it.survey) {
