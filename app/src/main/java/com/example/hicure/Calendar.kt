@@ -42,6 +42,7 @@ class Calendar : AppCompatActivity() {
     private val chartData = ArrayList<MyChartData>()
     private var selectedDate: String = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
     private var userId: String? = null
+    private var currentSession = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +61,8 @@ class Calendar : AppCompatActivity() {
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
             selectedDate = String.format("%d-%02d-%02d", year, month + 1, dayOfMonth)
             diaryTextView.text = selectedDate
+            currentSession = 1
+            binding.countNumber.text = "$currentSession 회차"
             binding.leftB.visibility = View.GONE
             loadDataAndInitializeUI(selectedDate, userId!!)
         }
@@ -81,7 +84,7 @@ class Calendar : AppCompatActivity() {
             }
         })
 
-        binding.diaryTextView.setText(selectedDate)
+        binding.diaryTextView.text = selectedDate
         diaryTextView = binding.diaryTextView
         breathTextView = binding.breathTextView
         lineChart = binding.linechart
@@ -93,29 +96,24 @@ class Calendar : AppCompatActivity() {
         }
 
         binding.leftB.visibility = View.GONE
-        binding.countNumber.text = "1 회차"
+        binding.countNumber.text = "$currentSession 회차"
         setupChartNavigation()
     }
 
     private fun setupChartNavigation() {
-        var num = 1
-
         binding.leftB.setOnClickListener {
-            num--
-            updateChart(num)
-            if (num == 1) binding.leftB.visibility = View.GONE
+            if (currentSession > 1) {
+                currentSession--
+                updateChart()
+                if (currentSession == 1) binding.leftB.visibility = View.GONE
+            }
         }
 
         binding.rightB.setOnClickListener {
-            num++
-            updateChart(num)
-            if (binding.leftB.visibility == View.GONE) binding.leftB.visibility = View.VISIBLE
+            currentSession++
+            updateChart()
+            if (currentSession > 1) binding.leftB.visibility = View.VISIBLE
         }
-    }
-
-    private fun updateChart(num: Int) {
-        binding.countNumber.text = "$num 회차"
-        setupLineChart(num.toString(), selectedDate)
     }
 
     private fun getCurrentDate(): String {
@@ -153,7 +151,7 @@ class Calendar : AppCompatActivity() {
                     "데이터가 존재하지 않습니다."
                 }
 
-                setupLineChart("1", date)
+                setupLineChart(currentSession.toString(), date)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -173,6 +171,7 @@ class Calendar : AppCompatActivity() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     chartData.clear()
 
+                    val totalSessions = snapshot.childrenCount.toInt()
                     val sessionSnapshot = snapshot.child(cnt)
                     if (sessionSnapshot.exists()) {
                         sessionSnapshot.children.forEach { dataSnapshot ->
@@ -194,12 +193,20 @@ class Calendar : AppCompatActivity() {
                         binding.noneData.visibility = View.VISIBLE
                     }
 
+                    if (cnt.toInt() >= totalSessions) {
+                        binding.rightB.visibility = View.GONE
+                    } else {
+                        binding.rightB.visibility = View.VISIBLE
+                    }
+
                     progressBar.visibility = View.GONE
                 }
 
                 override fun onCancelled(error: DatabaseError) {
                     breathTextView.text = "데이터를 가져오는 데 실패했습니다"
                     progressBar.visibility = View.GONE
+                    binding.dataChart.visibility = View.GONE
+                    binding.noneData.visibility = View.VISIBLE
                 }
             })
         } ?: run {
@@ -209,6 +216,8 @@ class Calendar : AppCompatActivity() {
     }
 
     private fun updateChart() {
+        binding.countNumber.text = "$currentSession 회차"
+        setupLineChart(currentSession.toString(), selectedDate)
         val entries = chartData.map { Entry(it.labelData.replace("[^\\d.]".toRegex(), "").toFloat(), it.lineData.toFloat()) }
 
         val lineDataSet = LineDataSet(entries, "").apply {
