@@ -10,6 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.hicure.databinding.ActivitySurveyBinding
 import com.example.hicure.utils.FirebaseCheckDate
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import java.time.LocalDate
@@ -25,13 +28,14 @@ class InitialSurvey : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        val data: MutableList<QuestionMemo> = loadData()
-        adapter = CustomAdapter()
-        adapter.listData = data
-        adapter.selectedAnswers = MutableList(data.size) { null }
+        loadData { data ->
+            adapter = CustomAdapter()
+            adapter.listData = data
+            adapter.selectedAnswers = MutableList(data.size) { null }
 
-        binding.questionView.adapter = adapter
-        binding.questionView.layoutManager = LinearLayoutManager(this)
+            binding.questionView.adapter = adapter
+            binding.questionView.layoutManager = LinearLayoutManager(this)
+        }
 
         "오늘의 폐건강".also { binding.actionTitle.text = it }
 
@@ -54,34 +58,39 @@ class InitialSurvey : AppCompatActivity() {
             submitSurvey()
         }
 
-        if (binding.actionTitle.text == "오늘의 폐건강") {
-            binding.surveyTitle.text = "진단평가"
-            val referenceDate = LocalDate.now()
-            binding.subTitle.text =
-                referenceDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-            binding.line.visibility = View.GONE
-            binding.underAppTItle.visibility = View.GONE
-        }
+        binding.surveyTitle.text = "진단평가"
+        val referenceDate = LocalDate.now()
+        binding.subTitle.text =
+            referenceDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        binding.line.visibility = View.GONE
+        binding.underAppTItle.visibility = View.GONE
 
         binding.etc.text = "하루 중 이상활동은 없었나요?"
     }
 
-    private fun loadData(): MutableList<QuestionMemo> {
+    private fun loadData(callback: (MutableList<QuestionMemo>) -> Unit) {
         val data: MutableList<QuestionMemo> = mutableListOf()
+        val database = Firebase.database("https://hicure-d5c99-default-rtdb.firebaseio.com/")
+        val surveyRef = database.getReference("InitialSurvey")
 
-        val surveyQuestion = listOf(
-            "반복적으로 쌕쌕거리는 숨소리(천명음)",
-            "호흡 곤란, 기침",
-            "밤이나 새벽에 악화되는 증상",
-            "운동 후 심해지는 천명이나 기침"
-        )
+        surveyRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (questionSnapshot in snapshot.children) {
+                    val key = questionSnapshot.key?.toIntOrNull()
+                    val title = questionSnapshot.getValue(String::class.java)
+                    if (key != null && title != null) {
+                        val memo = QuestionMemo(key, title)
+                        data.add(memo)
+                    }
+                }
+                callback(data)
+            }
 
-        surveyQuestion.forEachIndexed { index, title ->
-            val no = index + 1
-            val memo = QuestionMemo(no, title)
-            data.add(memo)
-        }
-        return data
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("InitialSurvey", "Failed to load survey questions", error.toException())
+                callback(data) // Return empty or partially filled data on failure
+            }
+        })
     }
 
     private fun getAnswerText(checkedId: Int?): String {

@@ -9,13 +9,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.hicure.databinding.ActivitySurveyBinding
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.chrono.Chronology
 import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
 
 class Survey : AppCompatActivity() {
 
@@ -26,15 +27,16 @@ class Survey : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        val data: MutableList<QuestionMemo> = loadData()
         val surveyNumber = intent.getStringExtra("survey_number") ?: "N"
 
-        adapter = CustomAdapter().apply {
-            listData = data
-        }
+        loadData() { data ->
+            adapter = CustomAdapter().apply {
+                listData = data
+            }
 
-        binding.questionView.layoutManager = LinearLayoutManager(this)
-        binding.questionView.adapter = adapter
+            binding.questionView.layoutManager = LinearLayoutManager(this@Survey)
+            binding.questionView.adapter = adapter
+        }
 
         "만족도조사".also { binding.actionTitle.text = it }
 
@@ -67,21 +69,37 @@ class Survey : AppCompatActivity() {
             binding.backCircle.root.visibility = View.GONE
         }
     }
-    private fun loadData(): MutableList<QuestionMemo> {
+
+    private fun loadData(callback: (MutableList<QuestionMemo>) -> Unit) {
         val data: MutableList<QuestionMemo> = mutableListOf()
+        val database = Firebase.database("https://hicure-d5c99-default-rtdb.firebaseio.com/")
+        val surveyRef = database.getReference("Survey")
 
-        val surveyQuestion = listOf(
-            "기기가 제대로 작동하였나요?",
-            "기기 사용에 어려움은 없었나요?"
-        )
+        surveyRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    for (questionSnapshot in snapshot.children) {
+                        val key = questionSnapshot.key?.toIntOrNull() // 질문의 키 (예: "1", "2")
+                        val title = questionSnapshot.getValue(String::class.java) // 질문 내용
+                        if (key != null && title != null) {
+                            val memo = QuestionMemo(key, title)
+                            data.add(memo)
+                        }
+                    }
+                    callback(data) // 데이터를 콜백으로 반환
+                } else {
+                    Log.e("Survey", "Survey questions do not exist in the database.")
+                    callback(data) // 빈 데이터 반환
+                }
+            }
 
-        surveyQuestion.forEachIndexed { index, title ->
-            val no = index + 1
-            val memo = QuestionMemo(no, title)
-            data.add(memo)
-        }
-        return data;
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("Survey", "Failed to load survey questions", error.toException())
+                callback(data) // 오류 발생 시 빈 데이터 반환
+            }
+        })
     }
+
 
     private fun getAnswerText(checkedId: Int?): String {
         return when (checkedId) {
@@ -148,5 +166,4 @@ class Survey : AppCompatActivity() {
             }
 
     }
-
 }

@@ -72,10 +72,10 @@
             android:name=".alarm.AlarmList"
             android:exported="false" />
         <activity
-            android:name=".InitialSurvey"
+            android:name=".Survey"
             android:exported="false" />
         <activity
-            android:name=".Survey"
+            android:name=".InitialSurvey"
             android:exported="false" />
         <activity
             android:name=".serveinfo.ServeInfo"
