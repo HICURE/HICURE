@@ -84,10 +84,10 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".InitialSurvey"
+            android:name=".AppStart"
             android:exported="false" />
         <activity
-            android:name=".AppStart"
+            android:name=".InitialSurvey"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

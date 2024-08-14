@@ -37,7 +37,7 @@
             android:layout_gravity="end"
             android:layout_marginTop="60dp"
             android:background="@drawable/inquiry_button"
-            android:fontFamily="@font/roboto_regular"
+            android:fontFamily="@font/oxygen_regular"
             android:text="문의하기"
             android:textColor="@color/edge_blue"
             android:textSize="15sp" />
