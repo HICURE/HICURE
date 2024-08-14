@@ -23,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.ArrayList
 import java.util.Date
 import java.util.Locale
@@ -41,7 +42,8 @@ class Calendar : AppCompatActivity() {
     lateinit var progressBar: ProgressBar
 
     private val chartData = ArrayList<MyChartData>()
-    private var selectedDate: String = LocalDate.now().toString()
+    private var selectedDate: String =
+        LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,10 +84,7 @@ class Calendar : AppCompatActivity() {
         binding.countNumber.text = "1 회차"
         var num = 1
 
-        setupLineChart("1", selectedDate)
-
         binding.leftB.setOnClickListener {
-
             num--
             binding.countNumber.text = "$num 회차"
             setupLineChart(num.toString(), selectedDate)
@@ -96,7 +95,6 @@ class Calendar : AppCompatActivity() {
         }
 
         binding.rightB.setOnClickListener {
-
             num++
             binding.countNumber.text = "$num 회차"
             setupLineChart(num.toString(), selectedDate)
@@ -116,13 +114,17 @@ class Calendar : AppCompatActivity() {
         if (userId != null) {
             diaryTextView.visibility = View.VISIBLE
             diaryTextView.text = currentDate
-            readFirebaseData(currentDate, userId)
+            loadDataAndInitializeUI(currentDate, userId)
+
+            // 한번 더 오늘 날짜로 데이터를 로드
+            calendarView.setDate(System.currentTimeMillis(), false, true)
         } else {
             breathTextView.text = "User ID를 찾을 수 없습니다"
         }
 
         // 날짜가 선택되었을 때 Firebase에서 데이터를 읽어옴
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
+
             selectedDate = String.format("%d-%02d-%02d", year, month + 1, dayOfMonth)
             diaryTextView.visibility = View.VISIBLE
             diaryTextView.text = selectedDate
@@ -131,7 +133,8 @@ class Calendar : AppCompatActivity() {
             binding.leftB.visibility = View.GONE
 
             if (userId != null) {
-                setupLineChart("1", selectedDate) // 새로운 날짜에 대해 첫 회차 데이터를 설정
+                binding.dataChart.visibility = View.GONE // 데이터 로딩 전 차트를 숨김
+                loadDataAndInitializeUI(selectedDate, userId)
             } else {
                 breathTextView.text = "User ID를 찾을 수 없습니다"
             }
@@ -153,74 +156,97 @@ class Calendar : AppCompatActivity() {
         return sharedPreferences.getString("user_id", null)
     }
 
-    // Firebase에서 데이터 읽기
-    private fun readFirebaseData(date: String, userIDD: String) {
+    // Firebase에서 데이터 읽기 및 UI 초기화
+    private fun loadDataAndInitializeUI(date: String, userIDD: String) {
+        progressBar.visibility = View.VISIBLE
+        lineChart.visibility = View.GONE
+        breathTextView.text = "데이터 로드 중..."
+
         val dataRef = userRef.child(userIDD).child("data").child(date)
 
         dataRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                var maxValue = Int.MIN_VALUE
-                val valuesList = mutableListOf<String>()
+                var maxValue: Int? = null
+                chartData.clear()
 
                 for (sectionSnapshot in snapshot.children) {
-                    // 각 섹션의 하위 항목들을 순회하며 최대값을 찾음
                     for (childSnapshot in sectionSnapshot.children) {
-                        val value = childSnapshot.getValue(Int::class.java) ?: 0
-                        if (value > maxValue) {
-                            maxValue = value
+                        val key = childSnapshot.key
+                        if (key != "time") {
+                            val value = childSnapshot.getValue(Int::class.java) ?: 0
+                            if (maxValue == null || value > maxValue) {
+                                maxValue = value
+                            }
                         }
-                        valuesList.add(value.toString())  // 각 value를 리스트에 추가
                     }
                 }
-                breathTextView.text = "하루중 최대값 : $maxValue"
+
+                if (maxValue != null) {
+                    breathTextView.text = "하루중 최대값 : $maxValue"
+                } else {
+                    breathTextView.text = "데이터가 존재하지 않습니다."
+                }
+
+                // 최대값이 설정된 후에 라인 차트를 설정합니다.
+                setupLineChart("1", date)
+                progressBar.visibility = View.GONE
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // 실패 시 처리
-                breathTextView.text = "데이터를 다시 생성해주세요"
+                breathTextView.text = "데이터를 가져오는 데 실패했습니다"
+                progressBar.visibility = View.GONE
             }
         })
     }
 
-
     private fun setupLineChart(cnt: String, date: String) {
-        lineChart = findViewById(R.id.linechart)
-        progressBar.visibility = View.VISIBLE
         lineChart.visibility = View.GONE
+        progressBar.visibility = View.VISIBLE
 
         val userId = getUserNameFromPreferences()
 
         if (userId != null) {
-            val dataRef: DatabaseReference = database.getReference("users/$userId/data/$date/$cnt")
+            val dataRef: DatabaseReference = database.getReference("users/$userId/data/$date")
 
             dataRef.addListenerForSingleValueEvent(object : ValueEventListener {
-
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
-                        chartData.clear() // 기존 데이터 초기화
+                        val totalSessions = snapshot.childrenCount.toInt()
+                        chartData.clear()
 
-                        for (dataSnapshot in snapshot.children) {
-                            val key = dataSnapshot.key
-                            if (key == "time") {
-                                val timeValue = dataSnapshot.getValue(String::class.java) ?: ""
-                                binding.textViewTime.setText(timeValue)
-                            } else {
-                                val label = key?.replace("[^\\d.]".toRegex(), "") ?: "0"
-                                val value = dataSnapshot.getValue(Double::class.java) ?: 0.0
-                                addChartItem(label + "초", value)
+                        val sessionSnapshot = snapshot.child(cnt)
+                        if (sessionSnapshot.exists()) {
+                            for (dataSnapshot in sessionSnapshot.children) {
+                                val key = dataSnapshot.key
+                                if (key == "time") {
+                                    val timeValue = dataSnapshot.getValue(String::class.java) ?: ""
+                                    binding.textViewTime.setText(timeValue)
+                                } else {
+                                    val label = key?.replace("[^\\d.]".toRegex(), "") ?: "0"
+                                    val value = dataSnapshot.getValue(Double::class.java) ?: 0.0
+                                    addChartItem(label + "초", value)
+                                }
                             }
+
+                            updateChart()
+                            binding.dataChart.visibility = View.VISIBLE // 로딩 후 차트를 보이게 함
+                            binding.noneData.visibility = View.GONE
+                        } else {
+                            binding.dataChart.visibility = View.GONE
+                            binding.noneData.visibility = View.VISIBLE
+                            breathTextView.text = "데이터가 존재하지 않습니다."
                         }
 
-                        updateChart()
+                        if (cnt.toInt() >= totalSessions) {
+                            binding.rightB.visibility = View.GONE
+                        } else {
+                            binding.rightB.visibility = View.VISIBLE
+                        }
 
-                        // 데이터가 있을 경우 LineChart를 표시
-                        binding.dataChart.visibility = View.VISIBLE
-                        binding.noneData.visibility = View.GONE
                     } else {
-                        // 데이터가 없을 경우 LineChart를 숨김
                         binding.dataChart.visibility = View.GONE
                         binding.noneData.visibility = View.VISIBLE
-                        binding.breathTextView.setText("데이터가 존재하지 않습니다.")
+                        breathTextView.text = "데이터가 존재하지 않습니다."
                     }
 
                     lineChart.visibility = View.VISIBLE
@@ -228,14 +254,10 @@ class Calendar : AppCompatActivity() {
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    breathTextView.text = "데이터를 가져오는 데 실패했습니다: ${error.message}"
-                    // 로딩 실패 시에도 ProgressBar를 숨김
+                    breathTextView.text = "데이터를 가져오는 데 실패했습니다"
                     progressBar.visibility = View.GONE
-                    // 실패 시 차트도 숨김
                     binding.dataChart.visibility = View.GONE
-
                     binding.noneData.visibility = View.VISIBLE
-
                 }
             })
         } else {
@@ -257,9 +279,9 @@ class Calendar : AppCompatActivity() {
         }
 
         val lineDataSet = LineDataSet(entries, "")
-        lineDataSet.color = Color.BLUE // LineChart에서 Line Color 설정
-        lineDataSet.setCircleColor(Color.DKGRAY) // LineChart에서 Line Circle Color 설정
-        lineDataSet.setCircleHoleColor(Color.DKGRAY) // LineChart에서 Line Hole Circle Color 설정
+        lineDataSet.color = Color.BLUE
+        lineDataSet.setCircleColor(Color.DKGRAY)
+        lineDataSet.setCircleHoleColor(Color.DKGRAY)
 
         val dataSets = ArrayList<ILineDataSet>()
         dataSets.add(lineDataSet)

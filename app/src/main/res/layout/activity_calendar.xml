@@ -83,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginVertical="20dp"
-                android:background="@drawable/pop_up_frame"
+                android:background="@drawable/blue_frame"
                 android:orientation="vertical"
                 android:padding="15dp">
 
