@@ -237,8 +237,10 @@ class MainActivity : AppCompatActivity() {
                         }
                         updateChart()
                     } else {
+                        updateChart()
                         Log.e("Firebase", "No data found for the given path")
                     }
+                    updateChart()
                 }
 
 
@@ -248,7 +250,6 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
-
 
     private fun updateChart() {
         val entries = mutableListOf<Entry>()
