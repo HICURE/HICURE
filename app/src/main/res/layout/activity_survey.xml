@@ -144,6 +144,10 @@
                 android:textColor="@color/edge_blue"
                 android:textSize="14sp" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="50dp"/>
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
