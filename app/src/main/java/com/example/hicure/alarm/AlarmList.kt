@@ -2,6 +2,7 @@ package com.example.hicure.alarm
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.ViewTreeObserver
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -39,6 +40,23 @@ class AlarmList : AppCompatActivity() {
 //            alarmRepository.clearAllAlarms() // Clear the database
 //            initializeDefaultAlarms() // Initialize default alarms
 //        }
+
+        "알람".also { binding.actionTitle.text = it }
+
+        binding.actionTitle.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                binding.actionTitle.viewTreeObserver.removeOnGlobalLayoutListener(this)
+
+                val actionTextWidth = binding.actionTitle.width
+
+                binding.actionTitle.width = actionTextWidth + 10
+
+                val layoutParams = binding.behindTitle.layoutParams
+                layoutParams.width = actionTextWidth + 30
+                binding.behindTitle.layoutParams = layoutParams
+            }
+        })
     }
 
     private fun initializeDefaultAlarms() {
