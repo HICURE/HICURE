@@ -41,11 +41,11 @@ class ActivityLungCapacityPrediction : AppCompatActivity() {
 
         binding.subTitle.text = infoSubTitle
 
-        binding.content1.visibility = View.GONE
         binding.content2.visibility = View.GONE
         binding.content3.visibility = View.GONE
         binding.content4.visibility = View.GONE
-        binding.content5.visibility = View.GONE
+
+        binding.content1.text = "현재 이 어플은 아래의 기준에 따라 기준치를 정하여서, SCORE값을 추가합니다.\n\n"
 
         binding.imageRes.setImageResource(R.drawable.image2)
         binding.imageRes.setOnClickListener {
@@ -54,6 +54,11 @@ class ActivityLungCapacityPrediction : AppCompatActivity() {
             }
             startActivity(intent)
         }
+
+        binding.content5.text = "기준치보다 일정 값 이상 작을 때는 1점\n"+
+                "기준치와 근접할 때는 2점\n"+
+                "기준치보다 일정 값 이상 클 때는 3점의 점수를 부여합니다."
+
 
         binding.backBtn.setOnClickListener{
             finish()

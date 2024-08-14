@@ -62,6 +62,10 @@ class UserInfo : AppCompatActivity() {
             true
         }
 
+        binding.userState.reset.setOnClickListener{
+            resetUserIdAndNavigate()
+        }
+
         val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
         val userId = sharedPreferences.getString("user_id", null) ?: return
 
@@ -69,9 +73,11 @@ class UserInfo : AppCompatActivity() {
 
         val userAge = sharedPreferences.getInt("user_age", 0)
         val userGender = sharedPreferences.getString("user_gender", null)
+        val userHeight = sharedPreferences.getInt("user_height", 0)
 
         binding.userState.userAge.text = userAge.toString()
         binding.userState.userGender.text = userGender ?: "N/A"
+        binding.userState.userHeight.text = userHeight.toString()
 
         binding.inquiry.inquiry.setOnClickListener{
             val intent = Intent(Intent.ACTION_VIEW)
@@ -80,7 +86,7 @@ class UserInfo : AppCompatActivity() {
         }
 
         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val sdfShort = SimpleDateFormat("MM-dd", Locale.getDefault())
+        val sdfShort = SimpleDateFormat("MM/dd", Locale.getDefault())
 
         userRef.child("startDate").get().addOnSuccessListener { snapshot ->
             val startDateString = snapshot.getValue(String::class.java)
@@ -127,6 +133,18 @@ class UserInfo : AppCompatActivity() {
         }.addOnFailureListener { e ->
             Log.e(TAG, "Failed to get startDate", e)
         }
+    }
+
+    private fun resetUserIdAndNavigate() {
+        val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            putString("user_id", " ")
+            apply()
+        }
+
+        val intent = Intent(this, AppStart::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
     }
 
     private fun startNewActivity(activityClass: Class<*>) {
