@@ -5,10 +5,9 @@
         <attr name ="textStrokeColor" format ="color"/>
     </declare-styleable>
 
-<!--    <attr name="alarmBoxStyle" format="enum">-->
-<!--        <enum name="blue" value="0"/>-->
-<!--        <enum name="yellow" value="1"/>-->
-<!--        <enum name="pink" value="2"/>-->
-<!--        <enum name="grey" value="3"/>-->
-<!--    </attr>-->
+    <declare-styleable name="CustomTimePicker">
+        <attr name="selectedTextSize" format="dimension"/>
+        <attr name="normalTextSize" format="dimension"/>
+        <attr name="amPmTextSize" format="dimension"/>
+    </declare-styleable>
 </resources>

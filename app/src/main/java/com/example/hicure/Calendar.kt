@@ -1,191 +1,241 @@
 package com.example.hicure
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-
-import android.annotation.SuppressLint
 import android.graphics.Color
-import java.io.FileInputStream
-import java.io.FileOutputStream
-
 import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.Button
 import android.widget.CalendarView
-import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
+import com.example.hicure.databinding.ActivityCalendarBinding
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.ArrayList
+import java.util.Date
+import java.util.Locale
 
 class Calendar : AppCompatActivity() {
-    var userID: String = "userID"
-    lateinit var fname: String
-    lateinit var str: String
-    lateinit var calendarView: CalendarView
-    lateinit var updateBtn: Button
-    lateinit var deleteBtn:Button
-    lateinit var saveBtn:Button
-    lateinit var diaryTextView: TextView
-    lateinit var diaryContent:TextView
-    lateinit var title:TextView
-    lateinit var contextEditText: EditText
 
-    lateinit var lineChart: LineChart
-    private val chartData = ArrayList<ChartData>()
+    private val database = FirebaseDatabase.getInstance("https://hicure-d5c99-default-rtdb.firebaseio.com/")
+    private val userRef: DatabaseReference = database.getReference("users")
+    private val binding: ActivityCalendarBinding by lazy { ActivityCalendarBinding.inflate(layoutInflater) }
+
+    private lateinit var calendarView: CalendarView
+    private lateinit var diaryTextView: TextView
+    private lateinit var breathTextView: TextView
+    private lateinit var lineChart: LineChart
+    private lateinit var progressBar: ProgressBar
+    private val chartData = ArrayList<MyChartData>()
+    private var selectedDate: String = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+    private var userId: String? = null
+    private var currentSession = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_calendar)
+        setContentView(binding.root)
 
-        // UI값 생성
-        calendarView=findViewById(R.id.calendarView)
-        diaryTextView=findViewById(R.id.diaryTextView)
-        saveBtn=findViewById(R.id.saveBtn)
-        deleteBtn=findViewById(R.id.deleteBtn)
-        updateBtn=findViewById(R.id.updateBtn)
-        diaryContent=findViewById(R.id.diaryContent)
-        contextEditText=findViewById(R.id.contextEditText)
+        initUI()
 
-
-
-        calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
-            diaryTextView.visibility = View.VISIBLE
-            saveBtn.visibility = View.VISIBLE
-            contextEditText.visibility = View.VISIBLE
-            diaryContent.visibility = View.INVISIBLE
-            updateBtn.visibility = View.INVISIBLE
-            deleteBtn.visibility = View.INVISIBLE
-            diaryTextView.text = String.format("%d / %d / %d", year, month + 1, dayOfMonth)
-            contextEditText.setText("")
-            checkDay(year, month, dayOfMonth, userID)
+        userId = getUserNameFromPreferences()
+        if (userId != null) {
+            loadDataAndInitializeUI(selectedDate, userId!!)
+            calendarView.setDate(System.currentTimeMillis(), false, true)
+        } else {
+            breathTextView.text = "User ID를 찾을 수 없습니다"
         }
 
-        saveBtn.setOnClickListener {
-            saveDiary(fname)
-            contextEditText.visibility = View.INVISIBLE
-            saveBtn.visibility = View.INVISIBLE
-            updateBtn.visibility = View.VISIBLE
-            deleteBtn.visibility = View.VISIBLE
-            str = contextEditText.text.toString()
-            diaryContent.text = str
-            diaryContent.visibility = View.VISIBLE
+        calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
+            selectedDate = String.format("%d-%02d-%02d", year, month + 1, dayOfMonth)
+            diaryTextView.text = selectedDate
+            currentSession = 1
+            binding.countNumber.text = "$currentSession 회차"
+            binding.leftB.visibility = View.GONE
+            loadDataAndInitializeUI(selectedDate, userId!!)
         }
     }
 
-    // 달력 내용 조회, 수정
-    fun checkDay(cYear: Int, cMonth: Int, cDay: Int, userID: String) {
-        //저장할 파일 이름설정
-        fname = "" + userID + cYear + "-" + (cMonth + 1) + "" + "-" + cDay + ".txt"
+    private fun initUI() {
+        binding.actionTitle.text = "캘린더"
+        binding.actionTitle.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                binding.actionTitle.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
-        var fileInputStream: FileInputStream
-        try {
-            fileInputStream = openFileInput(fname)
-            val fileData = ByteArray(fileInputStream.available())
-            fileInputStream.read(fileData)
-            fileInputStream.close()
-            str = String(fileData)
-            contextEditText.visibility = View.INVISIBLE
-            diaryContent.visibility = View.VISIBLE
-            diaryContent.text = str
-            saveBtn.visibility = View.INVISIBLE
-            updateBtn.visibility = View.VISIBLE
-            deleteBtn.visibility = View.VISIBLE
-            updateBtn.setOnClickListener {
-                contextEditText.visibility = View.VISIBLE
-                diaryContent.visibility = View.INVISIBLE
-                contextEditText.setText(str)
-                saveBtn.visibility = View.VISIBLE
-                updateBtn.visibility = View.INVISIBLE
-                deleteBtn.visibility = View.INVISIBLE
-                diaryContent.text = contextEditText.text
+                val actionTextWidth = binding.actionTitle.width
+                binding.actionTitle.width = actionTextWidth + 10
+
+                val layoutParams = binding.behindTitle.layoutParams
+                layoutParams.width = actionTextWidth + 30
+                binding.behindTitle.layoutParams = layoutParams
             }
-            deleteBtn.setOnClickListener {
-                diaryContent.visibility = View.INVISIBLE
-                updateBtn.visibility = View.INVISIBLE
-                deleteBtn.visibility = View.INVISIBLE
-                contextEditText.setText("")
-                contextEditText.visibility = View.VISIBLE
-                saveBtn.visibility = View.VISIBLE
-                removeDiary(fname)
+        })
+
+        binding.diaryTextView.text = selectedDate
+        diaryTextView = binding.diaryTextView
+        breathTextView = binding.breathTextView
+        lineChart = binding.linechart
+        progressBar = binding.progressBar
+        calendarView = binding.calendarView
+
+        binding.backB.setOnClickListener {
+            startActivity(Intent(this, MainActivity::class.java))
+        }
+
+        binding.leftB.visibility = View.GONE
+        binding.countNumber.text = "$currentSession 회차"
+        setupChartNavigation()
+    }
+
+    private fun setupChartNavigation() {
+        binding.leftB.setOnClickListener {
+            if (currentSession > 1) {
+                currentSession--
+                updateChart()
+                if (currentSession == 1) binding.leftB.visibility = View.GONE
             }
-            if (diaryContent.text == null) {
-                diaryContent.visibility = View.INVISIBLE
-                updateBtn.visibility = View.INVISIBLE
-                deleteBtn.visibility = View.INVISIBLE
-                diaryTextView.visibility = View.VISIBLE
-                saveBtn.visibility = View.VISIBLE
-                contextEditText.visibility = View.VISIBLE
+        }
+
+        binding.rightB.setOnClickListener {
+            currentSession++
+            updateChart()
+            if (currentSession > 1) binding.leftB.visibility = View.VISIBLE
+        }
+    }
+
+    private fun getCurrentDate(): String {
+        val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
+        return dateFormat.format(Date())
+    }
+
+    private fun getCurrentTime(): String {
+        val dateFormat = SimpleDateFormat("hh : mm", Locale.getDefault())
+        return dateFormat.format(Date())
+    }
+
+    private fun getUserNameFromPreferences(): String? {
+        val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        return sharedPreferences.getString("user_id", null)
+    }
+
+    private fun loadDataAndInitializeUI(date: String, userIDD: String) {
+        progressBar.visibility = View.VISIBLE
+        binding.dataChart.visibility = View.GONE
+        breathTextView.text = "데이터 로드 중..."
+
+        val dataRef = userRef.child(userIDD).child("data").child(date)
+
+        dataRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val maxValue = snapshot.children.flatMap { it.children }
+                    .filter { it.key != "time" }
+                    .mapNotNull { it.getValue(Int::class.java) }
+                    .maxOrNull()
+
+                breathTextView.text = if (maxValue != null) {
+                    "하루중 최대값 : $maxValue"
+                } else {
+                    "데이터가 존재하지 않습니다."
+                }
+
+                setupLineChart(currentSession.toString(), date)
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
+
+            override fun onCancelled(error: DatabaseError) {
+                breathTextView.text = "데이터를 가져오는 데 실패했습니다"
+                progressBar.visibility = View.GONE
+            }
+        })
+    }
+
+    private fun setupLineChart(cnt: String, date: String) {
+        progressBar.visibility = View.VISIBLE
+
+        userId?.let { id ->
+            val dataRef = userRef.child(id).child("data").child(date)
+
+            dataRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    chartData.clear()
+
+                    val totalSessions = snapshot.childrenCount.toInt()
+                    val sessionSnapshot = snapshot.child(cnt)
+                    if (sessionSnapshot.exists()) {
+                        sessionSnapshot.children.forEach { dataSnapshot ->
+                            val key = dataSnapshot.key
+                            if (key == "time") {
+                                binding.textViewTime.text = dataSnapshot.getValue(String::class.java)
+                            } else {
+                                val label = key?.replace("[^\\d.]".toRegex(), "") ?: "0"
+                                val value = dataSnapshot.getValue(Double::class.java) ?: 0.0
+                                addChartItem("$label 초", value)
+                            }
+                        }
+
+                        updateChart()
+                        binding.dataChart.visibility = View.VISIBLE
+                        binding.noneData.visibility = View.GONE
+                    } else {
+                        binding.dataChart.visibility = View.GONE
+                        binding.noneData.visibility = View.VISIBLE
+                    }
+
+                    if (cnt.toInt() >= totalSessions) {
+                        binding.rightB.visibility = View.GONE
+                    } else {
+                        binding.rightB.visibility = View.VISIBLE
+                    }
+
+                    progressBar.visibility = View.GONE
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    breathTextView.text = "데이터를 가져오는 데 실패했습니다"
+                    progressBar.visibility = View.GONE
+                    binding.dataChart.visibility = View.GONE
+                    binding.noneData.visibility = View.VISIBLE
+                }
+            })
+        } ?: run {
+            breathTextView.text = "User ID를 찾을 수 없습니다"
+            progressBar.visibility = View.GONE
         }
     }
 
+    private fun updateChart() {
+        binding.countNumber.text = "$currentSession 회차"
+        setupLineChart(currentSession.toString(), selectedDate)
+        val entries = chartData.map { Entry(it.labelData.replace("[^\\d.]".toRegex(), "").toFloat(), it.lineData.toFloat()) }
 
-    // 달력 내용 제거
-    @SuppressLint("WrongConstant")
-    fun removeDiary(readDay: String?) {
-        var fileOutputStream: FileOutputStream
-        try {
-            fileOutputStream = openFileOutput(readDay, MODE_NO_LOCALIZED_COLLATORS)
-            val content = ""
-            fileOutputStream.write(content.toByteArray())
-            fileOutputStream.close()
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
+        val lineDataSet = LineDataSet(entries, "").apply {
+            color = Color.BLUE
+            setCircleColor(Color.DKGRAY)
+            setCircleHoleColor(Color.DKGRAY)
+        }
+
+        lineChart.apply {
+            data = LineData(listOf<ILineDataSet>(lineDataSet))
+            description.isEnabled = false
+            invalidate()
         }
     }
 
-
-    // 달력 내용 추가
-    @SuppressLint("WrongConstant")
-    fun saveDiary(readDay: String?) {
-        var fileOutputStream: FileOutputStream
-        try {
-            fileOutputStream = openFileOutput(readDay, MODE_NO_LOCALIZED_COLLATORS)
-            val content = contextEditText.text.toString()
-            fileOutputStream.write(content.toByteArray())
-            fileOutputStream.close()
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace()
-        }
-    }
-    private fun setupLineChart() {
-        lineChart = findViewById(R.id.linechart)
-
-        // LineChart 데이터 초기화
-        chartData.clear()
-        addChartItem("1월", 7.9)
-        addChartItem("2월", 8.2)
-        addChartItem("3월", 8.3)
-        addChartItem("4월", 8.5)
-        addChartItem("5월", 7.3)
-
-        val entries = mutableListOf<Entry>()
-
-        for (item in chartData) {
-            entries.add(Entry(item.lableData.replace("[^\\d.]".toRegex(), "").toFloat(), item.lineData.toFloat()))
-        }
-
-        val lineDataSet = LineDataSet(entries, "")
-        lineDataSet.color = Color.BLUE // LineChart에서 Line Color 설정
-        lineDataSet.setCircleColor(Color.DKGRAY) // LineChart에서 Line Circle Color 설정
-        lineDataSet.setCircleHoleColor(Color.DKGRAY) // LineChart에서 Line Hole Circle Color 설정
-
-        val dataSets = ArrayList<ILineDataSet>()
-        dataSets.add(lineDataSet)
-
-        val data = LineData(dataSets)
-
-        lineChart.data = data
-        lineChart.description.isEnabled = false
-        lineChart.invalidate()
-    }
     private fun addChartItem(labelItem: String, dataItem: Double) {
-        val item = ChartData(labelItem, dataItem)
-        chartData.add(item)
+        chartData.add(MyChartData(labelItem, dataItem))
     }
 }
+
+data class MyChartData(val labelData: String, val lineData: Double)
