@@ -170,6 +170,34 @@ class MainActivity : AppCompatActivity() {
         checkAndSetupInitialChart(userId, userRefValue)
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        val userRefValue = sharedPreferences.getInt("reference_value", 0)
+        val userId = sharedPreferences.getString("user_id", null)
+
+        userId?.let {
+            // score 갱신
+            userRef.child(it).child("score")
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val score = dataSnapshot.getValue(Int::class.java) ?: 0
+                        Myscore.text = score.toString()
+
+                        setupPieChart(score.toString())
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        Myscore.text = "Failed to load score."
+                    }
+                })
+
+            // maxValue 갱신
+            checkAndSetupInitialChart(userId, userRefValue)
+        }
+    }
+
     private fun checkAndSetupInitialChart(userId: String, userRefValue: Int) {
         val currentDate = LocalDate.now().toString()
 
