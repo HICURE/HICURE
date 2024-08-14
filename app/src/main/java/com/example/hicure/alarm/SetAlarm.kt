@@ -20,6 +20,7 @@ class SetAlarm : AppCompatActivity() {
     private lateinit var binding: ActivitySetAlarmBinding
     private lateinit var alarmManager: AlarmManager
     private lateinit var timePicker: CustomTimePicker
+    private var alarmId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +39,7 @@ class SetAlarm : AppCompatActivity() {
             intent.getIntExtra("EXTRA_BUTTON_COLOR", R.drawable.set_alarm_save_button_box_blue)
         val alarmName = intent.getStringExtra("EXTRA_ALARM_NAME")
         val isAlarmEnabled = intent.getBooleanExtra("EXTRA_IS_ALARM_ENABLED", false)
-        val alarmId = intent.getIntExtra("EXTRA_ALARM_ID", 0)
+        alarmId = intent.getIntExtra("EXTRA_ALARM_ID", 0)
         val isSoundAndVibration = intent.getBooleanExtra("EXTRA_IS_SOUND_AND_VIBRATION", false)
 
         val boxDrawable = ContextCompat.getDrawable(this, boxDrawableResId)
@@ -95,12 +96,7 @@ class SetAlarm : AppCompatActivity() {
 
                 // RoomDB에 알람 설정 저장
                 saveAlarmSettings(selectedTime)
-
-                if (isAlarmEnabled) {
-                    scheduleAlarm(selectedTime)
-                } else {
-                    cancelAlarm()
-                }
+                scheduleAlarm(selectedTime)
 
                 // 결과 인텐트에 필요한 데이터를 담아 설정
                 val resultIntent = Intent().apply {
@@ -156,14 +152,15 @@ class SetAlarm : AppCompatActivity() {
             }
 
             val intent = Intent(this, AlertReceiver::class.java).apply {
-                putExtra("time", time)
+                putExtra("EXTRA_ALARM_ID", alarmId)
             }
             val pendingIntent = PendingIntent.getBroadcast(
                 this,
-                0,
+                alarmId, // Use alarm ID as requestCode
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
+
 
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
         }

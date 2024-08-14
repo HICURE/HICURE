@@ -1,5 +1,8 @@
 package com.example.hicure.alarm
 
+import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Intent
 import android.os.Bundle
 import android.view.ViewTreeObserver
@@ -13,6 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 class AlarmList : AppCompatActivity() {
 
@@ -20,12 +24,13 @@ class AlarmList : AppCompatActivity() {
     private lateinit var requestSetAlarm: ActivityResultLauncher<Intent>
     private var lastClickedAlarmBox: Int = 0
     private lateinit var alarmRepository: AlarmRepository
+    private lateinit var alarmManager: AlarmManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAlarmListBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
         // Initialize repository
         val database = AlarmDatabase.getInstance(applicationContext)
         alarmRepository = AlarmRepository(database.alarmDao())
@@ -66,9 +71,9 @@ class AlarmList : AppCompatActivity() {
             if (existingAlarms.isEmpty()) {
                 // Insert default alarms
                 val defaultAlarms = listOf(
-                    AlarmEntity(id = 1, time = "08:00 AM", amPm = "", label = "아침", isEnabled = false, isSoundAndVibration = false),
-                    AlarmEntity(id = 2, time = "12:00 PM", amPm = "", label = "점심", isEnabled = false, isSoundAndVibration = false),
-                    AlarmEntity(id = 3, time = "06:00 PM", amPm = "", label = "저녁", isEnabled = false, isSoundAndVibration = false)
+                    AlarmEntity(id = 1, time = "12:36 PM", amPm = "", label = "아침", isEnabled = false, isSoundAndVibration = false),
+                    AlarmEntity(id = 2, time = "12:37 PM", amPm = "", label = "점심", isEnabled = false, isSoundAndVibration = false),
+                    AlarmEntity(id = 3, time = "12:38 PM", amPm = "", label = "저녁", isEnabled = false, isSoundAndVibration = false)
                 )
                 defaultAlarms.forEach { alarm ->
                     alarmRepository.insertAlarm(alarm)
@@ -171,7 +176,62 @@ class AlarmList : AppCompatActivity() {
             alarm?.let {
                 it.isEnabled = isEnabled
                 alarmRepository.insertOrUpdateAlarm(it)
+                if (isEnabled) {
+                    scheduleAlarm(it)
+                } else {
+                    cancelAlarm(it)
+                }
             }
+        }
+    }
+
+    @SuppressLint("ScheduleExactAlarm")
+    private fun scheduleAlarm(alarm: AlarmEntity) {
+        val calendar = Calendar.getInstance()
+        val hourMinute = alarm.time.split(" ")[0]
+        val hour = hourMinute.split(":")[0].toInt()
+        val minute = hourMinute.split(":")[1].toInt()
+        val amPm = alarm.amPm
+
+        if (amPm.equals("PM", ignoreCase = true) && hour < 12) {
+            calendar.set(Calendar.HOUR_OF_DAY, hour + 12)
+        } else if (amPm.equals("AM", ignoreCase = true) && hour == 12) {
+            calendar.set(Calendar.HOUR_OF_DAY, 0)
+        } else {
+            calendar.set(Calendar.HOUR_OF_DAY, hour)
+        }
+        calendar.set(Calendar.MINUTE, minute)
+        calendar.set(Calendar.SECOND, 0)
+
+        val now = Calendar.getInstance()
+        if (calendar.before(now)) {
+            calendar.add(Calendar.DAY_OF_YEAR, 1)
+        }
+
+        val intent = Intent(this, AlertReceiver::class.java).apply {
+            putExtra("EXTRA_ALARM_ID", alarm.id)
+        }
+        val pendingIntent = PendingIntent.getBroadcast(
+            this,
+            alarm.id,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+    }
+    @SuppressLint("UnspecifiedImmutableFlag")
+    private fun cancelAlarm(alarm: AlarmEntity) {
+        val intent = Intent(this, AlertReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            this,
+            alarm.id,
+            intent,
+            PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        pendingIntent?.let {
+            alarmManager.cancel(it)
         }
     }
 
