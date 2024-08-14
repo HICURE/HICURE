@@ -25,7 +25,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/roboto_regular"
+            android:fontFamily="@font/oxygen_regular"
             android:text="@string/inquiryText"
             android:textColor="@color/edge_blue"
             android:textSize="15sp" />

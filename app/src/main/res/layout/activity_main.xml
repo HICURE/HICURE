@@ -42,6 +42,8 @@
 
     </androidx.appcompat.widget.Toolbar>
 
+    <include layout="@layout/background_circle" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -60,6 +62,7 @@
                 android:layout_height="87dp" />
 
             <LinearLayout
+                android:layout_marginHorizontal="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="17dp"
@@ -73,14 +76,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
+                    android:fontFamily="@font/oxygen_bold"
                     android:text="user_name"
                     android:textSize="20sp" />
 
                 <TextView
-                    android:id="@+id/score1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="님의 점수"
+                    android:text="님 어서오세요!"
                     android:textSize="20sp" />
 
             </LinearLayout>
@@ -100,7 +103,7 @@
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="30dp"
+                        android:layout_margin="20dp"
                         android:orientation="horizontal">
 
                         <ImageView
@@ -118,18 +121,34 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/myscore"
                                 android:layout_width="match_parent"
                                 android:layout_height="30dp"
                                 android:text="나의 점수"
                                 android:textColor="@color/edge_blue"
                                 android:textSize="15sp" />
 
-                            <com.github.mikephil.charting.charts.PieChart
-                                android:id="@+id/pieChart"
+                            <FrameLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent" />
+                                android:layout_gravity="center"
+                                android:layout_height="match_parent">
 
+                                <com.github.mikephil.charting.charts.PieChart
+                                    android:id="@+id/pieChart"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent" >
+                                </com.github.mikephil.charting.charts.PieChart>
+
+                                <TextView
+                                    android:id="@+id/myscore"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:fontFamily="@font/oxygen_bold"
+                                    android:gravity="center"
+                                    android:text="나의 점수"
+                                    android:textColor="@color/edge_blue"
+                                    android:textSize="20sp" />
+
+                            </FrameLayout>
 
                         </LinearLayout>
                     </FrameLayout>

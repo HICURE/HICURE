@@ -84,7 +84,7 @@ class UserInfo : AppCompatActivity() {
         }
 
         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val sdfShort = SimpleDateFormat("MM-dd", Locale.getDefault())
+        val sdfShort = SimpleDateFormat("MM/dd", Locale.getDefault())
 
         userRef.child("startDate").get().addOnSuccessListener { snapshot ->
             val startDateString = snapshot.getValue(String::class.java)

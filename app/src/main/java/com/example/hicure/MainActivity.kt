@@ -145,14 +145,8 @@ class MainActivity : AppCompatActivity() {
             userRef.child(it).child("score")
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        val score = dataSnapshot.getValue(Double::class.java) ?: 0.0
+                        val score = dataSnapshot.getValue(Int::class.java) ?: 0
                         Myscore.text = score.toString()
-
-                        // 사용자 이름과 점수를 결합하여 표시
-                        userName?.let {
-                            val displayText = "$it 점수: $score"
-                            binding.username.text = displayText
-                        }
 
                         setupPieChart(score.toString())
                     }

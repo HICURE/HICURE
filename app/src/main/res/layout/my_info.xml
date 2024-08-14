@@ -81,7 +81,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
-                    android:fontFamily="@font/roboto_regular"
+                    android:fontFamily="@font/oxygen_regular"
                     android:gravity="center"
                     android:text="@string/userGender"
                     android:textColor="@color/edge_blue" />
@@ -114,7 +114,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
-                    android:fontFamily="@font/roboto_regular"
+                    android:fontFamily="@font/oxygen_regular"
                     android:gravity="center"
                     android:text="@string/userAge"
                     android:textColor="@color/edge_blue" />
