@@ -72,7 +72,7 @@
             android:name=".alarm.AlarmList"
             android:exported="false" />
         <activity
-            android:name=".UserInfo"
+            android:name=".InitialSurvey"
             android:exported="false" />
         <activity
             android:name=".Survey"
@@ -87,7 +87,7 @@
             android:name=".AppStart"
             android:exported="false" />
         <activity
-            android:name=".InitialSurvey"
+            android:name=".UserInfo"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
