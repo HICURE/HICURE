@@ -63,7 +63,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_marginHorizontal="10dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -85,6 +85,13 @@
                     android:gravity="center"
                     android:text="@string/userGender"
                     android:textColor="@color/edge_blue" />
+
+                <android.widget.Button
+                    android:background="@drawable/setting"
+                    android:layout_height="24dp"
+                    android:layout_width="24dp"/>
+
+
             </LinearLayout>
 
             <View
@@ -96,7 +103,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_marginHorizontal="10dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -118,6 +125,51 @@
                     android:gravity="center"
                     android:text="@string/userAge"
                     android:textColor="@color/edge_blue" />
+
+                <android.widget.Button
+                    android:background="@drawable/setting"
+                    android:layout_height="24dp"
+                    android:layout_width="24dp"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="5dp"
+                android:background="@color/light_blue" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/roboto_bold"
+                    android:gravity="center"
+                    android:text="키"
+                    android:textColor="@color/edge_blue" />
+
+                <TextView
+                    android:id="@+id/user_age"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:fontFamily="@font/oxygen_regular"
+                    android:gravity="center"
+                    android:text="@string/userHeight"
+                    android:textColor="@color/edge_blue" />
+
+                <android.widget.Button
+                    android:background="@drawable/setting"
+                    android:layout_height="24dp"
+                    android:layout_width="24dp"/>
+
             </LinearLayout>
 
             <View
