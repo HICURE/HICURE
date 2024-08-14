@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
 
     <uses-permission android:name="android.permission.BLUETOOTH"/>
@@ -77,7 +79,7 @@
             android:name=".Calendar"
             android:exported="false" />
         <activity
-            android:name=".AppStart"
+            android:name=".alarm.AlarmList"
             android:exported="false" />
         <activity
             android:name=".UserInfo"
@@ -95,7 +97,7 @@
             android:name=".InitialSurvey"
             android:exported="false" />
         <activity
-            android:name=".alarm.AlarmList"
+            android:name=".AppStart"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
