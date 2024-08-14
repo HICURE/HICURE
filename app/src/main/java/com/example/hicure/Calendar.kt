@@ -46,7 +46,43 @@ class Calendar : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_calendar)
+
+        val currentDate = getCurrentDate()
+        val currentTime = getCurrentTime()
+
+        val textViewDate: TextView = findViewById(R.id.textViewDate)
+        textViewDate.text = currentDate
+        val textViewTime: TextView = findViewById(R.id.textViewTime)
+        textViewTime.text = currentTime
+
+        val backB: Button = findViewById(R.id.backB)
+        backB.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+        val min=findViewById<Button>(R.id.leftB)
+        val plus =findViewById<Button>(R.id.rightB)
+        val count_number =findViewById<TextView>(R.id.count_number)
+        var num=1
+
+        setupLineChart(1.toString())
+        min.setOnClickListener{
+            num--
+            count_number.setText(num.toString())
+            // 예시 데이터 초기화 및 설정
+            setupLineChart(num.toString())
+        }
+        plus.setOnClickListener{
+            num++
+            count_number.setText(num.toString())
+            // 예시 데이터 초기화 및 설정
+            setupLineChart(num.toString())
+        }
+        // UI 초기화
+        calendarView = findViewById(R.id.calendarView)
+        diaryTextView = findViewById(R.id.diaryTextView)
+        breathTextView = findViewById(R.id.breathTextView)
 
         initUI()
 
@@ -150,8 +186,10 @@ class Calendar : AppCompatActivity() {
                 } else {
                     "데이터가 존재하지 않습니다."
                 }
-
-                setupLineChart(currentSession.toString(), date)
+                if(maxValue<0){
+                    maxValue=0
+                }
+                breathTextView.text = "하루중 최대값 : $maxValue"
             }
 
             override fun onCancelled(error: DatabaseError) {
