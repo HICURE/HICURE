@@ -122,7 +122,7 @@ class CustomTimePicker @JvmOverloads constructor(
                 val amPmWidth = width * 0.2f
                 val hourWidth = width * 0.25f
                 val colonWidth = width * 0.005f
-                val minuteWidth = width * 0.2f  // 전체 분 열의 너비
+                val minuteWidth = width * 0.25f  // 전체 분 열의 너비
 
                 val hourScrollableWidth = hourWidth * 0.8f
                 val minuteScrollableWidth = minuteWidth * 0.8f  // 분 열의 80%만 스크롤 가능하도록 설정
