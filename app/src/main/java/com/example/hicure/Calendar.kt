@@ -81,6 +81,7 @@ class Calendar : AppCompatActivity() {
             }
         })
 
+        binding.diaryTextView.setText(selectedDate)
         diaryTextView = binding.diaryTextView
         breathTextView = binding.breathTextView
         lineChart = binding.linechart
