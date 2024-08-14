@@ -32,7 +32,7 @@ class CustomTimePicker @JvmOverloads constructor(
     private var scrollY = 0f
     private var hourScrollY = 0f
     private var minuteScrollY = 0f
-    private val scrollSpeedFactor = 0.1f // 스크롤 속도를 줄임
+    private val scrollSpeedFactor = 0.05f // 스크롤 속도를 줄임
 
     private val selectedTextSize: Float
     private val normalTextSize: Float
