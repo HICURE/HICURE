@@ -32,6 +32,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.time.LocalDate
 import java.util.ArrayList
+import com.example.hicure.utils.FirebaseCheckDate
 
 data class ChartData(
     var lableData: String = "",
@@ -164,7 +165,9 @@ class MainActivity : AppCompatActivity() {
                 })
         }
 
-        checkAndSetupInitialChart(userId!!, userRefValue!!)
+        // 날짜가 변경되었는지 체크하고, 필요한 경우 점수 업데이트
+        FirebaseCheckDate.updateDate(userId!!)
+        checkAndSetupInitialChart(userId, userRefValue)
     }
 
     private fun checkAndSetupInitialChart(userId: String, userRefValue: Int) {
@@ -209,6 +212,26 @@ class MainActivity : AppCompatActivity() {
                 }
             })
         }
+    }
+
+    private fun updateScoreAndResetGap(userId: String, gapValue: Int) {
+        userRef.child(userId).child("score").get()
+            .addOnSuccessListener { scoreSnapshot ->
+                val currentScore = scoreSnapshot.getValue(Int::class.java) ?: 0
+                val newScore = currentScore + gapValue
+
+                userRef.child(userId).child("score").setValue(newScore)
+                    .addOnSuccessListener {
+                        Myscore.text = newScore.toString()
+                        binding.gapValue.text = "0"  // gapValue 초기화
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(this, "점수 업데이트 실패: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "현재 점수를 가져오는데 실패했습니다: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun getCurrentDate(): String {
@@ -323,6 +346,8 @@ class MainActivity : AppCompatActivity() {
 
                             // gapValue에 점수 표시
                             binding.gapValue.text = "+ $score"
+
+                            userRef.child(userId).child("gapValue").setValue(score)
 
                             // 현재 회차가 마지막 회차라면 오른쪽 버튼을 숨김
                             if (cnt.toInt() >= totalSessions) {

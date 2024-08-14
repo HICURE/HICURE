@@ -178,11 +178,11 @@
                                         android:id="@+id/gap_value"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:fontFamily="@font/oxygen_bold"
+                                        android:fontFamily="@font/oxygen_regular"
                                         android:layout_marginTop="-3dp"
                                         android:gravity="center"
-                                        tools:text="나의 점수"
-                                        android:textColor="@color/light_blue"
+                                        android:text="+ 0"
+                                        android:textColor="@color/edge_blue"
                                         android:textSize="12sp" />
                                 </LinearLayout>
                             </FrameLayout>

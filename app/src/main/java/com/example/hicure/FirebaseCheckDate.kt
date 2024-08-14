@@ -20,6 +20,43 @@ object FirebaseCheckDate {
                 val nowFormatted = now.format(dateFormatter)
 
                 if (lastVisited == null || lastVisited != nowFormatted) {
+
+                    userRef.child(userId).child("gapValue").get()
+                        .addOnSuccessListener { gapValueSnapshot ->
+                            val gapValue = gapValueSnapshot.getValue(Int::class.java) ?: 0
+
+                            if (gapValue > 0) {
+                                userRef.child(userId).child("score").get()
+                                    .addOnSuccessListener { scoreSnapshot ->
+                                        val currentScore = scoreSnapshot.getValue(Int::class.java) ?: 0
+                                        val newScore = currentScore + gapValue
+
+                                        userRef.child(userId).child("score").setValue(newScore)
+                                            .addOnSuccessListener {
+                                                Log.d("FirebaseCheckDate", "점수 갱신 성공: $newScore")
+
+                                                userRef.child(userId).child("gapValue").setValue(0)
+                                                    .addOnSuccessListener {
+                                                        Log.d("FirebaseCheckDate", "gapValue 초기화 완료")
+                                                    }
+                                                    .addOnFailureListener { e ->
+                                                        Log.e("FirebaseCheckDate", "gapValue 초기화 실패", e)
+                                                    }
+                                            }
+                                            .addOnFailureListener { e ->
+                                                Log.e("FirebaseCheckDate", "점수 갱신 실패", e)
+                                            }
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Log.e("FirebaseCheckDate", "현재 점수 가져오기 실패", e)
+                                    }
+                            }
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("FirebaseCheckDate", "gapValue 가져오기 실패", e)
+                        }
+
+                    // infoVisited 리셋 및 lastAccessDate 갱신
                     userRef.child(userId).child("infoVisited").setValue(0)
                         .addOnSuccessListener {
                             Log.d("FirebaseCheckDate", "InfoVisited 리셋 완료")
