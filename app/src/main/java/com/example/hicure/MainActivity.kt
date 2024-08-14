@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity() {
 
             num--
             binding.countNumber.text = "$num 회차"
-            setupLineChart(num.toString(), userId!!)
+            setupLineChart(num.toString(), userId!!, userRefValue!!)
 
             if (num == 1) {
                 binding.leftB.visibility = View.GONE
@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity() {
 
             num++
             binding.countNumber.text = "$num 회차"
-            setupLineChart(num.toString(), userId!!)
+            setupLineChart(num.toString(), userId!!, userRefValue!!)
 
             if (binding.leftB.visibility == View.GONE) {
                 binding.leftB.visibility = View.VISIBLE
@@ -164,10 +164,10 @@ class MainActivity : AppCompatActivity() {
                 })
         }
 
-        checkAndSetupInitialChart(userId!!)
+        checkAndSetupInitialChart(userId!!, userRefValue!!)
     }
 
-    private fun checkAndSetupInitialChart(userId: String) {
+    private fun checkAndSetupInitialChart(userId: String, userRefValue: Int) {
         val currentDate = LocalDate.now().toString()
 
         if (userId != null) {
@@ -193,7 +193,7 @@ class MainActivity : AppCompatActivity() {
                         binding.dataChart.visibility = View.VISIBLE
                         binding.noneData.visibility = View.GONE
 
-                        setupLineChart("1", userId)
+                        setupLineChart("1", userId, userRefValue)
                     } else {
                         // 데이터가 없으면 차트를 숨김
                         binding.dataChart.visibility = View.GONE
@@ -252,7 +252,7 @@ class MainActivity : AppCompatActivity() {
         pieChart.invalidate()
     }
 
-    private fun setupLineChart(cnt: String, userId: String) {
+    private fun setupLineChart(cnt: String, userId: String, userRefValue: Int) {
         lineChart = findViewById(R.id.linechart)
         val currentDate = LocalDate.now().toString()
 
@@ -281,6 +281,9 @@ class MainActivity : AppCompatActivity() {
                         if (sessionRef.exists()) {
                             chartData.clear() // 기존 데이터 초기화
 
+                            // 최대값 추적을 위한 변수 초기화
+                            var maxValue = 0.0
+
                             // Firebase 데이터 가져오기
                             for (dataSnapshot in sessionRef.children) {
                                 val key = dataSnapshot.key
@@ -293,6 +296,11 @@ class MainActivity : AppCompatActivity() {
                                     val label = key?.replace("[^\\d.]".toRegex(), "") ?: "0"
                                     val value = dataSnapshot.getValue(Double::class.java) ?: 0.0
                                     addChartItem(label + "초", value)
+
+                                    // 최대값 갱신
+                                    if (value > maxValue) {
+                                        maxValue = value
+                                    }
                                 }
                             }
 
@@ -301,6 +309,20 @@ class MainActivity : AppCompatActivity() {
                             binding.noneData.visibility = View.GONE
 
                             updateChart()
+
+                            // 최대값을 maxValue TextView에 설정
+                            binding.maxValue.text = "오늘 나의 최대 수치 : $maxValue"
+
+                            // 기준값과의 차이 계산 및 점수 할당
+                            val difference = maxValue - userRefValue
+                            val score = when {
+                                difference < -100 -> 1
+                                difference in -100.0..50.0 -> 2
+                                else -> 3
+                            }
+
+                            // gapValue에 점수 표시
+                            binding.gapValue.text = "+ $score"
 
                             // 현재 회차가 마지막 회차라면 오른쪽 버튼을 숨김
                             if (cnt.toInt() >= totalSessions) {
@@ -311,7 +333,7 @@ class MainActivity : AppCompatActivity() {
 
                         } else {
                             binding.countNumber.text = "$totalSessions 회차"
-                            setupLineChart(totalSessions.toString(), userId)
+                            setupLineChart(totalSessions.toString(), userId, userRefValue)
                         }
 
                     } else {
