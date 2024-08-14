@@ -30,7 +30,9 @@ class CustomTimePicker @JvmOverloads constructor(
 
     private var itemHeight = 0f
     private var scrollY = 0f
-    private val scrollSpeedFactor = 0.2f // 스크롤 속도를 줄임
+    private var hourScrollY = 0f
+    private var minuteScrollY = 0f
+    private val scrollSpeedFactor = 0.1f // 스크롤 속도를 줄임
 
     private val selectedTextSize: Float
     private val normalTextSize: Float
@@ -117,31 +119,43 @@ class CustomTimePicker @JvmOverloads constructor(
 
         when (event.action) {
             MotionEvent.ACTION_DOWN, MotionEvent.ACTION_MOVE -> {
-                val amPmWidth = width * 0.2f // AM/PM 열의 넓이
-                val hourWidth = width * 0.3f  // 시간 열의 넓이
+                val amPmWidth = width * 0.2f
+                val hourWidth = width * 0.25f
+                val colonWidth = width * 0.005f
+                val minuteWidth = width * 0.2f  // 전체 분 열의 너비
+
+                val hourScrollableWidth = hourWidth * 0.8f
+                val minuteScrollableWidth = minuteWidth * 0.8f  // 분 열의 80%만 스크롤 가능하도록 설정
+                val minuteScrollStartX = amPmWidth + hourWidth + colonWidth + (minuteWidth * 0.2f)  // 분 열 스크롤 시작 위치
+
                 val column = when {
                     x < amPmWidth -> 0
-                    x < amPmWidth + hourWidth -> 1
-                    else -> 2
+                    x < amPmWidth + hourScrollableWidth -> 1
+                    x in minuteScrollStartX..(minuteScrollStartX + minuteScrollableWidth) -> 2  // 분 열 스크롤 영역
+                    else -> -1  // 스크롤 불가능한 영역
                 }
 
-                // 스크롤 위치
                 val dy = y - height / 2
 
                 when (column) {
                     0 -> {
                         selectedAmPm = if (y < height / 2) 0 else 1
-                        scrollY = 0f // AM/PM 열은 스크롤이 필요하지 않음
                     }
                     1 -> {
-                        scrollY += dy * scrollSpeedFactor
-                        selectedHour = ((selectedHour - (scrollY / itemHeight).toInt() + hours.size) % hours.size).coerceIn(0, hours.size - 1)
-                        scrollY = 0f
+                        hourScrollY += dy * scrollSpeedFactor
+                        val scrolledItems = (hourScrollY / itemHeight).toInt()
+                        if (scrolledItems != 0) {
+                            selectedHour = ((selectedHour - scrolledItems + hours.size) % hours.size).coerceIn(0, hours.size - 1)
+                            hourScrollY = 0f
+                        }
                     }
                     2 -> {
-                        scrollY += dy * scrollSpeedFactor
-                        selectedMinute = ((selectedMinute - (scrollY / itemHeight).toInt() + minutes.size) % minutes.size).coerceIn(0, minutes.size - 1)
-                        scrollY = 0f
+                        minuteScrollY += dy * scrollSpeedFactor
+                        val scrolledItems = (minuteScrollY / itemHeight).toInt()
+                        if (scrolledItems != 0) {
+                            selectedMinute = ((selectedMinute - scrolledItems + minutes.size) % minutes.size).coerceIn(0, minutes.size - 1)
+                            minuteScrollY = 0f
+                        }
                     }
                 }
 
@@ -149,7 +163,8 @@ class CustomTimePicker @JvmOverloads constructor(
                 return true
             }
             MotionEvent.ACTION_UP -> {
-                scrollY = 0f
+                hourScrollY = 0f
+                minuteScrollY = 0f
             }
         }
         return super.onTouchEvent(event)
