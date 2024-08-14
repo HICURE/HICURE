@@ -55,6 +55,22 @@ class InitialSurvey : AppCompatActivity() {
         })
 
         binding.checkButton.setOnClickListener {
+            val heightText = binding.userHeight.text.toString()
+
+            // 빈칸인지 확인
+            if (heightText.isBlank()) {
+                Toast.makeText(this, "키를 입력해주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // 입력된 값이 Int인지 확인
+            val heightValue = heightText.toIntOrNull()
+            if (heightValue == null) {
+                Toast.makeText(this, "키는 숫자여야 합니다.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // heightValue가 유효한 숫자인 경우 설문 제출 진행
             submitSurvey()
         }
 
@@ -65,8 +81,9 @@ class InitialSurvey : AppCompatActivity() {
         binding.line.visibility = View.GONE
         binding.underAppTItle.visibility = View.GONE
 
-        binding.etc.text = "하루 중 이상활동은 없었나요?"
+        binding.etc.text = "하루 중 이상활동은 없었나요? (필수 X)"
     }
+
 
     private fun loadData(callback: (MutableList<QuestionMemo>) -> Unit) {
         val data: MutableList<QuestionMemo> = mutableListOf()
@@ -168,5 +185,7 @@ class InitialSurvey : AppCompatActivity() {
         val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
         userRef.child("startDate").setValue(now.format(dateFormatter))
+
+        userRef.child("height").setValue(binding.userHeight.text.toString().toIntOrNull())
     }
 }

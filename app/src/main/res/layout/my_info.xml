@@ -86,12 +86,6 @@
                     android:text="@string/userGender"
                     android:textColor="@color/edge_blue" />
 
-                <android.widget.Button
-                    android:background="@drawable/setting"
-                    android:layout_height="24dp"
-                    android:layout_width="24dp"/>
-
-
             </LinearLayout>
 
             <View
@@ -126,10 +120,6 @@
                     android:text="@string/userAge"
                     android:textColor="@color/edge_blue" />
 
-                <android.widget.Button
-                    android:background="@drawable/setting"
-                    android:layout_height="24dp"
-                    android:layout_width="24dp"/>
 
             </LinearLayout>
 
@@ -156,7 +146,7 @@
                     android:textColor="@color/edge_blue" />
 
                 <TextView
-                    android:id="@+id/user_age"
+                    android:id="@+id/user_height"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
@@ -164,11 +154,6 @@
                     android:gravity="center"
                     android:text="@string/userHeight"
                     android:textColor="@color/edge_blue" />
-
-                <android.widget.Button
-                    android:background="@drawable/setting"
-                    android:layout_height="24dp"
-                    android:layout_width="24dp"/>
 
             </LinearLayout>
 

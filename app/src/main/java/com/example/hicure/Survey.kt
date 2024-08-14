@@ -55,7 +55,7 @@ class Survey : AppCompatActivity() {
 
             }
         })
-        binding.etc.text = "현재까지 진행함에 있어 느낀 점을 적어주세요."
+        binding.etc.text = "현재까지 진행함에 있어 느낀 점을 적어주세요.(필수 X)"
 
         binding.checkButton.setOnClickListener {
             submitSurvey(surveyNumber)
