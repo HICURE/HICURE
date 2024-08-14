@@ -4,24 +4,27 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.view.ViewTreeObserver
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.hicure.databinding.ActivityMainBinding
+import android.view.ViewTreeObserver
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import androidx.fragment.app.Fragment
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import android.widget.RelativeLayout
 import com.example.hicure.serveinfo.ServeInfo
 import com.example.hicure.alarm.AlarmList
 import com.google.android.material.bottomnavigation.BottomNavigationView
+
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
+
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -34,7 +37,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.time.LocalDate
 import java.util.ArrayList
-import com.example.hicure.utils.FirebaseCheckDate
 
 data class ChartData(
     var lableData: String = "",
@@ -51,6 +53,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var Myscore: TextView
     private val chartData = ArrayList<MyChartData1>()
 
+    private val frame: RelativeLayout by lazy { // activity_main의 화면 부분
+        findViewById(R.id.main)
+    }
     private val bottomNagivationView: BottomNavigationView by lazy { // 하단 네비게이션 바
         findViewById(R.id.bn_main)
     }
@@ -58,17 +63,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
-        lineChart = findViewById(R.id.linechart)
-
-        val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
-
-        val userRefValue = sharedPreferences.getInt("reference_value", 0)
-
-        binding.reference.setText("나의 폐활량 정적치  : $userRefValue")
-
-        val userName = sharedPreferences.getString("user_name", null)
-        val userId = sharedPreferences.getString("user_id", null)
 
         val currentDate = getCurrentDate()
         val currentTime = getCurrentTime()
@@ -89,37 +83,29 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, Calendar::class.java)
             startActivity(intent)
         }
-
+        val userName = getUserNameFromPreferences()
         userName?.let {
             "$it".also { binding.username.text = it }
         }
         setupLineChart(1.toString())
         Myscore = findViewById(R.id.myscore)
 
-        binding.leftB.visibility = View.GONE
-        binding.countNumber.text = "1 회차"
-        var num = 1
+        val min=findViewById<Button>(R.id.leftB)
+        val plus =findViewById<Button>(R.id.rightB)
+        val count_number =findViewById<TextView>(R.id.count_number)
+        var num=1
 
-        binding.leftB.setOnClickListener {
-
+        min.setOnClickListener{
             num--
-            binding.countNumber.text = "$num 회차"
-            setupLineChart(num.toString(), userId!!, userRefValue!!)
-
-            if (num == 1) {
-                binding.leftB.visibility = View.GONE
-            }
+            count_number.setText(num.toString())
+            // 예시 데이터 초기화 및 설정
+            setupLineChart(num.toString())
         }
-
-        binding.rightB.setOnClickListener {
-
+        plus.setOnClickListener{
             num++
-            binding.countNumber.text = "$num 회차"
-            setupLineChart(num.toString(), userId!!, userRefValue!!)
-
-            if (binding.leftB.visibility == View.GONE) {
-                binding.leftB.visibility = View.VISIBLE
-            }
+            count_number.setText(num.toString())
+            // 예시 데이터 초기화 및 설정
+            setupLineChart(num.toString())
         }
 
         bottomNagivationView.selectedItemId = R.id.ic_Home
@@ -152,33 +138,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        userId?.let {
-            userRef.child(it).child("score")
-                .addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        val score = dataSnapshot.getValue(Int::class.java) ?: 0
-                        Myscore.text = score.toString()
-
-                        setupPieChart(score.toString())
-                    }
-
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        Myscore.text = "Failed to load score."
-                    }
-                })
-        }
-
-        // 날짜가 변경되었는지 체크하고, 필요한 경우 점수 업데이트
-        FirebaseCheckDate.updateDate(userId!!)
-        checkAndSetupInitialChart(userId, userRefValue)
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
-        val userRefValue = sharedPreferences.getInt("reference_value", 0)
-        val userId = sharedPreferences.getString("user_id", null)
+        val userId = getUserIdFromPreferences()
 
         userId?.let {
             userRef.child(it).child("score").addListenerForSingleValueEvent(object : ValueEventListener {
@@ -186,9 +146,8 @@ class MainActivity : AppCompatActivity() {
                     val score = dataSnapshot.getValue(Double::class.java) ?: 0.0 // Double 타입으로 받음
                     Myscore.text = score.toString()
 
-                    // 사용자 이름과 점수를 결합하여 표시
                     userName?.let {
-                        val myscore = "나의 점수: ${score}"
+                        val myscore = "${score}"
                         binding.myscore.text = myscore
 
                         // 점수를 숫자형으로 비교
@@ -198,72 +157,22 @@ class MainActivity : AppCompatActivity() {
                             lungImage.setImageResource(R.drawable.badlung)
                         }
                     }
-                })
 
-            // maxValue 갱신
-            checkAndSetupInitialChart(userId, userRefValue)
-        }
-    }
-
-    private fun checkAndSetupInitialChart(userId: String, userRefValue: Int) {
-        val currentDate = LocalDate.now().toString()
-
-        if (userId != null) {
-            // Firebase 데이터베이스 참조
-            val database: FirebaseDatabase = FirebaseDatabase.getInstance()
-            val dataRef: DatabaseReference =
-                database.getReference("users/$userId/data/$currentDate")
-
-            // 로딩 중에 ProgressBar를 표시하고 LineChart를 숨김
-            binding.progressBar.visibility = View.VISIBLE
-            lineChart.visibility = View.GONE
-
-            // Firebase에서 데이터 가져오기
-            dataRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    // 로딩 완료 후, ProgressBar를 숨기고 LineChart를 표시
-                    binding.progressBar.visibility = View.GONE
-                    lineChart.visibility = View.VISIBLE
-
-                    if (snapshot.exists()) {
-                        // 데이터가 존재하면 첫 회차로 설정하고 차트 표시
-                        binding.countNumber.text = "1 회차"
-                        binding.dataChart.visibility = View.VISIBLE
-                        binding.noneData.visibility = View.GONE
-
-                        setupLineChart("1", userId, userRefValue)
-                    } else {
-                        // 데이터가 없으면 차트를 숨김
-                        binding.dataChart.visibility = View.GONE
-                        binding.noneData.visibility = View.VISIBLE
-                    }
+                    setupPieChart(score.toString())
                 }
+
 
                 override fun onCancelled(databaseError: DatabaseError) {
                     Myscore.text = "Failed to load score."
                 }
             })
         }
+
     }
 
-    private fun updateScoreAndResetGap(userId: String, gapValue: Int) {
-        userRef.child(userId).child("score").get()
-            .addOnSuccessListener { scoreSnapshot ->
-                val currentScore = scoreSnapshot.getValue(Int::class.java) ?: 0
-                val newScore = currentScore + gapValue
-
-                userRef.child(userId).child("score").setValue(newScore)
-                    .addOnSuccessListener {
-                        Myscore.text = newScore.toString()
-                        binding.gapValue.text = "0"  // gapValue 초기화
-                    }
-                    .addOnFailureListener { e ->
-                        Toast.makeText(this, "점수 업데이트 실패: ${e.message}", Toast.LENGTH_SHORT).show()
-                    }
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "현재 점수를 가져오는데 실패했습니다: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+    // 화면 전환 구현 메소드
+    private fun replaceFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction().replace(frame.id, fragment).commit()
     }
 
     private fun getCurrentDate(): String {
@@ -306,18 +215,15 @@ class MainActivity : AppCompatActivity() {
         pieChart.invalidate()
     }
 
+
     private fun setupLineChart(cnt: String) {
         lineChart = findViewById(R.id.linechart)
+        val userId = getUserNameFromPreferences()
         val currentDate = LocalDate.now().toString()
 
         if (userId != null) {
             val database: FirebaseDatabase = FirebaseDatabase.getInstance()
-            val dataRef: DatabaseReference =
-                database.getReference("users/$userId/data/$currentDate")
-
-            // 로딩 중에 ProgressBar를 표시하고 LineChart를 숨김
-            binding.progressBar.visibility = View.VISIBLE
-            lineChart.visibility = View.GONE
+            val dataRef: DatabaseReference = database.getReference("users/$userId/data/$currentDate/$cnt")
 
             dataRef.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -338,10 +244,6 @@ class MainActivity : AppCompatActivity() {
 
 
                 override fun onCancelled(error: DatabaseError) {
-                    // 로딩 실패 시에도 ProgressBar를 숨김
-                    binding.progressBar.visibility = View.GONE
-                    Toast.makeText(this@MainActivity, "데이터를 불러오는데 실패했습니다.", Toast.LENGTH_SHORT)
-                        .show()
                 }
             })
 
@@ -379,6 +281,16 @@ class MainActivity : AppCompatActivity() {
     private fun addChartItem(labelItem: String, dataItem: Double) {
         val item = MyChartData1(labelItem, dataItem)
         chartData.add(item)
+    }
+
+    private fun getUserNameFromPreferences(): String? {
+        val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        return sharedPreferences.getString("user_name", null)
+    }
+
+    private fun getUserIdFromPreferences(): String? {
+        val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        return sharedPreferences.getString("user_id", null)
     }
 
     private fun startNewActivity(activityClass: Class<*>) {
