@@ -94,25 +94,28 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="날짜를 표시"
+                    android:layout_marginBottom="5dp"
+                    android:textColor="@color/edge_blue"
                     android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/breathTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/edge_blue"
                     android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                    android:textSize="18sp"/>
 
             </LinearLayout>
 
             <FrameLayout
+                android:id="@+id/dataChart"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@drawable/pop_up_frame">
 
                 <LinearLayout
-                    android:id="@+id/dataChart"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"

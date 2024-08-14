@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.Button
 import android.widget.CalendarView
+import android.widget.ProgressBar
 import android.widget.TextView
 import com.example.hicure.databinding.ActivityCalendarBinding
 import com.github.mikephil.charting.charts.LineChart
@@ -36,10 +37,11 @@ class Calendar : AppCompatActivity() {
     lateinit var calendarView: CalendarView
     lateinit var diaryTextView: TextView
     lateinit var breathTextView: TextView
-    lateinit var title: TextView
-
     lateinit var lineChart: LineChart
+    lateinit var progressBar: ProgressBar
+
     private val chartData = ArrayList<MyChartData>()
+    private var selectedDate: String = LocalDate.now().toString()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,28 +69,43 @@ class Calendar : AppCompatActivity() {
         val textViewTime: TextView = findViewById(R.id.textViewTime)
         textViewTime.text = currentTime
 
+        lineChart = findViewById(R.id.linechart)
+        progressBar = findViewById(R.id.progressBar)
+
         val backB: Button = findViewById(R.id.backB)
         backB.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
-        val min=findViewById<Button>(R.id.leftB)
-        val plus =findViewById<Button>(R.id.rightB)
-        val count_number =findViewById<TextView>(R.id.count_number)
-        var num=1
 
-        min.setOnClickListener{
+        binding.leftB.visibility = View.GONE
+        binding.countNumber.text = "1 회차"
+        var num = 1
+
+        setupLineChart("1", selectedDate)
+
+        binding.leftB.setOnClickListener {
+
             num--
-            count_number.setText(num.toString())
-            // 예시 데이터 초기화 및 설정
-            setupLineChart(num.toString())
+            binding.countNumber.text = "$num 회차"
+            setupLineChart(num.toString(), selectedDate)
+
+            if (num == 1) {
+                binding.leftB.visibility = View.GONE
+            }
         }
-        plus.setOnClickListener{
+
+        binding.rightB.setOnClickListener {
+
             num++
-            count_number.setText(num.toString())
-            // 예시 데이터 초기화 및 설정
-            setupLineChart(num.toString())
+            binding.countNumber.text = "$num 회차"
+            setupLineChart(num.toString(), selectedDate)
+
+            if (binding.leftB.visibility == View.GONE) {
+                binding.leftB.visibility = View.VISIBLE
+            }
         }
+
         // UI 초기화
         calendarView = findViewById(R.id.calendarView)
         diaryTextView = findViewById(R.id.diaryTextView)
@@ -106,17 +123,19 @@ class Calendar : AppCompatActivity() {
 
         // 날짜가 선택되었을 때 Firebase에서 데이터를 읽어옴
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
-            val date = String.format("%d-%02d-%02d", year, month + 1, dayOfMonth)
+            selectedDate = String.format("%d-%02d-%02d", year, month + 1, dayOfMonth)
             diaryTextView.visibility = View.VISIBLE
-            diaryTextView.text = date
+            diaryTextView.text = selectedDate
+            num = 1
+            binding.countNumber.text = "1 회차"
+            binding.leftB.visibility = View.GONE
 
             if (userId != null) {
-                readFirebaseData(date, userId)
+                setupLineChart("1", selectedDate) // 새로운 날짜에 대해 첫 회차 데이터를 설정
             } else {
                 breathTextView.text = "User ID를 찾을 수 없습니다"
             }
         }
-
     }
 
     private fun getCurrentDate(): String {
@@ -164,43 +183,68 @@ class Calendar : AppCompatActivity() {
     }
 
 
-    private fun setupLineChart(cnt:String) {
+    private fun setupLineChart(cnt: String, date: String) {
         lineChart = findViewById(R.id.linechart)
+        progressBar.visibility = View.VISIBLE
+        lineChart.visibility = View.GONE
+
         val userId = getUserNameFromPreferences()
-        val currentDate = LocalDate.now().toString()
 
         if (userId != null) {
-            // Firebase 데이터베이스 참조
-            val database: FirebaseDatabase = FirebaseDatabase.getInstance()
-            val dataRef: DatabaseReference = database.getReference("users/$userId/data/$currentDate/$cnt")
+            val dataRef: DatabaseReference = database.getReference("users/$userId/data/$date/$cnt")
 
-            // Firebase에서 데이터 가져오기
             dataRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    chartData.clear() // 기존 데이터 초기화
 
-                    // Firebase 데이터 가져오기
-                    for (dataSnapshot in snapshot.children) {
-                        val label = dataSnapshot.key?.replace("[^\\d.]".toRegex(), "") ?: "0"
-                        val value = dataSnapshot.getValue(Double::class.java) ?: 0.0
-                        addChartItem(label + "초", value)
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        chartData.clear() // 기존 데이터 초기화
+
+                        for (dataSnapshot in snapshot.children) {
+                            val key = dataSnapshot.key
+                            if (key == "time") {
+                                val timeValue = dataSnapshot.getValue(String::class.java) ?: ""
+                                binding.textViewTime.setText(timeValue)
+                            } else {
+                                val label = key?.replace("[^\\d.]".toRegex(), "") ?: "0"
+                                val value = dataSnapshot.getValue(Double::class.java) ?: 0.0
+                                addChartItem(label + "초", value)
+                            }
+                        }
+
+                        updateChart()
+
+                        // 데이터가 있을 경우 LineChart를 표시
+                        binding.dataChart.visibility = View.VISIBLE
+                        binding.noneData.visibility = View.GONE
+                    } else {
+                        // 데이터가 없을 경우 LineChart를 숨김
+                        binding.dataChart.visibility = View.GONE
+                        binding.noneData.visibility = View.VISIBLE
+                        binding.breathTextView.setText("데이터가 존재하지 않습니다.")
                     }
 
-                    // 차트 업데이트
-                    updateChart()
+                    lineChart.visibility = View.VISIBLE
+                    progressBar.visibility = View.GONE
                 }
 
                 override fun onCancelled(error: DatabaseError) {
                     breathTextView.text = "데이터를 가져오는 데 실패했습니다: ${error.message}"
+                    // 로딩 실패 시에도 ProgressBar를 숨김
+                    progressBar.visibility = View.GONE
+                    // 실패 시 차트도 숨김
+                    binding.dataChart.visibility = View.GONE
+
+                    binding.noneData.visibility = View.VISIBLE
+
                 }
             })
         } else {
             breathTextView.text = "User ID를 찾을 수 없습니다"
+            progressBar.visibility = View.GONE
         }
     }
 
     private fun updateChart() {
-        // 차트 데이터를 추가한 후, 차트를 업데이트하는 함수
         val entries = mutableListOf<Entry>()
 
         for (item in chartData) {
@@ -234,4 +278,3 @@ class Calendar : AppCompatActivity() {
 }
 
 data class MyChartData(val labelData: String, val lineData: Double)
-

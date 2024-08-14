@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
         Myscore = findViewById(R.id.myscore)
 
         binding.leftB.visibility = View.GONE
-        binding.countNumber.text = " "
+        binding.countNumber.text = "1 회차"
         var num = 1
 
         binding.leftB.setOnClickListener {
