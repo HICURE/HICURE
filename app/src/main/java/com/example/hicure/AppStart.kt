@@ -310,6 +310,7 @@ class AppStart : AppCompatActivity() {
             putString("user_gender", user.gender)
             putInt("user_height", user.height)
             putBoolean("user_survey", user.survey)
+            putInt("reference_value", user.referenceValue)
             apply()
         }
     }
@@ -337,6 +338,7 @@ class AppStart : AppCompatActivity() {
                             editor.putString("user_gender", it.gender)
                             editor.putBoolean("user_survey", it.survey)
                             editor.putInt("user_height", it.height)
+                            editor.putInt("reference_value", it.referenceValue)
                             editor.apply()
 
                             if (it.survey) {

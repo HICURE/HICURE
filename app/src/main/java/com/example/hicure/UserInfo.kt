@@ -73,9 +73,11 @@ class UserInfo : AppCompatActivity() {
 
         val userAge = sharedPreferences.getInt("user_age", 0)
         val userGender = sharedPreferences.getString("user_gender", null)
+        val userHeight = sharedPreferences.getInt("user_height", 0)
 
         binding.userState.userAge.text = userAge.toString()
         binding.userState.userGender.text = userGender ?: "N/A"
+        binding.userState.userHeight.text = userHeight.toString()
 
         binding.inquiry.inquiry.setOnClickListener{
             val intent = Intent(Intent.ACTION_VIEW)
