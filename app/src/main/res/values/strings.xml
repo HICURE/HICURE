@@ -15,7 +15,7 @@
 
     <string name="set_alarm_name">알람 이름</string>
     <string name="set_alarm_name_text_field">내용을 입력해주세요.</string>
-    <string name="set_alarm_sound_vibrate">소리 및 진동</string>
+    <string name="set_alarm_sound_vibrate">진동</string>
     <string name="set_alarm_cancel_button">취소</string>
     <string name="set_alarm_save_button">저장</string>
 
