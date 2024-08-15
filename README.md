@@ -16,10 +16,10 @@
     <td align="center"><a href="https://github.com/7lyeon"><img src="https://avatars.githubusercontent.com/u/174766608?v=4" width="100px;" alt=""/>
   </tr>
       <tr>
-        <td >팀장 및 전체적인 개발</td>
-        <td >메인(홈), 캘린더</td>
-        <td >알람 페이지 및 기능</td>
-        <td >사용자 정보</td>
+        <td>팀장 및 전체적인 개발</td>
+        <td>메인(홈), 캘린더</td>
+        <td>알람 페이지 및 기능</td>
+        <td>사용자 정보</td>
       </tr>
     <tr>
     <td align="center"><a href="https://github.com/gjsk132" title="Code">gjsk132</a></td>
@@ -27,6 +27,20 @@
     <td align="center"><a href="https://github.com/hyeonju0925" title="Code">hyeonju0925</a></td>
     <td align="center"><a href="https://github.com/7lyeon" title="Code">7lyeon</a></td>
   </tr>
+</table>
+</div>
+
+
+⭐ Special Thanks
+---
+<div>
+  <table>
+  <tr>
+    <td align="center"><a href="https://github.com/tgyuuAn"><img src="https://avatars.githubusercontent.com/u/116813010?v=4" width="100px;" alt=""/>
+  </tr>
+      <tr>
+        <td align="center"><a href="https://github.com/tgyuuAn" title="Code">tgyuuAn</a></td>
+      </tr>
 </table>
 </div>
 
