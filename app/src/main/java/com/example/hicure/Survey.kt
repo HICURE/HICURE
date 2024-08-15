@@ -61,13 +61,15 @@ class Survey : AppCompatActivity() {
             submitSurvey(surveyNumber)
         }
 
-        if (binding.actionTitle.text=="만족도조사"){
-            val currentDate = LocalDate.now()
-            val formattedDate = currentDate.format(DateTimeFormatter.ofPattern("MM-dd"))
-            binding.subTitle.text = "$formattedDate"
-            binding.surveyTitle.text="$surveyNumber 일차 만족도조사"
-            binding.backCircle.root.visibility = View.GONE
-        }
+        val currentDate = LocalDate.now()
+        val formattedDate = currentDate.format(DateTimeFormatter.ofPattern("MM/dd"))
+        binding.subTitle.text = "$formattedDate"
+        binding.surveyTitle.text="$surveyNumber 일차 만족도조사"
+        binding.backCircle.root.visibility = View.GONE
+        binding.userHeight.visibility = View.GONE
+        binding.heightQuestion.visibility = View.GONE
+        binding.heightDescription.visibility = View.GONE
+
     }
 
     private fun loadData(callback: (MutableList<QuestionMemo>) -> Unit) {
