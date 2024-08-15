@@ -92,6 +92,7 @@
 
 
                 <TextView
+                    android:id="@+id/height_question"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="5. 당신의 키를 입력해주세요. (소수점 없이 숫자만)"
@@ -116,6 +117,7 @@
                     android:textSize="14sp" />
 
                 <TextView
+                    android:id="@+id/height_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
