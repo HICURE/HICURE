@@ -38,7 +38,6 @@ class ActivityLungCapacityPrediction : AppCompatActivity() {
                 binding.behindTitle.layoutParams = layoutParams
             }
         })
-
         binding.subTitle.text = infoSubTitle
 
         binding.content2.visibility = View.GONE

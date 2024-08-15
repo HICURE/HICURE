@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".alarm.SetAlarm">
 
     <androidx.appcompat.widget.Toolbar
@@ -15,6 +16,15 @@
         android:elevation="8dp"
         android:outlineSpotShadowColor="@color/black"
         app:layout_constraintTop_toTopOf="parent">
+
+        <android.widget.Button
+            android:id="@+id/backB"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/back"
+            android:fontFamily="@font/oxygen_bold"
+            android:textColor="@color/edge_blue"
+            android:textSize="25dp" />
 
         <FrameLayout
             android:layout_width="wrap_content"
@@ -40,119 +50,137 @@
     </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
-        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
+        android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintBottom_toBottomOf="parent">
+        tools:ignore="MissingConstraints">
 
-        <com.example.hicure.alarm.CustomTimePicker
-            android:id="@+id/customTimePicker"
+        <LinearLayout
+            android:id="@+id/container"
             android:layout_width="match_parent"
-            android:layout_height="258dp"
-            android:layout_marginTop="110dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            app:amPmTextSize="24sp"
-            app:normalTextSize="45sp"
-            app:selectedTextSize="50sp" />
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:layout_marginTop="30dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/alarmBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="38dp"
-            app:cardCornerRadius="12dp"
-            android:layout_gravity="center">
-
-            <LinearLayout
-                android:id="@+id/boxLayout"
+            <com.example.hicure.alarm.CustomTimePicker
+                android:id="@+id/customTimePicker"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/set_alarm_box_blue"
-                android:orientation="vertical"
-                android:padding="16dp">
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                android:layout_height="258dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginRight="20dp"
+                app:amPmTextSize="24sp"
+                app:normalTextSize="45sp"
+                app:selectedTextSize="50sp" />
 
-                    <ImageView
-                        android:layout_width="wrap_content"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/alarmBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginTop="38dp"
+                app:cardCornerRadius="12dp">
+
+                <LinearLayout
+                    android:id="@+id/boxLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/set_alarm_box_blue"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_alarm_bell"
-                        android:layout_marginStart="2dp"
-                        android:layout_marginEnd="18dp"/> <!-- 아이콘과 텍스트 사이의 간격 조정 -->
+                        android:layout_marginTop="15dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="2dp"
+                            android:layout_marginEnd="10dp"
+                            android:src="@drawable/ic_alarm_bell" /> <!-- 아이콘과 텍스트 사이의 간격 조정 -->
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autoSizeMaxTextSize="14dp"
+                            android:autoSizeMinTextSize="10sp"
+                            android:autoSizeStepGranularity="1sp"
+                            android:autoSizeTextType="uniform"
+                            android:fontFamily="@font/roboto_regular"
+                            android:gravity="center|start"
+                            android:text="@string/set_alarm_message"
+                            android:textColor="@color/edge_blue" />
+                    </LinearLayout>
+
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
                         android:fontFamily="@font/roboto_regular"
-                        android:text="@string/set_alarm_message"
+                        android:text="@string/set_alarm_name"
+                        android:textColor="@color/edge_blue"
+                        android:textSize="10sp" />
+
+                    <EditText
+                        android:id="@+id/alarmNameEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:background="@drawable/set_alarm_name_text_field"
+                        android:fontFamily="@font/oxygen_regular"
+                        android:hint="@string/set_alarm_name_text_field"
+                        android:inputType="text"
+                        android:paddingLeft="15dp"
+                        android:paddingTop="8dp"
+                        android:paddingRight="15dp"
+                        android:paddingBottom="8dp"
                         android:textColor="@color/edge_blue"
                         android:textSize="14sp" />
                 </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginTop="33dp"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <android.widget.Button
+                    android:id="@+id/cancelButton"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:fontFamily="@font/roboto_regular"
-                    android:text="@string/set_alarm_name"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/set_alarm_cancel_button_box"
+                    android:fontFamily="@font/oxygen_light"
+                    android:text="@string/set_alarm_cancel_button"
                     android:textColor="@color/edge_blue"
-                    android:textSize="14sp" />
+                    android:textSize="20sp" />
 
-                <EditText
-                    android:id="@+id/alarmNameEditText"
-                    android:layout_width="match_parent"
+                <android.widget.Button
+                    android:id="@+id/saveButton"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:background="@drawable/set_alarm_name_text_field"
-                    android:fontFamily="@font/oxygen_regular"
-                    android:hint="@string/set_alarm_name_text_field"
-                    android:inputType="text"
-                    android:paddingLeft="15dp"
-                    android:paddingTop="8dp"
-                    android:paddingRight="15dp"
-                    android:paddingBottom="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/set_alarm_save_button_box_blue"
+                    android:fontFamily="@font/oxygen_light"
+                    android:text="@string/set_alarm_save_button"
                     android:textColor="@color/edge_blue"
-                    android:textSize="14sp" />
+                    android:textSize="20sp" />
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="38dp"
-            android:orientation="horizontal">
-
-            <android.widget.Button
-                android:id="@+id/cancelButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/set_alarm_cancel_button_box"
-                android:text="@string/set_alarm_cancel_button"
-                android:fontFamily="@font/oxygen_light"
-                android:textColor="@color/edge_blue"
-                android:textSize="20sp"/>
-
-            <android.widget.Button
-                android:id="@+id/saveButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:background="@drawable/set_alarm_save_button_box_blue"
-                android:text="@string/set_alarm_save_button"
-                android:fontFamily="@font/oxygen_light"
-                android:textColor="@color/edge_blue"
-                android:textSize="20sp"/>
         </LinearLayout>
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

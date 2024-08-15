@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
@@ -49,6 +50,9 @@ class AlarmList : AppCompatActivity() {
 //            alarmRepository.clearAllAlarms() // Clear the database
 //            initializeDefaultAlarms() // Initialize default alarms
 //        }
+
+        binding.ui.alarm.visibility = View.VISIBLE
+        binding.ui.alarmText.setTextColor(resources.getColor(R.color.edge_blue, null))
 
         "알람".also { binding.actionTitle.text = it }
 

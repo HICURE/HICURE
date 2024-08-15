@@ -92,6 +92,10 @@
                     app:menu="@navigation/bottom_nav" />
             </LinearLayout>
 
+            <include
+                android:id="@+id/ui"
+                layout="@layout/nav_true_ui" />
+
         </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

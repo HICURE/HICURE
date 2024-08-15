@@ -19,6 +19,15 @@
         android:outlineSpotShadowColor="@color/black"
         app:layout_constraintTop_toTopOf="parent">
 
+        <android.widget.Button
+            android:id="@+id/backB"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/back"
+            android:fontFamily="@font/oxygen_bold"
+            android:textColor="@color/edge_blue"
+            android:textSize="25dp" />
+
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
