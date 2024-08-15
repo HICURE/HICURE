@@ -45,7 +45,7 @@ class NotificationHelper(base: Context) : ContextWrapper(base) {
     fun getChannelNotification(time: String?): NotificationCompat.Builder {
         return NotificationCompat.Builder(applicationContext, channelID)
             .setContentTitle(time)
-            .setContentText("알람입니다.")
+            .setContentText("폐활량 측정 시간입니다.")
             .setSmallIcon(R.drawable.ic_launcher_background)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
     }

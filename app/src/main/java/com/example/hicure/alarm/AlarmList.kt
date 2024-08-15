@@ -1,7 +1,13 @@
 package com.example.hicure.alarm
 
+import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.view.ViewTreeObserver
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,6 +21,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 class AlarmList : AppCompatActivity() {
 
@@ -22,22 +29,13 @@ class AlarmList : AppCompatActivity() {
     private lateinit var requestSetAlarm: ActivityResultLauncher<Intent>
     private var lastClickedAlarmBox: Int = 0
     private lateinit var alarmRepository: AlarmRepository
+    private lateinit var alarmManager: AlarmManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAlarmListBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        binding.bnMain.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.ic_Home -> startNewActivity(MainActivity::class.java)
-                R.id.ic_Alarm -> startNewActivity(AlarmList::class.java)
-                R.id.ic_Serve -> startNewActivity(ServeInfo::class.java)
-                R.id.ic_User -> startNewActivity(UserInfo::class.java)
-            }
-            true
-        }
-        // Initialize repository
+        alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
         val database = AlarmDatabase.getInstance(applicationContext)
         alarmRepository = AlarmRepository(database.alarmDao())
 
@@ -51,16 +49,47 @@ class AlarmList : AppCompatActivity() {
 //            alarmRepository.clearAllAlarms() // Clear the database
 //            initializeDefaultAlarms() // Initialize default alarms
 //        }
+
+        "알람".also { binding.actionTitle.text = it }
+
+        binding.actionTitle.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                binding.actionTitle.viewTreeObserver.removeOnGlobalLayoutListener(this)
+
+                val actionTextWidth = binding.actionTitle.width
+
+                binding.actionTitle.width = actionTextWidth + 10
+
+                val layoutParams = binding.behindTitle.layoutParams
+                layoutParams.width = actionTextWidth + 30
+                binding.behindTitle.layoutParams = layoutParams
+            }
+        })
+
+        binding.bnMain.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.ic_Home -> startNewActivity(MainActivity::class.java)
+                R.id.ic_Alarm -> startNewActivity(AlarmList::class.java)
+                R.id.ic_Serve -> startNewActivity(ServeInfo::class.java)
+                R.id.ic_User -> startNewActivity(UserInfo::class.java)
+            }
+            true
+        }
+    }
+
+    private fun startNewActivity(activityClass: Class<*>) {
+        val intent = Intent(this, activityClass)
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
     }
 
     private fun initializeDefaultAlarms() {
         CoroutineScope(Dispatchers.IO).launch {
-            // Check if alarms are already set
             val existingAlarms = alarmRepository.getAllAlarms.first()
             if (existingAlarms.isEmpty()) {
-                // Insert default alarms
                 val defaultAlarms = listOf(
-                    AlarmEntity(id = 1, time = "08:00 AM", amPm = "", label = "아침", isEnabled = false, isSoundAndVibration = false),
+                    AlarmEntity(id = 1, time = "07:00 AM", amPm = "", label = "아침", isEnabled = false, isSoundAndVibration = false),
                     AlarmEntity(id = 2, time = "12:00 PM", amPm = "", label = "점심", isEnabled = false, isSoundAndVibration = false),
                     AlarmEntity(id = 3, time = "06:00 PM", amPm = "", label = "저녁", isEnabled = false, isSoundAndVibration = false)
                 )
@@ -109,25 +138,25 @@ class AlarmList : AppCompatActivity() {
             val alarms = alarmRepository.getAllAlarms.first()
             runOnUiThread {
                 alarms.forEach { alarm ->
-
+                    val (initialTime, initialAMPM) = splitTimeAndAmPm(alarm.time)
                     when (alarm.id) {
                         1 -> {
-                            val (initialTime, initialAMPM) = splitTimeAndAmPm(alarm.time)
                             binding.alarmTimeBlue.text = getString(R.string.alarm_box_blue_time, initialTime)
                             binding.alarmAmPmBlue.text = getString(R.string.alarm_box_AMPM, initialAMPM)
                             binding.alarmLabelBlue.text = getString(R.string.alarm_box_name_blue, alarm.label)
+                            binding.alarmSwitchBlue.isChecked = alarm.isEnabled
                         }
                         2 -> {
-                            val (initialTime, initialAMPM) = splitTimeAndAmPm(alarm.time)
                             binding.alarmTimeYellow.text = getString(R.string.alarm_box_yellow_time, initialTime)
                             binding.alarmAmPmYellow.text = getString(R.string.alarm_box_AMPM, initialAMPM)
                             binding.alarmLabelYellow.text = getString(R.string.alarm_box_name_yellow, alarm.label)
+                            binding.alarmSwitchYellow.isChecked = alarm.isEnabled
                         }
                         3 -> {
-                            val (initialTime, initialAMPM) = splitTimeAndAmPm(alarm.time)
                             binding.alarmTimePink.text = getString(R.string.alarm_box_pink_time, initialTime)
                             binding.alarmAmPmPink.text = getString(R.string.alarm_box_AMPM, initialAMPM)
                             binding.alarmLabelPink.text = getString(R.string.alarm_box_name_pink, alarm.label)
+                            binding.alarmSwitchPink.isChecked = alarm.isEnabled
                         }
                     }
                     updateSwitchState(alarm)
@@ -135,6 +164,39 @@ class AlarmList : AppCompatActivity() {
             }
         }
     }
+
+    private fun updateAlarmStatus(alarmId: Int, isEnabled: Boolean) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val alarm = alarmRepository.getAlarmById(alarmId)
+            alarm?.let {
+                it.isEnabled = isEnabled
+                alarmRepository.insertOrUpdateAlarm(it)
+                Log.d("AlarmList", "Alarm ${it.id} status updated to ${it.isEnabled}")
+
+                if (isEnabled) {
+                    scheduleAlarm(it)
+                } else {
+                    cancelAlarm(it)
+                }
+            }
+            // Re-schedule all enabled alarms to ensure they are set properly
+            scheduleAllEnabledAlarms()
+        }
+    }
+
+    private fun scheduleAllEnabledAlarms() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val alarms = alarmRepository.getAllAlarms.first()
+            alarms.forEach { alarm ->
+                if (alarm.isEnabled) {
+                    scheduleAlarm(alarm)
+                } else {
+                    cancelAlarm(alarm)
+                }
+            }
+        }
+    }
+
 
 
     private fun updateSwitchState(alarm: AlarmEntity) {
@@ -159,13 +221,76 @@ class AlarmList : AppCompatActivity() {
         }
     }
 
-    private fun updateAlarmStatus(alarmId: Int, isEnabled: Boolean) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val alarm = alarmRepository.getAlarmById(alarmId)
-            alarm?.let {
-                it.isEnabled = isEnabled
-                alarmRepository.insertOrUpdateAlarm(it)
+
+    @SuppressLint("ObsoleteSdkInt", "ScheduleExactAlarm")
+    private fun scheduleAlarm(alarm: AlarmEntity) {
+        val calendar = Calendar.getInstance().apply {
+            // 사용자가 설정한 시간과 AM/PM에 따라 시간을 설정합니다.
+            val hourMinute = alarm.time.split(" ")[0]
+            val hour = hourMinute.split(":")[0].toInt()
+            val minute = hourMinute.split(":")[1].toInt()
+            val amPm = alarm.amPm
+
+            if (amPm.equals("PM", ignoreCase = true) && hour < 12) {
+                set(Calendar.HOUR_OF_DAY, hour + 12)
+            } else if (amPm.equals("AM", ignoreCase = true) && hour == 12) {
+                set(Calendar.HOUR_OF_DAY, 0)
+            } else {
+                set(Calendar.HOUR_OF_DAY, hour)
             }
+            set(Calendar.MINUTE, minute)
+            set(Calendar.SECOND, 0)
+        }
+
+        // 현재 시간보다 이전이면, 다음 날로 설정
+        val now = Calendar.getInstance()
+        if (calendar.before(now)) {
+            calendar.add(Calendar.DAY_OF_YEAR, 1)
+        }
+
+        val intent = Intent(this, AlertReceiver::class.java).apply {
+            putExtra("EXTRA_ALARM_ID", alarm.id)
+        }
+        val pendingIntent = PendingIntent.getBroadcast(
+            this,
+            alarm.id,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        Log.d("AlarmList", "Setting alarm ${alarm.id} for ${calendar.timeInMillis}")
+
+        // 매일 같은 시간에 알람이 울리도록 설정합니다.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                calendar.timeInMillis,
+                pendingIntent
+            )
+        } else {
+            alarmManager.setRepeating(
+                AlarmManager.RTC_WAKEUP,
+                calendar.timeInMillis,
+                AlarmManager.INTERVAL_DAY,
+                pendingIntent
+            )
+        }
+    }
+
+
+    @SuppressLint("UnspecifiedImmutableFlag")
+    private fun cancelAlarm(alarm: AlarmEntity) {
+        val intent = Intent(this, AlertReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            this,
+            alarm.id,
+            intent,
+            PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        pendingIntent?.let {
+            alarmManager.cancel(it)
+            Log.d("AlarmList", "Cancelled alarm ${alarm.id}")
         }
     }
 
@@ -191,13 +316,15 @@ class AlarmList : AppCompatActivity() {
 
                     CoroutineScope(Dispatchers.IO).launch {
                         alarmRepository.insertOrUpdateAlarm(alarmEntity)
+                        runOnUiThread {
+                            updateAlarmBox(time, label)
+                        }
                     }
-
-                    updateAlarmBox(time, label)
                 }
             }
         }
     }
+
 
     private fun navigateToSetAlarm(boxDrawableResId: Int, switchDrawableResId: Int, buttonDrawableResId: Int, id: Int) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -218,7 +345,6 @@ class AlarmList : AppCompatActivity() {
     }
 
     private fun updateAlarmBox(time: String?, label: String?) {
-        // ViewBinding을 통해 CardView를 참조
         val alarmBox = when (lastClickedAlarmBox) {
             R.id.alarmBoxBlue -> binding.alarmBoxBlue
             R.id.alarmBoxYellow -> binding.alarmBoxYellow
@@ -227,7 +353,6 @@ class AlarmList : AppCompatActivity() {
         }
 
         if (alarmBox == null) {
-            // Handle case where alarmBox is null
             return
         }
 
@@ -238,7 +363,6 @@ class AlarmList : AppCompatActivity() {
         val amPmTextView = alarmBox.findViewById<TextView>(textViewIds.third)
 
         if (timeTextView == null || labelTextView == null || amPmTextView == null) {
-            // Handle case where any of the TextViews are null
             return
         }
 
