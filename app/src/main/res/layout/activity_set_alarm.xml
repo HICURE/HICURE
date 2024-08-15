@@ -70,7 +70,7 @@
                     android:id="@+id/customTimePicker"
                     android:layout_width="match_parent"
                     android:layout_height="258dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="50dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     app:amPmTextSize="24sp"
@@ -82,7 +82,7 @@
                     android:layout_marginHorizontal="30dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="38dp"
+                    android:layout_marginTop="45dp"
                     app:cardCornerRadius="12dp"
                     android:layout_gravity="center">
 
@@ -105,7 +105,7 @@
                                 android:layout_height="wrap_content"
                                 android:src="@drawable/ic_alarm_bell"
                                 android:layout_marginStart="2dp"
-                                android:layout_marginEnd="18dp"/> <!-- 아이콘과 텍스트 사이의 간격 조정 -->
+                                android:layout_marginEnd="10dp"/> <!-- 아이콘과 텍스트 사이의 간격 조정 -->
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -128,7 +128,7 @@
                             android:fontFamily="@font/roboto_regular"
                             android:text="@string/set_alarm_name"
                             android:textColor="@color/edge_blue"
-                            android:textSize="14sp" />
+                            android:textSize="10sp" />
 
                         <EditText
                             android:id="@+id/alarmNameEditText"
@@ -154,7 +154,7 @@
                     android:layout_marginHorizontal="30dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="45dp"
                     android:orientation="horizontal">
 
                     <android.widget.Button
