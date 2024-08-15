@@ -36,3 +36,41 @@ BLE를 통해 주변 기기를 스캔, 연결하여
 
 <img src="https://github.com/user-attachments/assets/4fd1ae8e-d2fc-4e64-8d68-6d54eb9984b4" width=250>
 <img src="https://github.com/user-attachments/assets/dd3bf622-9835-4153-8364-12b37cd4ca8a" width=250>
+
+### 측정하기
+<img src="https://github.com/user-attachments/assets/c94af225-1e70-4f16-8f5c-ad8eba65f789" width=250>
+<img src="https://github.com/user-attachments/assets/2d172379-6313-4f7f-8e30-297b7f404edf" width=250>
+<img src="https://github.com/user-attachments/assets/37620b9b-4e94-49f8-a892-77786f0f8f8c" width=250>
+
+### 결과 저장 및 캘린더
+날짜, 시간마다의 측정결과를 저장하고 돌아볼 수 있습니다.
+
+<img src="https://github.com/user-attachments/assets/fd9e67ac-51a8-4f21-aa6f-027841a17531" width=250>
+<img src="https://github.com/user-attachments/assets/4106f6c8-c475-40f4-ad3e-af7cca6330a8" width=250>
+
+### 알람 기능
+원하는 측정 시간을 설정하고, 푸쉬알람을 받을 수 있습니다.
+
+<img src="https://github.com/user-attachments/assets/e303fa59-89c9-491a-bed9-8cbda5cc5225" width=250>
+<img src="https://github.com/user-attachments/assets/b3311e93-a1e4-4223-988f-ad258e3d7ecb" width=250>
+
+### 추가 정보 제공
+정보를 보면 파란색으로 체크되고 점수가 올라갑니다. ( 정보 하나당 하루 1회 점수 증가 )
+
+<img src="https://github.com/user-attachments/assets/a7f11888-dc21-4775-8406-c733bbeb9b55" width=250>
+<img src="https://github.com/user-attachments/assets/4ec0ed18-00bb-4297-9c91-7ca9e263cc22" width=100>
+<img src="https://github.com/user-attachments/assets/71e8b40f-eade-468b-adfb-3c82afa96a5d" width=100>
+<img src="https://github.com/user-attachments/assets/70a0adf9-1642-48a1-8b07-60017a395ad0" width=100>
+<img src="https://github.com/user-attachments/assets/df71b246-4209-424b-8a50-9993e7c6e321" width=100>
+<img src="https://github.com/user-attachments/assets/06c889b0-261c-4176-9793-62610d51926d" width=100>
+<img src="https://github.com/user-attachments/assets/084ef34a-87a7-4da2-8057-69590cbd680c" width=100>
+<img src="https://github.com/user-attachments/assets/d22ffc5c-41c1-444e-a311-0f788df1b137" width=100>
+
+### 사용자 정보 및 기타 기능
+나의 설정된 정보를 알고, 문의사항 및 특정 날짜 이후에 만족도 조사를 진행할 수 있다.
+
+<img src="https://github.com/user-attachments/assets/e4fa1da8-68f5-4eca-baab-e97b6109b6b7" width=250>
+<img src="https://github.com/user-attachments/assets/ca3a24c0-ff96-4c89-879b-d531acc137da" width=250>
+<img src="https://github.com/user-attachments/assets/d1654286-1f7f-4383-849f-ed534c5b3290" width=250>
+
+
