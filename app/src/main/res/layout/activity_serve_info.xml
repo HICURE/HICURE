@@ -76,7 +76,7 @@
                 android:elevation="10dp"
                 android:outlineSpotShadowColor="@color/black"
                 app:itemActiveIndicatorStyle="@null"
-                app:itemIconTint="@drawable/nav_click_color"
+                app:itemIconTint="@drawable/nav_click_icon"
                 app:itemTextColor="@drawable/nav_click_color"
                 app:labelVisibilityMode="labeled"
                 app:menu="@navigation/bottom_nav" />

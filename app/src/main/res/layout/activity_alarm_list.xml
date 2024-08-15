@@ -284,7 +284,7 @@
                 android:checkable ="true"
                 app:labelVisibilityMode="labeled"
                 android:outlineSpotShadowColor="@color/black"
-                app:itemIconTint="@drawable/nav_click_color"
+                app:itemIconTint="@drawable/nav_click_icon"
                 app:itemTextColor="@drawable/nav_click_color"
                 app:menu="@navigation/bottom_nav" />
         </FrameLayout>

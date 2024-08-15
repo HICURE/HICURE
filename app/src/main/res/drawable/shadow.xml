@@ -1,0 +1,15 @@
+<!-- res/drawable/shadow_background.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:right="8dp" android:left="8dp" android:top="8dp" android:bottom="8dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#80000000" />  <!-- 그림자 색상 -->
+            <corners android:radius="8dp" />  <!-- 모서리 둥글기 -->
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/white" />  <!-- 배경색 -->
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+</layer-list>

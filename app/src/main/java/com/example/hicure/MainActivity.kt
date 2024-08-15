@@ -280,10 +280,10 @@ class MainActivity : AppCompatActivity() {
 
         val entries = ArrayList<PieEntry>()
         if (values.size >= 2) {
-            entries.add(PieEntry(values[0], "Part 1"))
-            entries.add(PieEntry(values[1], "Part 2"))
+            entries.add(PieEntry(values[0], ""))
+            entries.add(PieEntry(values[1], ""))
         } else {
-            entries.add(PieEntry(100f, "Unknown")) // If not enough values, display default
+            entries.add(PieEntry(100f, "")) // If not enough values, display default
         }
 
         val dataSet = PieDataSet(entries, "Pie Chart Data")
