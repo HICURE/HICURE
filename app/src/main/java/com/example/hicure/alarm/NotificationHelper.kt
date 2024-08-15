@@ -46,7 +46,7 @@ class NotificationHelper(base: Context) : ContextWrapper(base) {
         return NotificationCompat.Builder(applicationContext, channelID)
             .setContentTitle(time)
             .setContentText("폐활량 측정 시간입니다.")
-            .setSmallIcon(R.drawable.ic_launcher_background)
+            .setSmallIcon(R.drawable.app_icon)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
     }
 }
