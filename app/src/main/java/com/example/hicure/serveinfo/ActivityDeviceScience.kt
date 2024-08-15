@@ -37,10 +37,6 @@ class ActivityDeviceScience : AppCompatActivity() {
                 binding.behindTitle.layoutParams = layoutParams
             }
         })
-        binding.backB.setOnClickListener {
-            startActivity(Intent(this, ServeInfo::class.java))
-            finish()
-        }
         binding.subTitle.text = infoSubTitle
 
         binding.content4.visibility = View.GONE
