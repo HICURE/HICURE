@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.ViewTreeObserver
@@ -36,6 +37,7 @@ class AlarmList : AppCompatActivity() {
         val database = AlarmDatabase.getInstance(applicationContext)
         alarmRepository = AlarmRepository(database.alarmDao())
 
+        initializeDefaultAlarms()
         displayExistingAlarms()
         setupAlarmBoxListeners()
         setupSwitchListeners()
@@ -69,9 +71,9 @@ class AlarmList : AppCompatActivity() {
             val existingAlarms = alarmRepository.getAllAlarms.first()
             if (existingAlarms.isEmpty()) {
                 val defaultAlarms = listOf(
-                    AlarmEntity(id = 1, time = "04:26 AM", amPm = "", label = "아침", isEnabled = false, isSoundAndVibration = false),
-                    AlarmEntity(id = 2, time = "04:27 AM", amPm = "", label = "점심", isEnabled = false, isSoundAndVibration = false),
-                    AlarmEntity(id = 3, time = "04:28 AM", amPm = "", label = "저녁", isEnabled = false, isSoundAndVibration = false)
+                    AlarmEntity(id = 1, time = "05:00 AM", amPm = "", label = "아침", isEnabled = false, isSoundAndVibration = false),
+                    AlarmEntity(id = 2, time = "05:01 AM", amPm = "", label = "점심", isEnabled = false, isSoundAndVibration = false),
+                    AlarmEntity(id = 3, time = "05:02 AM", amPm = "", label = "저녁", isEnabled = false, isSoundAndVibration = false)
                 )
                 defaultAlarms.forEach { alarm ->
                     alarmRepository.insertAlarm(alarm)
@@ -241,12 +243,25 @@ class AlarmList : AppCompatActivity() {
         Log.d("AlarmList", "Setting alarm ${alarm.id} for ${calendar.timeInMillis}")
 
         // 매일 같은 시간에 알람이 울리도록 설정합니다.
-        alarmManager.setRepeating(
-            AlarmManager.RTC_WAKEUP,
-            calendar.timeInMillis, // 최초 알람 시간
-            AlarmManager.INTERVAL_DAY, // 매일 반복
-            pendingIntent
-        )
+//        alarmManager.setRepeating(
+//            AlarmManager.RTC_WAKEUP,
+//            calendar.timeInMillis, // 최초 알람 시간
+//            AlarmManager.INTERVAL_DAY, // 매일 반복
+//            pendingIntent
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                calendar.timeInMillis,
+                pendingIntent
+            )
+        } else {
+            alarmManager.setRepeating(
+                AlarmManager.RTC_WAKEUP,
+                calendar.timeInMillis,
+                AlarmManager.INTERVAL_DAY,
+                pendingIntent
+            )
+        }
     }
 
 
