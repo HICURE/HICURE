@@ -70,7 +70,7 @@
                     android:id="@+id/customTimePicker"
                     android:layout_width="match_parent"
                     android:layout_height="258dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="50dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     app:amPmTextSize="24sp"
@@ -94,7 +94,7 @@
                         android:orientation="vertical"
                         android:padding="16dp">
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="15dp"
                             android:orientation="horizontal"
@@ -108,12 +108,16 @@
                                 android:layout_marginEnd="18dp"/> <!-- 아이콘과 텍스트 사이의 간격 조정 -->
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/roboto_regular"
+                                android:autoSizeMaxTextSize="14dp"
+                                android:autoSizeMinTextSize="10sp"
+                                android:autoSizeStepGranularity="1sp"
+                                android:autoSizeTextType="uniform"
+                                android:gravity="center|start"
                                 android:text="@string/set_alarm_message"
-                                android:textColor="@color/edge_blue"
-                                android:textSize="14sp" />
+                                android:textColor="@color/edge_blue"/>
                         </LinearLayout>
 
 
