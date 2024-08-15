@@ -12,8 +12,11 @@ import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.example.hicure.MainActivity
 import com.example.hicure.R
+import com.example.hicure.UserInfo
 import com.example.hicure.databinding.ActivityAlarmListBinding
+import com.example.hicure.serveinfo.ServeInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -42,10 +45,10 @@ class AlarmList : AppCompatActivity() {
         setupSwitchListeners()
         initActivityResultLauncher()
         // 앱 실행 시 알람 정보 초기화 코드
-        CoroutineScope(Dispatchers.IO).launch {
-            alarmRepository.clearAllAlarms() // Clear the database
-            initializeDefaultAlarms() // Initialize default alarms
-        }
+//        CoroutineScope(Dispatchers.IO).launch {
+//            alarmRepository.clearAllAlarms() // Clear the database
+//            initializeDefaultAlarms() // Initialize default alarms
+//        }
 
         "알람".also { binding.actionTitle.text = it }
 
@@ -63,6 +66,22 @@ class AlarmList : AppCompatActivity() {
                 binding.behindTitle.layoutParams = layoutParams
             }
         })
+
+        binding.bnMain.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.ic_Home -> startNewActivity(MainActivity::class.java)
+                R.id.ic_Alarm -> startNewActivity(AlarmList::class.java)
+                R.id.ic_Serve -> startNewActivity(ServeInfo::class.java)
+                R.id.ic_User -> startNewActivity(UserInfo::class.java)
+            }
+            true
+        }
+    }
+
+    private fun startNewActivity(activityClass: Class<*>) {
+        val intent = Intent(this, activityClass)
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
     }
 
     private fun initializeDefaultAlarms() {
@@ -242,11 +261,6 @@ class AlarmList : AppCompatActivity() {
         Log.d("AlarmList", "Setting alarm ${alarm.id} for ${calendar.timeInMillis}")
 
         // 매일 같은 시간에 알람이 울리도록 설정합니다.
-//        alarmManager.setRepeating(
-//            AlarmManager.RTC_WAKEUP,
-//            calendar.timeInMillis, // 최초 알람 시간
-//            AlarmManager.INTERVAL_DAY, // 매일 반복
-//            pendingIntent
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
