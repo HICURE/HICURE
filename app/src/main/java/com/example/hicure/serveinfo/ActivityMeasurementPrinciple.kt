@@ -37,7 +37,6 @@ class ActivityMeasurementPrinciple : AppCompatActivity() {
                 binding.behindTitle.layoutParams = layoutParams
             }
         })
-
         binding.subTitle.text = infoSubTitle
 
         binding.content5.visibility = View.GONE

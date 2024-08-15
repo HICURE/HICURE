@@ -35,20 +35,28 @@
             android:padding="10dp">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:autoSizeMaxTextSize="15dp"
+                android:autoSizeMinTextSize="10sp"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                android:gravity="center"
                 android:text="1회차"
-                android:textColor="@color/edge_blue"
-                android:textSize="15sp" />
+                android:textColor="@color/edge_blue" />
 
             <TextView
                 android:id="@+id/date1"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:autoSizeMaxTextSize="10sp"
+                android:autoSizeMinTextSize="8sp"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                android:gravity="center"
                 android:text="날짜"
-                android:textColor="@color/edge_blue"
-                android:textSize="11sp" />
+                android:textColor="@color/edge_blue" />
 
             <View
                 android:id="@+id/Icon1"
@@ -69,20 +77,28 @@
             android:padding="10dp">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:autoSizeMaxTextSize="15dp"
+                android:autoSizeMinTextSize="10sp"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                android:gravity="center"
                 android:text="2회차"
-                android:textColor="@color/edge_blue"
-                android:textSize="15sp" />
+                android:textColor="@color/edge_blue" />
 
             <TextView
                 android:id="@+id/date2"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:text="날짜"
                 android:textColor="@color/edge_blue"
-                android:textSize="11sp" />
+                android:autoSizeMaxTextSize="10sp"
+                android:autoSizeMinTextSize="8sp"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                android:gravity="center"/>
 
             <View
                 android:id="@+id/Icon2"
@@ -103,20 +119,28 @@
             android:padding="10dp">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:autoSizeMaxTextSize="15dp"
+                android:autoSizeMinTextSize="10sp"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                android:gravity="center"
                 android:text="3회차"
-                android:textColor="@color/edge_blue"
-                android:textSize="15sp" />
+                android:textColor="@color/edge_blue" />
 
             <TextView
                 android:id="@+id/date3"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:text="날짜"
                 android:textColor="@color/edge_blue"
-                android:textSize="11sp" />
+                android:autoSizeMaxTextSize="10sp"
+                android:autoSizeMinTextSize="8sp"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                android:gravity="center"/>
 
             <View
                 android:id="@+id/Icon3"
@@ -137,20 +161,28 @@
             android:padding="10dp">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:autoSizeMaxTextSize="15dp"
+                android:autoSizeMinTextSize="10sp"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                android:gravity="center"
                 android:text="4회차"
-                android:textColor="@color/edge_blue"
-                android:textSize="15sp" />
+                android:textColor="@color/edge_blue" />
 
             <TextView
                 android:id="@+id/date4"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:text="날짜"
                 android:textColor="@color/edge_blue"
-                android:textSize="11sp" />
+                android:autoSizeMaxTextSize="10sp"
+                android:autoSizeMinTextSize="8sp"
+                android:autoSizeStepGranularity="1sp"
+                android:autoSizeTextType="uniform"
+                android:gravity="center"/>
 
             <View
                 android:id="@+id/Icon4"

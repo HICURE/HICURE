@@ -81,7 +81,7 @@ class InitialSurvey : AppCompatActivity() {
             referenceDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         binding.line.visibility = View.GONE
         binding.underAppTItle.visibility = View.GONE
-
+        binding.backB.visibility = View.GONE
         binding.etc.text = "하루 중 이상활동은 없었나요? (필수 X)"
     }
 

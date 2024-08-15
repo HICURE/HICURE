@@ -58,6 +58,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        binding.ui.home.visibility = View.VISIBLE
+        binding.ui.homeText.setTextColor(resources.getColor(R.color.edge_blue, null))
+
         lineChart = findViewById(R.id.linechart)
 
         val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
@@ -119,8 +122,6 @@ class MainActivity : AppCompatActivity() {
                 binding.leftB.visibility = View.VISIBLE
             }
         }
-
-        bottomNagivationView.selectedItemId = R.id.ic_Home
 
         binding.bnMain.setOnItemSelectedListener { item ->
             when (item.itemId) {
@@ -287,8 +288,12 @@ class MainActivity : AppCompatActivity() {
         val values = listOf(scoreValue, 100f - scoreValue)
 
         val entries = ArrayList<PieEntry>()
-        entries.add(PieEntry(values[0], ""))
-        entries.add(PieEntry(values[1], ""))
+        if (values.size >= 2) {
+            entries.add(PieEntry(values[0], ""))
+            entries.add(PieEntry(values[1], ""))
+        } else {
+            entries.add(PieEntry(100f, "")) // If not enough values, display default
+        }
 
         val dataSet = PieDataSet(entries, "Pie Chart Data")
         dataSet.colors = listOf(Color.parseColor("#5184ED"), Color.parseColor("#E8EDF2"))
@@ -331,35 +336,38 @@ class MainActivity : AppCompatActivity() {
                     if (snapshot.exists()) {
                         val totalSessions = snapshot.childrenCount.toInt()
 
-                        // 현재 회차 데이터에 접근
-                        val sessionRef = snapshot.child(cnt)
-                        if (sessionRef.exists()) {
-                            chartData.clear() // 기존 데이터 초기화
+                        var maxValue = 0.0 // 모든 회차 중에서 최대값을 저장할 변수
 
-                            // 최대값 추적을 위한 변수 초기화
-                            var maxValue = 0.0
-
-                            // Firebase 데이터 가져오기
-                            for (dataSnapshot in sessionRef.children) {
+                        // 모든 회차 데이터를 순회하면서 최대값 계산
+                        for (sessionSnapshot in snapshot.children) {
+                            for (dataSnapshot in sessionSnapshot.children) {
                                 val key = dataSnapshot.key
-                                if (key == "time") {
-                                    // time 키가 발견되면 textViewTime에 설정
-                                    val timeValue = dataSnapshot.getValue(String::class.java) ?: ""
-                                    binding.textViewTime.setText(timeValue)
-                                } else {
-                                    // 그 외의 데이터는 차트에 추가
-                                    val label = key?.replace("[^\\d.]".toRegex(), "") ?: "0"
+                                if (key != "time") { // 시간 데이터는 제외하고 값만 비교
                                     val value = dataSnapshot.getValue(Double::class.java) ?: 0.0
-                                    addChartItem(label + "초", value)
-
-                                    // 최대값 갱신
                                     if (value > maxValue) {
-                                        maxValue = value
+                                        maxValue = value // 최대값 갱신
                                     }
                                 }
                             }
+                        }
 
-                            // 차트가 존재하는 경우 데이터 표시
+                        // 현재 선택된 회차의 데이터를 표시
+                        val sessionRef = snapshot.child(cnt)
+                        if (sessionRef.exists()) {
+                            chartData.clear()
+
+                            for (dataSnapshot in sessionRef.children) {
+                                val key = dataSnapshot.key
+                                if (key == "time") {
+                                    val timeValue = dataSnapshot.getValue(String::class.java) ?: ""
+                                    binding.textViewTime.setText(timeValue)
+                                } else {
+                                    val label = key?.replace("[^\\d.]".toRegex(), "") ?: "0"
+                                    val value = dataSnapshot.getValue(Double::class.java) ?: 0.0
+                                    addChartItem(label + "초", value)
+                                }
+                            }
+
                             binding.dataChart.visibility = View.VISIBLE
                             binding.noneData.visibility = View.GONE
 

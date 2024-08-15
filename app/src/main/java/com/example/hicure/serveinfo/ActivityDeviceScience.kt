@@ -37,7 +37,6 @@ class ActivityDeviceScience : AppCompatActivity() {
                 binding.behindTitle.layoutParams = layoutParams
             }
         })
-
         binding.subTitle.text = infoSubTitle
 
         binding.content4.visibility = View.GONE

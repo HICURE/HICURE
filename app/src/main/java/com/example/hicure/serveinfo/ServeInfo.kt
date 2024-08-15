@@ -2,6 +2,7 @@ package com.example.hicure.serveinfo
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.view.ViewTreeObserver
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +27,9 @@ class ServeInfo : AppCompatActivity(), InfoAdapter.OnItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        binding.ui.serve.visibility = View.VISIBLE
+        binding.ui.serveText.setTextColor(resources.getColor(R.color.edge_blue, null))
 
         bottomNavigationView.selectedItemId = R.id.ic_Serve
 

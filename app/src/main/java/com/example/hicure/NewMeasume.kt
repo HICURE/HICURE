@@ -88,6 +88,11 @@ class NewMeasume : AppCompatActivity() {
             isDataProcessingEnabled = false
             vcValues.clear()
 
+            binding.backB.setOnClickListener {
+                startActivity(Intent(this, BleConnect::class.java))
+                finish()
+            }
+
             // ready timer
             val firstTimer = object : CountDownTimer(3000, 10) {
                 override fun onTick(millisUntilFinished: Long) {

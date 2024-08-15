@@ -93,6 +93,7 @@ class Calendar : AppCompatActivity() {
 
         binding.backB.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
 
         binding.leftB.visibility = View.GONE
@@ -116,16 +117,6 @@ class Calendar : AppCompatActivity() {
         }
     }
 
-    private fun getCurrentDate(): String {
-        val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
-        return dateFormat.format(Date())
-    }
-
-    private fun getCurrentTime(): String {
-        val dateFormat = SimpleDateFormat("hh : mm", Locale.getDefault())
-        return dateFormat.format(Date())
-    }
-
     private fun getUserNameFromPreferences(): String? {
         val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
         return sharedPreferences.getString("user_id", null)
@@ -142,7 +133,7 @@ class Calendar : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val maxValue = snapshot.children.flatMap { it.children }
                     .filter { it.key != "time" }
-                    .mapNotNull { it.getValue(Int::class.java) }
+                    .mapNotNull { it.getValue(Double::class.java) }
                     .maxOrNull()
 
                 breathTextView.text = if (maxValue != null) {

@@ -1,0 +1,23 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="20dp"
+    android:viewportWidth="19"
+    android:viewportHeight="21">
+    <group>
+    <!-- 알림 벨 모양의 본체 -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#395597"
+        android:strokeWidth="1"
+        android:strokeMiterLimit="10"
+        android:pathData="M18.5,15.2083V16.8333H1V15.2083C1,14.0833 1.45833,13.0417 2.20833,12.25L3.91667,10.5417C4.70833,9.75 5.125,8.70833 5.125,7.58333V5.58333C5.125,3.04167 7.16667,1 9.70833,1C12.25,1 14.2917,3.04167 14.2917,5.58333V7.625C14.2917,8.75 14.75,9.79167 15.5,10.5833L17.2083,12.2917C18.0417,13.0417 18.5,14.125 18.5,15.2083Z"/>
+
+    <!-- 벨의 아래쪽 부분 -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#395597"
+        android:strokeWidth="1"
+        android:strokeMiterLimit="10"
+        android:pathData="M7.25,16.8333V17.6666C7.25,19.0416 8.375,20.1666 9.75,20.1666C11.125,20.1666 12.25,19.0416 12.25,17.6666V16.8333"/>
+    </group>
+</vector>

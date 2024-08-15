@@ -37,7 +37,6 @@ class ActivityBreathExercises : AppCompatActivity() {
                 binding.behindTitle.layoutParams = layoutParams
             }
         })
-
         binding.subTitle.text = infoSubTitle
 
         binding.image.visibility = View.GONE

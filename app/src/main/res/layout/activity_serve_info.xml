@@ -67,19 +67,35 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <com.google.android.material.bottomnavigation.BottomNavigationView
-                android:id="@+id/bn_main"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:checkable="true"
-                android:elevation="10dp"
-                android:outlineSpotShadowColor="@color/black"
-                app:itemActiveIndicatorStyle="@null"
-                app:itemIconTint="@drawable/nav_click_color"
-                app:itemTextColor="@drawable/nav_click_color"
-                app:labelVisibilityMode="labeled"
-                app:menu="@navigation/bottom_nav" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#0D000000"></ImageView>
+
+                <com.google.android.material.bottomnavigation.BottomNavigationView
+                    android:id="@+id/bn_main"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:checkable="true"
+                    android:elevation="10dp"
+                    android:outlineSpotShadowColor="@color/black"
+                    app:itemActiveIndicatorStyle="@null"
+                    app:itemIconTint="@drawable/nav_click_icon"
+                    app:itemTextColor="@drawable/nav_click_color"
+                    app:labelVisibilityMode="labeled"
+                    app:menu="@navigation/bottom_nav" />
+            </LinearLayout>
+
+            <include
+                android:id="@+id/ui"
+                layout="@layout/nav_true_ui" />
+
         </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
