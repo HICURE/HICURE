@@ -32,7 +32,7 @@ class LineChart : AppCompatActivity() {
         for (item in chartData) {
             entries.add(
                 Entry(
-                    item.lableData.replace("[^\\d.]".toRegex(), "").toFloat(),
+                    item.labelData.replace("[^\\d.]".toRegex(), "").toFloat(),
                     item.lineData.toFloat()
                 )
             )
