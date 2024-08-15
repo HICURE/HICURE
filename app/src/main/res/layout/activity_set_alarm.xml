@@ -52,7 +52,7 @@
             android:id="@+id/customTimePicker"
             android:layout_width="match_parent"
             android:layout_height="258dp"
-            android:layout_marginTop="90dp"
+            android:layout_marginTop="110dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             app:amPmTextSize="24sp"
@@ -63,7 +63,7 @@
             android:id="@+id/alarmBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="38dp"
             app:cardCornerRadius="12dp"
             android:layout_gravity="center">
 
@@ -74,11 +74,34 @@
                 android:background="@drawable/set_alarm_box_blue"
                 android:orientation="vertical"
                 android:padding="16dp">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_alarm_bell"
+                        android:layout_marginStart="2dp"
+                        android:layout_marginEnd="18dp"/> <!-- 아이콘과 텍스트 사이의 간격 조정 -->
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_regular"
+                        android:text="@string/set_alarm_message"
+                        android:textColor="@color/edge_blue"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="24dp"
                     android:fontFamily="@font/roboto_regular"
                     android:text="@string/set_alarm_name"
                     android:textColor="@color/edge_blue"
@@ -88,6 +111,7 @@
                     android:id="@+id/alarmNameEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
                     android:background="@drawable/set_alarm_name_text_field"
                     android:fontFamily="@font/oxygen_regular"
                     android:hint="@string/set_alarm_name_text_field"
@@ -96,32 +120,8 @@
                     android:paddingTop="8dp"
                     android:paddingRight="15dp"
                     android:paddingBottom="8dp"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/edge_blue"
                     android:textSize="14sp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/roboto_regular"
-                        android:text="@string/set_alarm_sound_vibrate"
-                        android:textColor="@color/edge_blue"
-                        android:textSize="14sp" />
-
-                    <Switch
-                        android:id="@+id/soundVibrationSwitch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:thumb="@drawable/alarm_switch_thumb"
-                        android:track="@drawable/alarm_switch_track_on_blue" />
-                </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -129,7 +129,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="38dp"
             android:orientation="horizontal">
 
             <android.widget.Button
@@ -155,5 +155,4 @@
                 android:textSize="20sp"/>
         </LinearLayout>
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
