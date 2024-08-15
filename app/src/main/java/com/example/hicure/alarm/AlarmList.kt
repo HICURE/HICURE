@@ -33,7 +33,6 @@ class AlarmList : AppCompatActivity() {
         binding = ActivityAlarmListBinding.inflate(layoutInflater)
         setContentView(binding.root)
         alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-        // Initialize repository
         val database = AlarmDatabase.getInstance(applicationContext)
         alarmRepository = AlarmRepository(database.alarmDao())
 
@@ -204,7 +203,7 @@ class AlarmList : AppCompatActivity() {
     }
 
 
-    @SuppressLint("UnspecifiedImmutableFlag", "ScheduleExactAlarm")
+    @SuppressLint("ObsoleteSdkInt", "ScheduleExactAlarm")
     private fun scheduleAlarm(alarm: AlarmEntity) {
         val calendar = Calendar.getInstance().apply {
             // 사용자가 설정한 시간과 AM/PM에 따라 시간을 설정합니다.
