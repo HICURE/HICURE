@@ -349,7 +349,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -375,6 +374,9 @@
                     app:menu="@navigation/bottom_nav" />
             </LinearLayout>
 
+            <include
+                android:id="@+id/ui"
+                layout="@layout/nav_true_ui" />
         </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

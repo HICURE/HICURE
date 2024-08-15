@@ -27,4 +27,5 @@
     <color name="gray">#CCCCD7</color>
     <color name="gray_frame">#CCCCCC</color>
     <color name="warning">#D1180B</color>
+    <color name="air">#00D1180B</color>
 </resources>

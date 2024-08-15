@@ -58,6 +58,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        binding.ui.home.visibility = View.VISIBLE
+        binding.ui.homeText.setTextColor(resources.getColor(R.color.edge_blue, null))
+
         lineChart = findViewById(R.id.linechart)
 
         val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
@@ -119,8 +122,6 @@ class MainActivity : AppCompatActivity() {
                 binding.leftB.visibility = View.VISIBLE
             }
         }
-
-        bottomNagivationView.selectedItemId = R.id.ic_Home
 
         binding.bnMain.setOnItemSelectedListener { item ->
             when (item.itemId) {

@@ -32,6 +32,9 @@ class UserInfo : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        binding.ui.user.visibility = View.VISIBLE
+        binding.ui.userText.setTextColor(resources.getColor(R.color.edge_blue, null))
+
         "설정".also { binding.actionTitle.text = it }
 
         binding.actionTitle.viewTreeObserver.addOnGlobalLayoutListener(object :
