@@ -287,8 +287,12 @@ class MainActivity : AppCompatActivity() {
         val values = listOf(scoreValue, 100f - scoreValue)
 
         val entries = ArrayList<PieEntry>()
-        entries.add(PieEntry(values[0], ""))
-        entries.add(PieEntry(values[1], ""))
+        if (values.size >= 2) {
+            entries.add(PieEntry(values[0], ""))
+            entries.add(PieEntry(values[1], ""))
+        } else {
+            entries.add(PieEntry(100f, "")) // If not enough values, display default
+        }
 
         val dataSet = PieDataSet(entries, "Pie Chart Data")
         dataSet.colors = listOf(Color.parseColor("#5184ED"), Color.parseColor("#E8EDF2"))
