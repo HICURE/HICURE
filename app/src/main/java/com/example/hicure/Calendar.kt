@@ -93,6 +93,7 @@ class Calendar : AppCompatActivity() {
 
         binding.backB.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
 
         binding.leftB.visibility = View.GONE

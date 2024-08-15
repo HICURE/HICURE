@@ -45,12 +45,19 @@ class BleConnect : AppCompatActivity(), OnDeviceClickListener {
         private const val TAG = "BleConnect"
     }
 
+
+
     @SuppressLint("ServiceCast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
         Log.d(TAG, "onCreate: Activity started")
+
+        binding.backB.setOnClickListener {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
 
         "폐건강 측정하기".also { binding.actionTitle.text = it }
 

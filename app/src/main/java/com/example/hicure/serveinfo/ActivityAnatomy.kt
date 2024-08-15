@@ -10,6 +10,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.hicure.MainActivity
 import com.example.hicure.R
 import com.example.hicure.databinding.InfoDetailsBinding
 
@@ -38,6 +39,11 @@ class ActivityAnatomy : AppCompatActivity() {
                 binding.behindTitle.layoutParams = layoutParams
             }
         })
+
+        binding.backB.setOnClickListener {
+            startActivity(Intent(this, ServeInfo::class.java))
+            finish()
+        }
 
         binding.subTitle.text = infoSubTitle
 
