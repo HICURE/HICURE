@@ -6,5 +6,5 @@
     <solid android:color="@color/alarm_box_back_yellow" />
     <size
         android:width="320dp"
-        android:height="170dp" />
+        android:height="160dp" />
 </shape>
