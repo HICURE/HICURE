@@ -69,9 +69,9 @@ class AlarmList : AppCompatActivity() {
             val existingAlarms = alarmRepository.getAllAlarms.first()
             if (existingAlarms.isEmpty()) {
                 val defaultAlarms = listOf(
-                    AlarmEntity(id = 1, time = "03:14 AM", amPm = "", label = "아침", isEnabled = false, isSoundAndVibration = false),
-                    AlarmEntity(id = 2, time = "03:15 AM", amPm = "", label = "점심", isEnabled = false, isSoundAndVibration = false),
-                    AlarmEntity(id = 3, time = "03:16 AM", amPm = "", label = "저녁", isEnabled = false, isSoundAndVibration = false)
+                    AlarmEntity(id = 1, time = "04:26 AM", amPm = "", label = "아침", isEnabled = false, isSoundAndVibration = false),
+                    AlarmEntity(id = 2, time = "04:27 AM", amPm = "", label = "점심", isEnabled = false, isSoundAndVibration = false),
+                    AlarmEntity(id = 3, time = "04:28 AM", amPm = "", label = "저녁", isEnabled = false, isSoundAndVibration = false)
                 )
                 defaultAlarms.forEach { alarm ->
                     alarmRepository.insertAlarm(alarm)
@@ -204,22 +204,25 @@ class AlarmList : AppCompatActivity() {
 
     @SuppressLint("UnspecifiedImmutableFlag", "ScheduleExactAlarm")
     private fun scheduleAlarm(alarm: AlarmEntity) {
-        val calendar = Calendar.getInstance()
-        val hourMinute = alarm.time.split(" ")[0]
-        val hour = hourMinute.split(":")[0].toInt()
-        val minute = hourMinute.split(":")[1].toInt()
-        val amPm = alarm.amPm
+        val calendar = Calendar.getInstance().apply {
+            // 사용자가 설정한 시간과 AM/PM에 따라 시간을 설정합니다.
+            val hourMinute = alarm.time.split(" ")[0]
+            val hour = hourMinute.split(":")[0].toInt()
+            val minute = hourMinute.split(":")[1].toInt()
+            val amPm = alarm.amPm
 
-        if (amPm.equals("PM", ignoreCase = true) && hour < 12) {
-            calendar.set(Calendar.HOUR_OF_DAY, hour + 12)
-        } else if (amPm.equals("AM", ignoreCase = true) && hour == 12) {
-            calendar.set(Calendar.HOUR_OF_DAY, 0)
-        } else {
-            calendar.set(Calendar.HOUR_OF_DAY, hour)
+            if (amPm.equals("PM", ignoreCase = true) && hour < 12) {
+                set(Calendar.HOUR_OF_DAY, hour + 12)
+            } else if (amPm.equals("AM", ignoreCase = true) && hour == 12) {
+                set(Calendar.HOUR_OF_DAY, 0)
+            } else {
+                set(Calendar.HOUR_OF_DAY, hour)
+            }
+            set(Calendar.MINUTE, minute)
+            set(Calendar.SECOND, 0)
         }
-        calendar.set(Calendar.MINUTE, minute)
-        calendar.set(Calendar.SECOND, 0)
 
+        // 현재 시간보다 이전이면, 다음 날로 설정
         val now = Calendar.getInstance()
         if (calendar.before(now)) {
             calendar.add(Calendar.DAY_OF_YEAR, 1)
@@ -237,13 +240,15 @@ class AlarmList : AppCompatActivity() {
 
         Log.d("AlarmList", "Setting alarm ${alarm.id} for ${calendar.timeInMillis}")
 
-        // 반복해서 알람 울리기
-        alarmManager.setExactAndAllowWhileIdle(
+        // 매일 같은 시간에 알람이 울리도록 설정합니다.
+        alarmManager.setRepeating(
             AlarmManager.RTC_WAKEUP,
-            calendar.timeInMillis,
+            calendar.timeInMillis, // 최초 알람 시간
+            AlarmManager.INTERVAL_DAY, // 매일 반복
             pendingIntent
         )
     }
+
 
     @SuppressLint("UnspecifiedImmutableFlag")
     private fun cancelAlarm(alarm: AlarmEntity) {
