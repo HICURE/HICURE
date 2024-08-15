@@ -40,7 +40,6 @@ class SetAlarm : AppCompatActivity() {
         val alarmName = intent.getStringExtra("EXTRA_ALARM_NAME")
         val isAlarmEnabled = intent.getBooleanExtra("EXTRA_IS_ALARM_ENABLED", false)
         alarmId = intent.getIntExtra("EXTRA_ALARM_ID", 0)
-        val isSoundAndVibration = intent.getBooleanExtra("EXTRA_IS_SOUND_AND_VIBRATION", false)
 
         val boxDrawable = ContextCompat.getDrawable(this, boxDrawableResId)
         val switchDrawable = ContextCompat.getDrawable(this, switchDrawableResId)
@@ -48,7 +47,6 @@ class SetAlarm : AppCompatActivity() {
 
         binding.alarmBox.background = boxDrawable
         binding.boxLayout.background = boxDrawable
-        binding.soundVibrationSwitch.trackDrawable = switchDrawable
         binding.saveButton.background = buttonDrawable
 
         "알람 설정".also { binding.actionTitle.text = it }
@@ -74,7 +72,6 @@ class SetAlarm : AppCompatActivity() {
         if (alarmName != null) {
             binding.alarmNameEditText.setText(alarmName)
         }
-        binding.soundVibrationSwitch.isChecked = isSoundAndVibration
 
         binding.cancelButton.setOnClickListener {
             setResult(Activity.RESULT_CANCELED)
@@ -92,7 +89,6 @@ class SetAlarm : AppCompatActivity() {
                 }
 
                 val alarmName = binding.alarmNameEditText.text.toString()
-                val isSoundAndVibration = binding.soundVibrationSwitch.isChecked
 
                 // RoomDB에 알람 설정 저장
                 saveAlarmSettings(selectedTime)
@@ -105,7 +101,6 @@ class SetAlarm : AppCompatActivity() {
                     putExtra("EXTRA_BOX_COLOR", boxDrawableResId)
                     putExtra("EXTRA_AM_PM", amPm)
                     putExtra("EXTRA_IS_ALARM_ENABLED", isAlarmEnabled)
-                    putExtra("EXTRA_IS_SOUND_AND_VIBRATION", isSoundAndVibration)
                     putExtra("EXTRA_ALARM_ID", alarmId)
                 }
 
