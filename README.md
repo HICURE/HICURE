@@ -1,5 +1,34 @@
-# HICURE
-폐활량 측정 기기 보조 어플입니다!
+![header](https://capsule-render.vercel.app/api?type=waving&text=HICURE&animation=fadeIn&fontsize=30&color=gradient&customColorList=1,2,3&height=200&fontColor=ffffff&fontAlign=75&fontAlign=75&fontAlignY=45&descAlign=83.6&descAlignY=20)
+
+📚 Stacks
+---
+![image](https://github.com/user-attachments/assets/4df7095c-3a6a-4b2a-9af4-82858680b88d)
+![image](https://github.com/user-attachments/assets/aa025233-e880-4fe3-aa59-4b167f5102fb)
+
+🐥 Contributors
+---
+<div>
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/gjsk132"><img src="https://avatars.githubusercontent.com/u/113815454?v=4" width="100px;" alt=""/>
+    <td align="center"><a href="https://github.com/suhyun113"><img src="https://avatars.githubusercontent.com/u/163711629?v=4" width="100px;" alt=""/>
+    <td align="center"><a href="https://github.com/hyeonju0925"><img src="https://avatars.githubusercontent.com/u/87307176?v=4" width="100px;" alt=""/>
+    <td align="center"><a href="https://github.com/7lyeon"><img src="https://avatars.githubusercontent.com/u/174766608?v=4" width="100px;" alt=""/>
+  </tr>
+      <tr>
+        <td >팀장 및 전체적인 개발</td>
+        <td >메인(홈), 캘린더</td>
+        <td >알람 페이지 및 기능</td>
+        <td >사용자 정보</td>
+      </tr>
+    <tr>
+    <td align="center"><a href="https://github.com/gjsk132" title="Code">gjsk132</a></td>
+    <td align="center"><a href="https://github.com/suhyun113" title="Code">suhyun113</a></td>
+    <td align="center"><a href="https://github.com/hyeonju0925" title="Code">hyeonju0925</a></td>
+    <td align="center"><a href="https://github.com/7lyeon" title="Code">7lyeon</a></td>
+  </tr>
+</table>
+</div>
 
 📖 Contens
 ---
