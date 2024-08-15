@@ -29,7 +29,7 @@ class AlertReceiver : BroadcastReceiver() {
                     withContext(Dispatchers.Main) {
                         alarmEntity?.let { alarm ->
                             val nb: NotificationCompat.Builder = notificationHelper.getChannelNotification(alarm.time)
-                            notificationHelper.getManager().notify(alarmId, nb.build())
+                            notificationHelper.getManager().notify(System.currentTimeMillis().toInt(), nb.build())
 
                             // 다음 날 같은 시간으로 알람 재설정
                             rescheduleAlarm(ctx, alarm, alarmManager)
