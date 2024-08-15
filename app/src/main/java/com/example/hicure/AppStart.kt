@@ -23,7 +23,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.hicure.BleConnect.Companion
 import com.example.hicure.databinding.ActivityAppStartBinding
 import com.example.hicure.databinding.CheckIdBinding
 import com.google.firebase.database.DataSnapshot
@@ -56,6 +55,7 @@ class AppStart : AppCompatActivity() {
             promptEnableBluetooth()
         }
 
+
         // User data load
         loadUserFromPreferences {
             binding.root.setOnTouchListener { _, event ->
@@ -71,7 +71,6 @@ class AppStart : AppCompatActivity() {
                 Toast.makeText(this, "LOADING", Toast.LENGTH_SHORT).show()
             }
         }
-
     }
 
     @SuppressLint("MissingPermission")
@@ -174,6 +173,7 @@ class AppStart : AppCompatActivity() {
 
     // Touch Screen
     private fun handleTouchEvent(event: MotionEvent?) {
+
         if (isUserLoggedIn) {
             val nextActivity = if (isSurvey) MainActivity::class.java else InitialSurvey::class.java
             startActivity(Intent(this, nextActivity))
@@ -225,11 +225,14 @@ class AppStart : AppCompatActivity() {
                                     ).show()
 
                                 } else {
+
                                     val user = User().apply {
                                         name = "New User"
                                         age = 0
+                                        height = 0
                                         gender = "Unknown"
                                         survey = false
+                                        score = 0
                                     }
                                     userRef.child(newId).setValue(user)
                                         .addOnSuccessListener {
@@ -305,7 +308,9 @@ class AppStart : AppCompatActivity() {
             putString("user_name", user.name)
             putInt("user_age", user.age)
             putString("user_gender", user.gender)
+            putInt("user_height", user.height)
             putBoolean("user_survey", user.survey)
+            putInt("reference_value", user.referenceValue)
             apply()
         }
     }
@@ -332,12 +337,15 @@ class AppStart : AppCompatActivity() {
                             editor.putInt("user_age", it.age)
                             editor.putString("user_gender", it.gender)
                             editor.putBoolean("user_survey", it.survey)
+                            editor.putInt("user_height", it.height)
+                            editor.putInt("reference_value", it.referenceValue)
                             editor.apply()
 
                             if (it.survey) {
                                 isSurvey = true
                             }
                         }
+
                     } else {
                         // User ID does not exist in Firebase
                         editor.putString("user_id", "")

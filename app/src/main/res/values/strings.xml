@@ -24,6 +24,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="tempSurveyQuestion">임시 질문 문항</string>
     <string name="yes">예</string>
+    <string name="userHeight">유저 키</string>
     <string name="no">아니요</string>
     <string name="surveyTitle">설문 제목</string>
     <string name="check">확인</string>

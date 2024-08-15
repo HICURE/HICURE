@@ -386,4 +386,9 @@ class AlarmList : AppCompatActivity() {
             if (parts.size == 2) Pair(parts[0], parts[1]) else Pair(time, "")
         } ?: Pair("", "")
     }
+    private fun startNewActivity(activityClass: Class<*>) {
+        val intent = Intent(this, activityClass)
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
+    }
 }
