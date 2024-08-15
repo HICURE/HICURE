@@ -81,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="30dp"
-                android:layout_marginTop="45dp"
+                android:layout_marginTop="38dp"
                 app:cardCornerRadius="12dp">
 
                 <LinearLayout
@@ -152,7 +152,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="30dp"
-                android:layout_marginTop="45dp"
+                android:layout_marginTop="33dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
