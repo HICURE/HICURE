@@ -29,8 +29,8 @@ import java.util.Date
 import java.util.Locale
 
 class Calendar : AppCompatActivity() {
-
-    private val database = FirebaseDatabase.getInstance("https://hicure-d5c99-default-rtdb.firebaseio.com/")
+    private val database =
+        FirebaseDatabase.getInstance("https://hicure-d5c99-default-rtdb.firebaseio.com/")
     private val userRef: DatabaseReference = database.getReference("users")
     private val binding: ActivityCalendarBinding by lazy { ActivityCalendarBinding.inflate(layoutInflater) }
 

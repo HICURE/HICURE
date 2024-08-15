@@ -3,6 +3,7 @@ package com.example.hicure
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.TextView
@@ -35,7 +36,7 @@ import java.util.ArrayList
 import com.example.hicure.utils.FirebaseCheckDate
 
 data class ChartData(
-    var lableData: String = "",
+    var labelData: String = "",
     var lineData: Double = 0.0
 )
 
@@ -185,11 +186,17 @@ class MainActivity : AppCompatActivity() {
                         val score = dataSnapshot.getValue(Int::class.java) ?: 0
                         Myscore.text = score.toString()
 
+                            // 점수를 숫자형으로 비교
+                        if (score >= 60) { // score를 직접 비교
+                            binding.lungimage.setImageResource(R.drawable.goodlung)
+                        } else {
+                            binding.lungimage.setImageResource(R.drawable.badlung)
+                        }
+
                         setupPieChart(score.toString())
                     }
-
                     override fun onCancelled(databaseError: DatabaseError) {
-                        Myscore.text = "Failed to load score."
+                        Log.e(this@MainActivity.toString(), "Failed Load Date", databaseError.toException())
                     }
                 })
 
@@ -275,19 +282,16 @@ class MainActivity : AppCompatActivity() {
     private fun setupPieChart(sco: String) {
         val pieChart = findViewById<PieChart>(R.id.pieChart)
 
-        // 데이터 변환 (예: "40,60" -> [40f, 60f])
-        val values = sco.split(",").map { it.trim().toFloatOrNull() ?: 0f }
+        val scoreValue = sco.toFloatOrNull() ?: 0f
+
+        val values = listOf(scoreValue, 100f - scoreValue)
 
         val entries = ArrayList<PieEntry>()
-        if (values.size >= 2) {
-            entries.add(PieEntry(values[0], "Part 1"))
-            entries.add(PieEntry(values[1], "Part 2"))
-        } else {
-            entries.add(PieEntry(100f, "Unknown")) // If not enough values, display default
-        }
+        entries.add(PieEntry(values[0], ""))
+        entries.add(PieEntry(values[1], ""))
 
         val dataSet = PieDataSet(entries, "Pie Chart Data")
-        dataSet.colors = listOf(Color.GRAY, Color.LTGRAY)
+        dataSet.colors = listOf(Color.parseColor("#5184ED"), Color.parseColor("#E8EDF2"))
         dataSet.setDrawValues(false)
 
         // 도넛 차트 효과를 위해 가운데 원을 비웁니다.
@@ -415,7 +419,7 @@ class MainActivity : AppCompatActivity() {
         for (item in chartData) {
             entries.add(
                 Entry(
-                    item.lableData.replace("[^\\d.]".toRegex(), "").toFloat(),
+                    item.labelData.replace("[^\\d.]".toRegex(), "").toFloat(),
                     item.lineData.toFloat()
                 )
             )

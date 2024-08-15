@@ -6,8 +6,11 @@ import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.example.hicure.MainActivity
 import com.example.hicure.R
+import com.example.hicure.UserInfo
 import com.example.hicure.databinding.ActivityAlarmListBinding
+import com.example.hicure.serveinfo.ServeInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -25,6 +28,15 @@ class AlarmList : AppCompatActivity() {
         binding = ActivityAlarmListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.bnMain.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.ic_Home -> startNewActivity(MainActivity::class.java)
+                R.id.ic_Alarm -> startNewActivity(AlarmList::class.java)
+                R.id.ic_Serve -> startNewActivity(ServeInfo::class.java)
+                R.id.ic_User -> startNewActivity(UserInfo::class.java)
+            }
+            true
+        }
         // Initialize repository
         val database = AlarmDatabase.getInstance(applicationContext)
         alarmRepository = AlarmRepository(database.alarmDao())
@@ -249,5 +261,10 @@ class AlarmList : AppCompatActivity() {
         return time?.split(" ")?.let { parts ->
             if (parts.size == 2) Pair(parts[0], parts[1]) else Pair(time, "")
         } ?: Pair("", "")
+    }
+    private fun startNewActivity(activityClass: Class<*>) {
+        val intent = Intent(this, activityClass)
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
     }
 }
