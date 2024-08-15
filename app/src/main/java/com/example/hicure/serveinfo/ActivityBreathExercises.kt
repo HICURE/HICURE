@@ -37,10 +37,6 @@ class ActivityBreathExercises : AppCompatActivity() {
                 binding.behindTitle.layoutParams = layoutParams
             }
         })
-        binding.backB.setOnClickListener {
-            startActivity(Intent(this, ServeInfo::class.java))
-            finish()
-        }
         binding.subTitle.text = infoSubTitle
 
         binding.image.visibility = View.GONE
