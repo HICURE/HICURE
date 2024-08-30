@@ -11,8 +11,8 @@
 <table>
   <tr>
     <td align="center"><a href="https://github.com/gjsk132"><img src="https://avatars.githubusercontent.com/u/113815454?v=4" width="100px;" alt=""/>
-    <td align="center"><a href="https://github.com/suhyun113"><img src="https://avatars.githubusercontent.com/u/163711629?v=4" width="100px;" alt=""/>
     <td align="center"><a href="https://github.com/hyeonju0925"><img src="https://avatars.githubusercontent.com/u/87307176?v=4" width="100px;" alt=""/>
+    <td align="center"><a href="https://github.com/suhyun113"><img src="https://avatars.githubusercontent.com/u/163711629?v=4" width="100px;" alt=""/>
     <td align="center"><a href="https://github.com/7lyeon"><img src="https://avatars.githubusercontent.com/u/174766608?v=4" width="100px;" alt=""/>
   </tr>
       <tr>
@@ -23,8 +23,8 @@
       </tr>
     <tr>
     <td align="center"><a href="https://github.com/gjsk132" title="Code">gjsk132</a></td>
-    <td align="center"><a href="https://github.com/suhyun113" title="Code">suhyun113</a></td>
     <td align="center"><a href="https://github.com/hyeonju0925" title="Code">hyeonju0925</a></td>
+    <td align="center"><a href="https://github.com/suhyun113" title="Code">suhyun113</a></td>
     <td align="center"><a href="https://github.com/7lyeon" title="Code">7lyeon</a></td>
   </tr>
 </table>
